@@ -9,7 +9,7 @@ class UserCloudInfoTableSeeder extends Seeder {
 		DB::table('user_cloud_info')->insert(array(
         			'userID'=>'1',
 					'cloudID'=>'1',	
-					'access_token'=>''
+					'access_token'=>'PIXXPZ9wS5oAAAAAAAAAAWjrWEud9FspD2Gpz3QRvbb2HSjV_Ga3rF8Okqz8bUfG'
 			  
       	));
 
