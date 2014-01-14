@@ -15,7 +15,42 @@ Route::get('/', function()
 {
 	return View::make('hello');
 });
-*/
+
+/* test routes*/
+
+
+Route::get('/test/master', function()
+{
+	return View::make('landing.landing');
+});
+
+Route::get('/test/front', function()
+{
+	return View::make('landing.front');
+});
+
+Route::get('/test/dashboard', function()
+{
+	return View::make('dashboard.dashboard');
+});
+
+Route::get('/login',function(){
+    return View::make('user.login');
+});
+
+Route::post('/login',array('as' => 'sign_in' , 'uses' => 'UsersController@postSignin'));
+
+Route::get('/users/login',function() {
+    return View::make('user.test');
+});
+
+Route::get('/users/dashboard',function() {
+    return View::make('dashboard.dashboard');
+});
+
+Route::post('/signup',array('as' => 'sign_up','uses' => 'UsersController@postCreate'));
+
+Route::get('/users/register',array('as' => 'register', 'uses' => 'UsersController@getRegister'));
 
 
 
@@ -25,7 +60,7 @@ Route::get('/', function()
 
 
 //Route::get('user/{cloud}',array('as'=>'authenticate', 'uses'=>'UsersController@getRegistrationPage'));
-/*
+
 Route::get('authenticate',array(
 	'as'=>'authenticate_route',
 	'uses'=>'UsersController@getRegistrationPage'
@@ -37,7 +72,7 @@ Route::get('auth/dropbox',array(
 	'uses'=>'UsersController@getCompletion'
 	));
 
-	*/
+
 
 											// home page
 Route::get('user/home',array(
@@ -84,4 +119,3 @@ Route::get('user/refresh/{cloudName}',array(
 	'as'=>'refresh_route',
 	'uses'=>'FilesController@getRefresh'
 ));
-

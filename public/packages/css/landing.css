@@ -1,0 +1,98 @@
+/*@import url(http://fonts.googleapis.com/css?family=Lemon);*/
+/*@import url(http://fonts.googleapis.com/css?family=Indie+Flower);*/
+@import url(http://fonts.googleapis.com/css?family=Covered+By+Your+Grace);
+
+html , body {
+    height: 100% !important;
+}
+.main-nav {
+    margin-bottom: 0px;
+}
+
+.jumbotron {
+    background-image: url('../img/pattern.png');
+    position: relative; /* for the bottom alignment of the downward arrow, I could not find a method to 
+                         center it. Also need to make it float so that is move down along with the 
+                         page and also changes to upward arrow as it moves down. TODO*/
+    background-color: #f4655f !important;
+    color: #ffffff;
+    height: 90%;
+}
+
+.brand {
+    /*font-family: 'Indie Flower';*/
+    font-family: 'Covered By Your Grace';
+    font-size: 5em !important;
+}
+
+.brand-small {
+    font-family: 'Covered By Your Grace';
+    font-size: 3em !important;
+}
+
+.btn-custom-common {
+    font-size: 0.8em !important;   
+}
+.btn-custom:hover {
+    color: #ffffff;
+    border-color: #ffffff;
+    background-color: #f4655f;
+}
+
+.btn-custom a:hover {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.btn-custom {
+    color: #f4655f;
+    border: 1px solid;
+    border-color: #f4655f;
+    background-color: #ffffff;
+}
+
+.btn-custom a {
+    color: #f4655f;
+    text-decoration: none;
+}
+
+.button-row {
+    margin-top: 21px;
+    margin-bottom: 10.5px;
+}
+
+
+/* downward arrow*/
+.learn-more-row {
+    margin-top: 21px;
+    margin-bottom: 10.5px;
+    position: absolute;
+    right: 30px;
+    bottom: 0px;
+}
+
+/* css for signin modal */
+
+.login {
+    padding-top: 5em !important;
+}
+
+.login .modal-header {
+    color: #f4655f;
+}
+
+.login .modal-dialog {
+    width: 400px !important;
+}
+
+.login .form-control:focus {
+  border-color: #f4655f;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(244, 101, 95, 0.6);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(244, 101, 95, 0.6);
+}
+
+.login .btn-custom {
+    padding: 7px 14px !important;
+}
+
