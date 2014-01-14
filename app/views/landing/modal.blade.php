@@ -34,10 +34,10 @@
       <div class="modal-body">
         <form role="form" method="post" action="{{ route('sign_up') }}">
             <div class="form-group">
-                <input type="firtname" name="firstname" class="form-control" placeholder="First Name">
+                <input type="firtname" name="first_name" class="form-control" placeholder="First Name">
             </div>
             <div class="form-group">
-                <input type="lastname" name="lastname" class="form-control" placeholder="Last Name">
+                <input type="lastname" name="last_name" class="form-control" placeholder="Last Name">
             </div>
             <div class="form-group">
                 <input type="email" name="email" class="form-control" placeholder="Email">
@@ -46,7 +46,7 @@
                 <input type="password" name="password" class="form-control" placeholder="Password">
             </div>
             <div class="form-group">
-                <input type="password" name="password_confirmation" class="form-control" placeholder="Password">
+                <input type="password" name="password_confirmation" class="form-control" placeholder="Confirm Password">
             </div>
           <button type="submit" class="btn btn-custom">Submit</button>
         </form><!--

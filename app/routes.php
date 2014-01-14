@@ -50,7 +50,7 @@ Route::get('/users/dashboard',function() {
 
 Route::post('/signup',array('as' => 'sign_up','uses' => 'UsersController@postCreate'));
 
-
+Route::get('/users/register',array('as' => 'register', 'uses' => 'UsersController@getRegister'));
 
 
 

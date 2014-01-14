@@ -14,7 +14,10 @@ class UsersController extends BaseController {
 
     public function postSignin() {
         if (Auth::attempt(array('email'=>Input::get('email'),'password' =>Input::get('password')))) {
-           return Redirect::to('users/dashboard')->with('message', 'You are now logged in!');
+           //Session email variable to get user data from tables
+            Session::put('email',Input::get('email'));
+
+            return Redirect::to('users/dashboard')->with('message', 'You are now logged in!');
         } else {
            return Redirect::to('users/login')
               ->with('message', 'Your username/password combination was incorrect')
@@ -29,8 +32,8 @@ class UsersController extends BaseController {
         if ($validator->passes()) {
     
             $user = new User;
-            $user->firstname = Input::get('firstname');
-            $user->lastname = Input::get('lastname');
+            $user->first_name = Input::get('first_name');
+            $user->last_name = Input::get('last_name');
             $user->email = Input::get('email');
             $user->password = Hash::make(Input::get('password'));
             $user->save();
@@ -39,10 +42,14 @@ class UsersController extends BaseController {
         // validation has passed, save user in DB
         } else {
             // validation has failed, display error messages
-            return Redirect::to('users/register')
+            return Redirect::route('register')
                 ->with('message', 'The following errors occurred')
                 ->withErrors($validator)->withInput();
         }
+    }
+
+    public function getRegister() {
+        return View::make('user.test');
     }
 
     public function getHome(){
@@ -65,7 +72,7 @@ class UsersController extends BaseController {
         $path= app_path().'/database/dropbox-app-info.json';
         $appInfo = Dropbox\AppInfo::loadFromJsonFile($path);
         $clientIdentifier = "Project-Kumo";
-        $redirectUri = "http://localhost/UnifiedCloud/public/auth/dropbox";// This needs a Https link ..only localhost 
+        $redirectUri = "http://localhost/UnifiedCloud/public/index.php/auth/dropbox";// This needs a Https link ..only localhost 
                                                                     //is allowed for http
         $csrfTokenStore = new Dropbox\ArrayEntryStore($_SESSION, 'date(format)ropbox-auth-csrf-token');
         return new Dropbox\WebAuth($appInfo, $clientIdentifier, $redirectUri, $csrfTokenStore);
