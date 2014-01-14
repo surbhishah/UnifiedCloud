@@ -12,7 +12,6 @@ class FilesController extends BaseController{
 	*
 	*	@Exceptions:UnknownCloudException,	Exception
 	*/
-	
 	// Upload	
 	public function postFile(){
 
@@ -47,8 +46,7 @@ class FilesController extends BaseController{
 		}
 			
 	}
-/************************************************************************************************/
-	
+/************************************************************************************************/	
 	/*	@params : 
 	*	fileName : name of the file to be downloaded
 	*	cloudName: Name of the cloud to which file is to be uploaded (case insensitive)
@@ -92,7 +90,6 @@ class FilesController extends BaseController{
 	*	cloudName: Name of the cloud (case insensitive)
 	*	@Exceptions:UnknownCloudException,	Exception
 	*/
-	
 	public function getFolderContents($cloudName,$folderPath){
 		try{
 			$cloudName = Input::get('cloudName');
@@ -126,7 +123,6 @@ class FilesController extends BaseController{
 	*	Otherwise metadata of the folder 
 	*	@Exceptions: UnknownCloudException, Exception
 	*/
-
 	public function getCreateFolder($cloudName, $folderPath){
 		try{
 		
@@ -140,9 +136,7 @@ class FilesController extends BaseController{
 
 			//if $result == null then folder already exists
 			return View::make('complete')
-						->with('message',$result);
-		
-
+						->with('message',$result);	
 
 		}catch(UnknownCloudException $e){
 			return View::make('complete')
@@ -155,7 +149,6 @@ class FilesController extends BaseController{
 	}
 
 /************************************************************************************************/
-
 	/*
 	*	@params : 
 	*	path : path to the file to be deleted  
@@ -187,11 +180,18 @@ class FilesController extends BaseController{
 						->with('message',$e->getMessage());
 		}
 	}
-
-
 /************************************************************************************************/
-
-
+	/*
+	*	@params : 
+	*	cloudName: Name of the cloud to be added 
+	*	@return value: returns data received from cloud 
+	*					However, nothing needs to be returned 
+	*					This function is an internal operation 
+	*	@description:	This function brings in all file information from the cloud and 
+	*					stores it in database 
+	*		
+	*	@Exceptions:UnknownCloudException,	Exception
+	*/
 public function getAddCloud($cloudName){
 		 try{
 			// Whenever user adds a new cloud, we first need to authenticate 
@@ -200,8 +200,6 @@ public function getAddCloud($cloudName){
 			// This function has been made only to check the functionality of getFullFileStructure
 			// It may not be required later 
 			// At present, I have hard coded the access token in the database 
-			
-
 			// You need USERID from the session
 			$cloudName = Input::get('cloudName');
 			// YOU NEED userID from the session 
@@ -220,7 +218,19 @@ public function getAddCloud($cloudName){
 						->with('message',$e->getMessage());
 		}
 	}
-
+/************************************************************************************************/
+	/*
+	*	@params : 
+	*	cloudName: Name of the cloud to be added 
+	*	@return value: returns data received from cloud 
+	*					However, nothing needs to be returned 
+	*					This function is an internal operation 
+	*	@description:	This function brings in information regarding files that have been modified since 
+	*					last time this function was called and 
+	*					stores it in database 
+	*		
+	*	@Exceptions:UnknownCloudException,	Exception
+	*/
 	public function getRefresh($cloudName){
 		try{
 			// Whenever user calls for a refresh or we may even call it when user logs into our application
@@ -246,7 +256,9 @@ public function getAddCloud($cloudName){
 						->with('message',$e->getMessage());
 		}	
 
-	}	
+	}
+/************************************************************************************************/
+
 
 }
 

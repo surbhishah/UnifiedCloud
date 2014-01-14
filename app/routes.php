@@ -85,4 +85,3 @@ Route::get('user/refresh/{cloudName}',array(
 	'uses'=>'FilesController@getRefresh'
 ));
 
-

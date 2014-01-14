@@ -1,6 +1,4 @@
-
 <?php
-// TODO CHNAGE TIME FORMAT OF DATA RETURNED BY Dropbox
 class Dropbox implements CloudInterface{
 	private static $clientIdentifier = "Project-Kumo";
 	private static $cloudID = '1';	
@@ -67,9 +65,7 @@ class Dropbox implements CloudInterface{
 				// user will download a file he has uploaded right now 
 				chmod($serverDestinationPath.$fileName, 0750);
 				File::delete($serverDestinationPath.$fileName);
-
 				Utility::removeDir($serverDestinationPath);
-
 			
 			}catch(Exception $e){
 				throw new Exception($e->getMessage());
@@ -147,7 +143,6 @@ class Dropbox implements CloudInterface{
 
 	}
 /************************************************************************************************/
-
 	/*
 	 *	@params : 
 	 *	'userID'				: ID of the user 
@@ -163,38 +158,35 @@ class Dropbox implements CloudInterface{
 		// For now, I am hard coding the user ID and have also hard coded the access token in db
 			$userID = '1';													// COMMENT THIS LATER
 			//$user = User::find($userID); 									// UNCOMMENT THIS LATER
-			// $path = app_path().'/accessToken.txt';			// TESTING
-			// File::append($path,'Hello Surbhi you are awesome');
 			$accessToken = UnifiedCloud::getAccessToken($userID, self::$cloudID );
 			if($accessToken == null){
 				error_log('Access token is null');
 				throw new AccessTokenNotFoundException();
 				return null;
 			}else{
-			//	File::append($path,$accessToken);		//TESTING
 				$client = new Dropbox\Client($accessToken,self::$clientIdentifier);
 				return $client;
 			}
 	}
 /************************************************************************************************/
-
-
 	/*
 	*	@params:
 	*	userID = ID of the user 
 	* 	folderPath = Path of the folder whose contents have been sought
 	*	For eg : if folderPath = /Projects/Unicloud then contents of Unicloud will be returned
 	*	@return value: Meta data of the folder and its files and folders
-	* 	@Exceptions:	
+	* 	@Exceptions:	Exception
 	*/
 	public function getFolderContents($userID, $folderPath){
 		// Get client object 
 		try{
-			$client = self::getClient($userID);
-			// Dropbox API requires that there should be no trailing slash except if it is root '/'
-			// Obtain fileMetaData from Dropbox
-			$fileMetaData=$client->getMetadataWithChildren($folderPath);
-			return $fileMetaData;
+			// $client = self::getClient($userID);
+			// // Dropbox API requires that there should be no trailing slash except if it is root '/'
+			// // Obtain fileMetaData from Dropbox
+			// $fileMetaData=$client->getMetadataWithChildren($folderPath);
+			// return $fileMetaData;
+			$fileArray = UnifiedCloud::getFolderContents($userID,self::$cloudID,$folderPath);
+			return $fileArray;
 
 		}catch(Exception $e){
 			throw new Exception($e->getMessage());
@@ -247,6 +239,16 @@ class Dropbox implements CloudInterface{
 
 	}
 /************************************************************************************************/
+	/*
+	*	@params:
+	*	userID = ID of the user 
+	*	@return value: Complete Information regarding files on user's cloud 
+	* 	@Exceptions:	Exception
+	*	@description:	This function stores complete information of a user's dropbox files 
+	*					in database of UnifiedCloud
+	*/
+
+
 // To be called when a user adds a new cloud to UnifiedCloud
 // At that time , we bring in all information from dropbox and save it to our database
 // After this we just bring the delta (ie the changes that have been made) and reflect them in our database
@@ -256,79 +258,114 @@ class Dropbox implements CloudInterface{
 			$client = self::getClient($userID);
 			// First null : cursor
 			// Second null: path_prefix
-			$data = $client->getDelta(null,null);
-			$hasMore = $data['has_more'];
-			
-			//cursor :A string that encodes the latest information that has been returned. 
-			//On the next call to /delta, pass in this value.
-			$cursor = $data['cursor'];
-			UnifiedCloud::setNewCursor($userID, self::$cloudID, $cursor);
-			$fileData = $data['entries'];
-			//reset is always true on the initial call to /delta (i.e. when no cursor is passed in). 
-			//$reset = $data['reset'];
-			foreach ($fileData as $file) {
-				$completePath = $file[1]['path'];
-				list($path, $fileName)=	Utility::splitPath($completePath);
-				UnifiedCloud::addFileInfo($fileName, $userID, self::$cloudID,$path,$file[1]['is_dir'],$file[1]['modified'],$file[1]['size'],$file[1]['rev']);
-			}
+			$i=0;
+			do{
+				$data = $client->getDelta(null,null);
+				$hasMore = $data['has_more'];// if hasMore = true then we are supposed to call 
+				// getDelta again so as to get more data
+				//cursor :A string that encodes the latest information that has been returned. 
+				//On the next call to /delta, pass in this value.
+				$cursor = $data['cursor'];
+				UnifiedCloud::setNewCursor($userID, self::$cloudID, $cursor);
+				$fileData = $data['entries'];
+				//reset is always true on the initial call to /delta (i.e. when no cursor is passed in). 
+				//$reset = $data['reset'];
+				foreach ($fileData as $file) {
+					$completePath = $file[1]['path'];
+					list($path, $fileName)=	Utility::splitPath($completePath);
+					UnifiedCloud::addFileInfo($fileName, $userID, self::$cloudID,$path,$file[1]['is_dir'],
+					Utility::changeDateFormatToDBFormat($file[1]['modified']),$file[1]['size'],$file[1]['rev']);
+				}
+
+				$i++;
+			}while($hasMore==true && $i<10);
+
 			return $data;
+
 		}catch(Exception $e){
 			throw new Exception($e->getMessage());
 		}
 	}
 /************************************************************************************************/
-	public function refreshFolder($userID, $folderPath){
+	/*
+	*	@params:
+	*	userID = ID of the user 
+	*	@return value: Data received from dropbox when refresh is called 
+	* 	@Exceptions:	Exception
+	*	@description:
+	*/
 
-	}
-/************************************************************************************************/
+	/*
+	*	This function is a way to catch up with the changes occuring to user's dropbox
+	*	First, when user adds dropbox to his account, we bring in all his file Information
+	*	from dropbox using function getFullFileStructure.
+	*	However, to catch up with the changes occuring on the cloud , this function can be 
+	*	repeatedly called so that only the changes will be sent by dropbox
+	*/
+
 	public function refreshFullFileStructure($userID){
 		try{
 			$client = self::getClient($userID);
 			$oldCursor = UnifiedCloud::getOldCursor($userID, self::$cloudID);
+
  			//Cursor  : A string that is used to keep track of your current state. 
 			//On the next call pass in this value to return delta entries 
 			//that have been recorded since the cursor was returned.
 			// if oldCursor = null , directly null will be passed to function call delta
 			// everything remains the same
+			$i=0;
+			do{
+					$data = $client->getDelta($oldCursor,null);
+					$hasMore = $data['has_more'];
+					$cursor = $data['cursor'];
+					UnifiedCloud::setNewCursor($userID, self::$cloudID, $cursor);
+					$fileData = $data['entries'];
+					$reset = $data['reset'];
+					if($reset == true){
+						 // If true, clear your local state before processing the delta entries. 
+						 // reset is always true on the initial call to /delta (i.e. when no cursor is passed in). 
+						 // Otherwise, it is true in rare situations, such as after server or account maintenance, 
+						 // or if a user deletes their app folder
+						UnifiedCloud::resetFileState($userID, self::$cloudID);
+					}
+					
+					foreach ($fileData as $file) {
+						if($file[1]==null){// Then that file has been deleted , so we need 
+											// to update our database and delete that file
+							// Dropbox treats its files as case insensitive but preserves the case 
+							// ie is the file ABC.txt then it will be saved as abc.xml in db 
+							// but to the user, it will appear to be ABC.txt
+							// This is why $file[1] is (all letters lowercase) filename of the file 
+							// This will work even if a folder is deleted 
+							list($path, $fileName)=	Utility::splitPath($file[0]);
+							$file_db = UnifiedCloud::getFileCaseInsensitive($userID, self::$cloudID, $path, $fileName);
+							if($file_db!=null){
+								$file_db->delete();
+							}					
+						}
+						else{
 
-			// $path = app_path().'/accessToken.txt';
-			// File::put($path, $oldCursor);			// TESTING
-			
+							$completePath = $file[1]['path'];
+							list($path, $fileName)=	Utility::splitPath($completePath);
+							$file_db = UnifiedCloud::getFile($userID, self::$cloudID, $path, $fileName);
+							if($file_db == null){// Does this file exist?
+								// If no then, create such a file 
+								UnifiedCloud::addFileInfo($fileName, $userID, self::$cloudID,$path,$file[1]['is_dir'],
+								Utility::changeDateFormatToDBFormat($file[1]['modified']),$file[1]['size'],$file[1]['rev']);
+							}
+							else{
+								// If yes ...ie the file exists but may have changed
+								// Delete the old entry and create a new entry
+								$file_db->delete();
+								UnifiedCloud::addFileInfo($fileName, $userID, self::$cloudID,$path,$file[1]['is_dir'],
+								Utility::changeDateFormatToDBFormat($file[1]['modified']),$file[1]['size'],$file[1]['rev']);
+							}
 
-			// First parameter  : cursor
-			// Second null: path_prefix
-			// if path_prefix= null, full file structure info is returned 
-			$data = $client->getDelta($oldCursor,null);
-			$hasMore = $data['has_more'];
-			$cursor = $data['cursor'];
-			UnifiedCloud::setNewCursor($userID, self::$cloudID, $cursor);
-			$fileData = $data['entries'];
-			$reset = $data['reset'];
-			if($reset == true){
-				 //If true, clear your local state before processing the delta entries. 
-				 //reset is always true on the initial call to /delta (i.e. when no cursor is passed in). 
-				 //Otherwise, it is true in rare situations, such as after server or account maintenance, 
-				 //or if a user deletes their app folder
-				UnifiedCloud::resetFileState($userID, self::$cloudID);
-			}
-			
-			foreach ($fileData as $file) {
-				$completePath = $file[1]['path'];
-				list($path, $fileName)=	Utility::splitPath($completePath);
-				$file_db = UnifiedCloud::getFile($userID, self::$cloudID, $path, $fileName);
-				if($file_db == null){// Does this file exist?
-					// If no then, create such a file 
-					UnifiedCloud::addFileInfo($fileName, $userID, self::$cloudID,$path,$file[1]['is_dir'],$file[1]['modified'],$file[1]['size'],$file[1]['rev']);
-				}
-				else{
-					// If yes ...ie the file exists but may have changed
-					// Delete the old entry and create a new entry
-					$file_db->delete();
-					UnifiedCloud::addFileInfo($fileName, $userID, self::$cloudID,$path,
-							$file[1]['is_dir'],$file[1]['modified'],$file[1]['size'],$file[1]['rev']);
-				}
+						}
+					}
 
-			}
+				$i++;
+			}while($hasMore==true && $i<10);
 			return $data;
 
 		}catch(Exception $e){
@@ -336,16 +373,6 @@ class Dropbox implements CloudInterface{
 		}		
 	}
 /************************************************************************************************/
-
-
-
-
-
-
-
-
-
-
 
 	
 }

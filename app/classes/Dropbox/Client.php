@@ -853,7 +853,7 @@ class Client
         }
         return array(true, $metadata);
     }
-
+    
     /**
      * A way of letting you keep up with changes to files and folders in a user's Dropbox.
      *
