@@ -9,10 +9,8 @@ class CreateTempTable extends Migration {
 		Schema::create('temp',function($table) {
 			$table->integer('fileID')->unsigned();
 			$table->foreign('fileID')->references('fileID')->on('files')->onDelete('cascade');
-			$table->text('temp_file_name');
-			$table->primary(array('fileID'));
+			//$table->primary('fileID');
 			$table->timestamps();
-
 		});
 	}
 
