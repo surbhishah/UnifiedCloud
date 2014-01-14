@@ -5,13 +5,7 @@ use Illuminate\Auth\Reminders\RemindableInterface;
 
 class User extends Eloquent implements UserInterface, RemindableInterface {
 
-	public static $rules = array(
-			'first_name'=>'required|alpha|min:1',
-			'last_name'=>'required|alpha|min:1',
-			'emailID'=>'required|email|unique:users',
-			'password'=>'required|alpha_num|between:6,20|confirmed',
-			'password_confirmation' => 'required|alpha_num|between:6,20'
-		);
+	
 
 
 	/**
@@ -20,17 +14,18 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 * @var array
 	 */
 	public static $rules = array(
-         'first_name' => 'required|alpha|min:3',
-        'last_name' => 'required|alpha|min:3',
-        'email' => 'required|email|unique:users',
-    'password' => 'required|alpha_num|between:6,12|confirmed'
-        // 'password_confirmation' => 'required|alpha_num|between:6,12'
-    );
+			'first_name'=>'required|alpha|min:1',
+			'last_name'=>'required|alpha|min:1',
+			'email'=>'required|email|unique:users',
+			'password'=>'required|alpha_num|between:6,20|confirmed',
+			'password_confirmation' => 'required|alpha_num|between:6,20'
+	);
 	/**
 	 * The database table used by the model.
 	 *
 	 * @var string
 	 */
+	
 	protected $table = 'users';
 	/**
 	 * The attributes excluded from the model's JSON form.
@@ -67,7 +62,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	public function getReminderEmail()
 	{
-		return $this->emailID;
+		return $this->email;
 	}
 
 }
