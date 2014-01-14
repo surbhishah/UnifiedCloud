@@ -15,3 +15,33 @@ Route::get('/', function()
 {
 	return View::make('hello');
 });
+
+/* test routes*/
+
+
+Route::get('/test/master', function()
+{
+	return View::make('landing.landing');
+});
+
+Route::get('/test/front', function()
+{
+	return View::make('landing.front');
+});
+
+Route::get('/test/dashboard', function()
+{
+	return View::make('dashboard.dashboard');
+});
+
+Route::get('/login',function(){
+    return View::make('user.login');
+});
+
+Route::post('/login',array('as' => 'sign_in' , 'uses' => 'UsersController@postSignin'));
+
+Route::get('/users/login',function() {
+    return View::make('user.test');
+});
+
+Route::post('/signup',array('as' => 'sign_up','uses' => 'UsersController@postCreate'));

@@ -9,7 +9,7 @@ class DatabaseSeeder extends Seeder {
 		$this->call('CloudTableSeeder');
 		$this->call('FileTableSeeder');
 		$this->call('UserCloudInfoTableSeeder');
-		
+
 	}
 
 }

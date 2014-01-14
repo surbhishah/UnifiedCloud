@@ -6,6 +6,18 @@ use Illuminate\Auth\Reminders\RemindableInterface;
 class User extends Eloquent implements UserInterface, RemindableInterface {
 
 	/**
+	 * These rules are used by Validator.
+	 *
+	 * @var array
+	 */
+	public static $rules = array(
+         'first_name' => 'required|alpha|min:3',
+        'last_name' => 'required|alpha|min:3',
+        'email' => 'required|email|unique:users',
+    'password' => 'required|alpha_num|between:6,12|confirmed'
+        // 'password_confirmation' => 'required|alpha_num|between:6,12'
+    );
+	/**
 	 * The database table used by the model.
 	 *
 	 * @var string
@@ -45,7 +57,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	public function getReminderEmail()
 	{
-		return $this->email;
+		return $this->emailID;
 	}
 
 }

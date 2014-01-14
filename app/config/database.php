@@ -57,7 +57,7 @@ return array(
 			'host'      => 'localhost',
 			'database'  => 'UnifiedCloud',
 			'username'  => 'root',
-			'password'  => 'surbhishah',
+			'password'  => 'password',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
