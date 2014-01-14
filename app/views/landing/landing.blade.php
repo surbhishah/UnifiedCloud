@@ -50,5 +50,4 @@
         </div><!-- end container -->
     </div><!-- end jumbotron -->
 @include('landing.modal')
-
 @stop

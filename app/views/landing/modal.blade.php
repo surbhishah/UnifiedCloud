@@ -45,7 +45,9 @@
             <div class="form-group">
                 <input type="password" name="password" class="form-control" placeholder="Password">
             </div>
-
+            <div class="form-group">
+                <input type="password" name="password_confirmation" class="form-control" placeholder="Password">
+            </div>
           <button type="submit" class="btn btn-custom">Submit</button>
         </form><!--
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
