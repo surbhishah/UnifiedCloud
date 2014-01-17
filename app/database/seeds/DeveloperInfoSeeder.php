@@ -14,14 +14,14 @@ class DeveloperInfoSeeder extends Seeder {
     */
 
 
-      DB::table('users')->delete();
+     /* DB::table('users')->delete();
       DB::table('users')->insert(array(
           'userID'=>'1',
-          'emailID'=> 'surbhishah81@yahoo.in',
+          'email'=> 'surbhishah81@yahoo.in',
           'first_name'  =>  'surbhi',
           'last_name'   =>  'shah',
-          'password_hash' => Hash::make('password')
-      ));
+          'password' => Hash::make('password')
+      ));*/
       
       DB::table('clouds')->delete();    
       DB::table('clouds')->insert(array(
@@ -29,21 +29,18 @@ class DeveloperInfoSeeder extends Seeder {
         "name"=>"Dropbox",
         "app_key"=>"sa62ueedrflmeqz",
         "app_secret"=>"2sdzxwtyo1qdp25",
-        "redirect_uri"=>"http://localhost/UnifiedCloud/auth/dropbox",        
-        "created_at"=>date('y-m-d h:m:s'),
-        "updated_at"=>date('y-m-d h:m:s')
+        "redirect_uri"=>"http://localhost/UnifiedCloud/auth/dropbox"
       ));
   
-      DB::table('user_cloud_info')->delete();
+      /*DB::table('user_cloud_info')->delete();
       DB::table('user_cloud_info')->insert(array(
               'userID'=>'1',
           'cloudID'=>'1', 
           'access_token'=>'PIXXPZ9wS5oAAAAAAAAAAWjrWEud9FspD2Gpz3QRvbb2HSjV_Ga3rF8Okqz8bUfG'
         
         ));
-
+*/
       
-
   }
  
 }

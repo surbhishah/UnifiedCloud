@@ -1,7 +1,12 @@
 @extends('layouts.default')
 
 @section('content')
+@include('layouts.nav.navigation')
 <div class="container">
+
+    @include('dashboard.cloudSelectModal')
+    @include('dashboard.fileUploadModal')
+    {{-- print_r($clouds) --}}
 <div class="row">
     <div class="col-xs-6 col-md-3">
         <h2>Dashboard</h2>
@@ -23,7 +28,7 @@
         <div class="btn-group-vertical btn-block">
             <button class="btn btn-primary ">
                 <span class="pull-left">Clouds</span>
-                <span class="glyphicon glyphicon-plus pull-right"></span>
+                <span class="glyphicon glyphicon-plus pull-right" data-toggle="modal" data-target="#SelectModal"></span>
             </button>
             @include('dashboard.clouds')
         <button class="btn btn-primary">
@@ -40,7 +45,7 @@
                 @include('dashboard.dashboardPanelHead')
             </div>
             <div class="panel-body">
-                <table cellspacing="0" class="table table-striped table-condensed table-hover">
+                <table cellspacing="0" class="table" id="file-explorer">
                      <thead>
                         <tr>
                              <td>
@@ -66,5 +71,19 @@
         </div>
     </div>
 </div>
+<div id="cwd"></div>
 </div>
 @endsection
+
+@section('scripts')
+    @parent
+    {{ HTML::script('packages/js/dashboard.js')}}
+    {{ HTML::script('packages/js/jquery-dateformat.js')}}
+    {{ HTML::script('packages/bootstrap/js/modal.js' )}}
+@stop
+
+@section('links')
+    @parent
+    {{ HTML::style('packages/css/dashboard.css') }}
+    {{ HTML::style('packages/css/common.css') }}
+@stop
