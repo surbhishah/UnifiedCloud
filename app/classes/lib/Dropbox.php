@@ -156,8 +156,9 @@ class Dropbox implements CloudInterface{
 		// because ultimately we always need the userID of the user
 		// Security concerns: In case attacker gets hold of userID from the session
 		// For now, I am hard coding the user ID and have also hard coded the access token in db
-			$userID = '1';													// COMMENT THIS LATER
+			//$userID = '1';													// COMMENT THIS LATER
 			//$user = User::find($userID); 									// UNCOMMENT THIS LATER
+			
 			$accessToken = UnifiedCloud::getAccessToken($userID, self::$cloudID );
 			if($accessToken == null){
 				error_log('Access token is null');
@@ -178,15 +179,26 @@ class Dropbox implements CloudInterface{
 	* 	@Exceptions:	Exception
 	*/
 	public function getFolderContents($userID, $folderPath){
-		// Get client object 
+		// Get client object
+		 
 		try{
 			// $client = self::getClient($userID);
 			// // Dropbox API requires that there should be no trailing slash except if it is root '/'
 			// // Obtain fileMetaData from Dropbox
 			// $fileMetaData=$client->getMetadataWithChildren($folderPath);
 			// return $fileMetaData;
-			$fileArray = UnifiedCloud::getFolderContents($userID,self::$cloudID,$folderPath);
-			return $fileArray;
+			
+			Log::info('getHasUserFiles values returned',array('userID' => $userID,'cloud' => self::$cloudID, 'values' => UnifiedCloud::getHasUserFiles($userID,self::$cloudID)));
+
+			if(UnifiedCloud::getHasUserFiles($userID,self::$cloudID) == false) {
+				Log::info('running getFullFileStructure');
+				$this->getFullFileStructure($userID);
+			}
+
+			$fileArrayJson = UnifiedCloud::getFolderContents($userID,self::$cloudID,$folderPath);
+
+
+			return $fileArrayJson;
 
 		}catch(Exception $e){
 			throw new Exception($e->getMessage());
@@ -271,19 +283,27 @@ class Dropbox implements CloudInterface{
 				//reset is always true on the initial call to /delta (i.e. when no cursor is passed in). 
 				//$reset = $data['reset'];
 				foreach ($fileData as $file) {
+
 					$completePath = $file[1]['path'];
 					list($path, $fileName)=	Utility::splitPath($completePath);
 					UnifiedCloud::addFileInfo($fileName, $userID, self::$cloudID,$path,$file[1]['is_dir'],
 					Utility::changeDateFormatToDBFormat($file[1]['modified']),$file[1]['size'],$file[1]['rev']);
+					//Log::info('running foreach these many times',array('file' => $fileName));
 				}
 
 				$i++;
+				//Log::Info('running DO these many times: ',array('i' => $i));
 			}while($hasMore==true && $i<10);
 
-			return $data;
+			//update user cloud info table.
+			UnifiedCloud::setHasUserFiles($userID,self::$cloudID,true);
+			Log::info('setHasUserFiles=',array('get' => UnifiedCloud::getHasUserFiles($userID,self::$cloudID)));
+			
+			//return $data;
 
 		}catch(Exception $e){
-			throw new Exception($e->getMessage());
+			Log::error($e->getMessage());
+			//throw new Exception($e->getMessage());
 		}
 	}
 /************************************************************************************************/
@@ -306,6 +326,12 @@ class Dropbox implements CloudInterface{
 	public function refreshFullFileStructure($userID){
 		try{
 			$client = self::getClient($userID);
+
+			if(UnifiedCloud::getHasUserFiles($userID,self::$cloudID) == false) {
+				$this->getFullFileStructure($userID);
+				return;
+			}
+
 			$oldCursor = UnifiedCloud::getOldCursor($userID, self::$cloudID);
 
  			//Cursor  : A string that is used to keep track of your current state. 
@@ -366,13 +392,90 @@ class Dropbox implements CloudInterface{
 
 				$i++;
 			}while($hasMore==true && $i<10);
-			return $data;
+			//return $data;
 
 		}catch(Exception $e){
 			throw new Exception($e->getMessage());
 		}		
 	}
 /************************************************************************************************/
+	public function getRegistrationPage(){
+        // Redirect user to app authentication page of dropbox
+        // uri of authentication is to be obtained using object of WebAuth class 
+        $webauth =$this->getWebAuth(); 
+        $authorizeUrl = $webauth->start();
+        return Redirect::to($authorizeUrl);
+    }
+    
 
+    private function getWebAuth(){
+        session_start();
+        
+        $path= app_path().'/database/dropbox-app-info.json';
+        $appInfo = Dropbox\AppInfo::loadFromJsonFile($path);
+        $clientIdentifier = "Project-Kumo";
+        $redirectUri = "http://localhost/UnifiedCloud/public/index.php/auth/dropbox";// This needs a Https link ..only localhost 
+                                                                    //is allowed for http
+        $csrfTokenStore = new Dropbox\ArrayEntryStore($_SESSION, 'date(format)ropbox-auth-csrf-token');
+        return new Dropbox\WebAuth($appInfo, $clientIdentifier, $redirectUri, $csrfTokenStore);
+    }
+
+
+    function getCompletion(){
+        try {
+                
+            // Get access token of the user now he has authenticated our app
+
+            //$_GET is an array of variables passed to the current script via the URL parameters.
+                
+                list($accessToken, $userId, $urlState) = $this->getWebAuth()->finish($_GET);
+//              assert($urlState === null);  // Since we didn't pass anything in start()
+                //$path =  app_path().'/accessToken.txt';
+                //File::put($path, $accessToken);
+
+                //Hard coding Dropbox id because this auth belongs to dropbox.
+                UnifiedCloud::setAccessToken(Session::get('email'),1,$accessToken);
+
+                return Redirect::route('dashboard');
+                //return View::make('complete');
+            }
+
+            catch (Dropbox\WebAuthException_BadRequest $ex) {
+               error_log("/dropbox-auth-finish: bad request: " . $ex->getMessage());
+               return View::make('user.error')
+                            ->with('message',$ex->getMessage());
+               // Respond with an HTTP 400 and display error page...
+            }
+
+            catch (Dropbox\WebAuthException_BadState $ex) {
+               // Auth session expired.  Restart the auth process.
+               header('Location: /dropbox-auth-start');
+            }
+
+            catch (Dropbox\WebAuthException_Csrf $ex) {
+               error_log("/dropbox-auth-finish: CSRF mismatch: " . $ex->getMessage());
+               return View::make('user.error')
+                            ->with('message',$ex->getMessage());
+               // Respond with HTTP 403 and display error page...
+            }
+
+            catch (Dropbox\WebAuthException_NotApproved $ex) {
+               error_log("/dropbox-auth-finish: not approved: " . $ex->getMessage());
+               return View::make('user.error')
+                            ->with('message',$ex->getMessage());
+            }
+            
+            catch (Dropbox\WebAuthException_Provider $ex) {
+               error_log("/dropbox-auth-finish: error redirect from Dropbox: " . $ex->getMessage());
+               return View::make('user.error')
+                            ->with('message',$ex->getMessage());
+            }
+            
+            catch (Dropbox\Exception $ex) {
+               error_log("/dropbox-auth-finish: error communicating with Dropbox API: " . $ex->getMessage());
+               return View::make('user.error')
+                            ->with('message',$ex->getMessage());
+            }
+    }
 	
 }
