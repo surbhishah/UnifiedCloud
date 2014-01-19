@@ -97,7 +97,7 @@ class UnifiedCloud {
 
 						->select(array('fileID','file_name','is_directory','rev'))->get()->toArray();
 
-		->select(array('file_name','last_modified_time','is_directory','size'))->get()->toJson();
+	//	->select(array('file_name','last_modified_time','is_directory','size'))->get()->toJson();
 		//toJson() can also be used in place of toArray 
 	}
 /**********************************************************************************************/

@@ -342,27 +342,3 @@ public function getAddCloud($cloudName){
 	}
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-}
