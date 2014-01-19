@@ -258,7 +258,76 @@ public function getAddCloud($cloudName){
 
 	}
 /************************************************************************************************/
+	public function getDownloadFolder(){
+			// try{
+				$cloudName = Input::get('cloudName');
+				$folderPath = Input::get('folderPath');
+				// YOU NEED userID from the session 
+				$userID = '1';									//COMMENT THIS LATER
+				$factory = new CloudFactory(); 
+				$cloud = $factory->createCloud($cloudName);
+				$result = $cloud->downloadFolder($userID,$folderPath);
+				return View::make('complete')
+							->with('message',$result);
+			
 
+
+			// }catch(UnknownCloudException $e){
+			// 		return View::make('complete')
+			// 			->with('message',$e->getMessage());			
+			// }catch(Exception $e){
+			// 		return View::make('complete')
+			// 			->with('message',$e->getMessage());
+			// }			
+			// $files = array('First.txt','Second.txt');
+			$filePath = public_path().'/test/';
+		
+	}
+	public function createZip($jsonFilePath){
+			$zip = new ZipArchive;
+			$zipfilename= 'test.zip';
+			if(file_exists($jsonFilePath)){
+				throw new Exception("Json file not found in createZip function ");
+			}
+			$fileJson= File::get($jsonFilePath);
+			$fileArray=json_decode($fileJson, true);// True for associative array 
+			foreach ($fileArray as $folderPath => $files) {
+				list($path, $folderName)=Utility::splitPath($folderPath);
+									
+			}
+			if($zip->open($zipfilename, ZipArchive::CREATE)){
+				foreach ($files as $fileName) {
+						if(file_exists($filePath.$fileName)){
+							if(is_readable($filePath.$fileName)){
+								if($zip->addFile($filePath.$fileName, $fileName)){
+
+								}
+								else{
+									throw new Exception('File could not be added to zip in createZip function ');
+
+								}
+							}
+							else{
+								throw new Exception('File not readable in createZip function ');
+							}
+						}	
+						else{
+
+							throw new Exception('File not found in createZip function');
+						}	
+				}
+			
+			}
+			else{
+				throw new Exception('Zip could not be created in createZip function ');
+			}
+			$zip->close();
+			header('Content-Type: application/zip');
+			header('Content-disposition: attachment; filename='.$zipfilename);
+			readfile($zipfilename);
+			unlink($zipfilename);
+		
+	}
 
 }
 

@@ -372,7 +372,79 @@ class Dropbox implements CloudInterface{
 			throw new Exception($e->getMessage());
 		}		
 	}
-/************************************************************************************************/
 
-	
+/************************************************************************************************/
+	public function downloadFolder($userID, $folderPath){
+		// try{
+		 		list($path, $folderName)=	Utility::splitPath($folderPath);
+				$folder = UnifiedCloud::getFile($userID, self::$cloudID, $path, $folderName );
+				$folderID = $folder->fileID;	
+				$client = self::getClient($userID);
+				$array = array();
+				$this->downloadFolderOnServer($userID,$folderPath,$client,$array);
+				$path = public_path().'/temp/dropbox/downloads/'.$folderID.'.json';
+				File::put($path,json_encode($array));
+				return $array;
+		// }catch(Exception $e){
+		// 	throw new Exception($e->getMessage());
+		// }
+	}
+	// NOTE :: THIS FUNCTION NEEDS ARRAY NOT JSON FROM UnifiedCloud::getFolderContents 
+	private function downloadFolderOnServer($userID, $folderPath,$client, &$array){
+		$serverDestinationPath = public_path().'/temp/dropbox/downloads/';
+		$files = UnifiedCloud::getFolderContentsPrecise($userID, self::$cloudID, $folderPath);
+		$array[$folderPath]=$files;
+		if($files != null){
+			foreach($files as $file){
+				if($file['is_directory']==true){
+					// Recursive call 
+					$this->downloadFolderOnServer($userID, Utility::joinPath($folderPath, $file['file_name']), $client, $array);
+				}
+				else{
+					$fileDestination = $serverDestinationPath.$file['fileID'];
+					if(UnifiedCloud::TempFileExists($file['fileID'])	){
+						// Check if the file is up to date , so get the metadata from dropbox
+						$fileMetaData = $client->getMetaData(Utility::joinPath($folderPath, $file['file_name']));
+						// Check if the rev values are same , if they are then send this file , DO NOT download
+						if($fileMetaData['rev']==$file['rev']){ //otherwise download the file
+							continue;// Do nothing for this file, go to next one
+						}
+					}// otherwise download the file 
+					$fileStream = fopen($fileDestination, 'wb');
+					$client->getFile(	Utility::joinPath($folderPath, $file['file_name']  ), $fileStream);
+					UnifiedCloud::addTempEntry($file['fileID']);
+				}
+			}
+		}
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

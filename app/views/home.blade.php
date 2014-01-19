@@ -1,3 +1,12 @@
+{{ Form::open(array('route'=>'download_folder_route', 'as'=>'download_folder','method'=>'get')) }}
+{{ Form::hidden('userID','1' )	}}
+{{ Form::hidden('cloudName','Dropbox' )	}}
+{{ Form::label('Folder Path', 'Folder Path:')	}}
+{{ Form::text('folderPath')}}			
+{{ Form::submit('Download folder ')	}}
+{{ Form::close()}}
+
+
 <br>
 <br>
 <br>

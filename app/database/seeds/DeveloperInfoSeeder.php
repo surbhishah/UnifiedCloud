@@ -17,10 +17,10 @@ class DeveloperInfoSeeder extends Seeder {
       DB::table('users')->delete();
       DB::table('users')->insert(array(
           'userID'=>'1',
-          'emailID'=> 'surbhishah81@yahoo.in',
+          'email'=> 'surbhishah81@yahoo.in',
           'first_name'  =>  'surbhi',
           'last_name'   =>  'shah',
-          'password_hash' => Hash::make('password')
+          'password' => Hash::make('password')
       ));
       
       DB::table('clouds')->delete();    

@@ -27,6 +27,14 @@ class Utility {
 		}
 		return array($path, $fileName);
  	}
+ 	public static function joinPath($path,$fileName){
+ 		if($path == '/'){
+ 			return $path.$fileName;
+ 		}
+ 		else{
+ 			return $path.'/'.$fileName;
+ 		}
+ 	}
 /***********************************************************************************************/	
 	/*
 	*	@params:

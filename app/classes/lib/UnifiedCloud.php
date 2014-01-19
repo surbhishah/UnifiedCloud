@@ -62,21 +62,6 @@ class UnifiedCloud {
 			return FileModel::where('userID','=',$userID)->where('cloudID','=',$cloudID)->where('path','=',$path)->where('file_name','=',$fileName)->get()->first();
 	}
 /**********************************************************************************************/
-/*
-	*	@params:
-	*		userID : ID of the user 
-	*		cloudID: ID of the cloud
-	*		path : Path to the file For eg /Project/UniCloud for a file at /Project/UniCloud/file.txt
-	*		fileName:	Name of the file For eg file.txt
-	*	@return value:
-	*	 	object of class FileModel
-	*	@decription : Returns the file of a user at a particular path on the cloud 
-	*
-	*/
-	public static function getFileCaseInsensitive($userID, $cloudID, $path, $fileName){
-			return FileModel::where('userID','=',$userID)->where('cloudID','=',$cloudID)->where('path','=',$path)->where('file_name','=',$fileName)->get()->first();
-	}
-/**********************************************************************************************/
 	/*
 	*	@params:
 	*		userID : ID of the user 
@@ -91,7 +76,25 @@ class UnifiedCloud {
 	*/
 	public static function getFolderContents($userID, $cloudID, $path){
 		return FileModel::where('userID','=',$userID)->where('cloudID','=',$cloudID)->where('path','=',$path)
-		->select(array('file_name','last_modified_time','is_directory','size'))->get()->toArray();
+				->select(array('file_name','last_modified_time','is_directory','size'))->get()->toArray();
+		//toJson() can also be used in place of toArray 
+	}
+/**********************************************************************************************/
+	/*
+	*	@params:
+	*		userID : ID of the user 
+	*		cloudID: ID of the cloud
+	*		path : 	Path to the folder 
+	*				For eg if path = '/Project/UniCloud'
+	*				The function shall return the contents of this folder 
+	*	@return value:
+	*				an Array of files each containing fileID, file_name, is_directory
+	*	@decription : Returns the file(s) of a user at a particular path on the cloud 
+	*
+	*/
+	public static function getFolderContentsPrecise($userID, $cloudID, $path){
+		return FileModel::where('userID','=',$userID)->where('cloudID','=',$cloudID)->where('path','=',$path)
+						->select(array('fileID','file_name','is_directory','rev'))->get()->toArray();
 		//toJson() can also be used in place of toArray 
 	}
 /**********************************************************************************************/

@@ -10,7 +10,7 @@
 | and give it the Closure to execute when that URI is requested.
 |
 */
-/*
+
 Route::get('/', function()
 {
 	return View::make('hello');
@@ -119,3 +119,13 @@ Route::get('user/refresh/{cloudName}',array(
 	'as'=>'refresh_route',
 	'uses'=>'FilesController@getRefresh'
 ));
+
+
+
+
+/// This is a test route 
+Route::get('user/download_folder',array(
+	'as'=>'download_folder_route',
+	'uses'=>'FilesController@getDownloadFolder'
+));
+
