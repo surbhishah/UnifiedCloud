@@ -19,16 +19,7 @@ html , body {
     height: 90%;
 }
 
-.brand {
-    /*font-family: 'Indie Flower';*/
-    font-family: 'Covered By Your Grace';
-    font-size: 5em !important;
-}
 
-.brand-small {
-    font-family: 'Covered By Your Grace';
-    font-size: 3em !important;
-}
 
 .btn-custom-common {
     font-size: 0.8em !important;   

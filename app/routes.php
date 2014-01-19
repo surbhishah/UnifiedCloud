@@ -11,6 +11,7 @@
 |
 */
 
+/*
 Route::get('/', function()
 {
 	return View::make('hello');
@@ -34,23 +35,26 @@ Route::get('/test/dashboard', function()
 	return View::make('dashboard.dashboard');
 });
 
-Route::get('/login',function(){
-    return View::make('user.login');
+// Route::get('/login',function(){
+//     return View::make('user.login');
+// });
+
+Route::post('user/login',array('as' => 'sign_in' , 'uses' => 'UsersController@postSignin'));
+
+Route::get('user/login',function() {
+    return View::make('landing.landing');
 });
 
-Route::post('/login',array('as' => 'sign_in' , 'uses' => 'UsersController@postSignin'));
+Route::get('user/logout', array('as' => 'logout' , 'uses' => 'UsersController@getLogout'));
 
-Route::get('/users/login',function() {
-    return View::make('user.test');
-});
+// Route::get('/users/dashboard',function() {
+//     return View::make('dashboard.dashboard');
+// });
 
-Route::get('/users/dashboard',function() {
-    return View::make('dashboard.dashboard');
-});
+Route::get('user/dashboard', array('as' => 'dashboard', 'uses' => 'UsersController@getDashboard'));
+Route::post('signup',array('as' => 'sign_up','uses' => 'UsersController@postCreate'));
 
-Route::post('/signup',array('as' => 'sign_up','uses' => 'UsersController@postCreate'));
-
-Route::get('/users/register',array('as' => 'register', 'uses' => 'UsersController@getRegister'));
+Route::get('user/register',array('as' => 'register', 'uses' => 'UsersController@getRegister'));
 
 
 
@@ -71,29 +75,29 @@ Route::get('auth/dropbox',array(
 	'as'=>'completion_route',
 	'uses'=>'UsersController@getCompletion'
 	));
-
-
-
 											// home page
 Route::get('user/home',array(
 	'as'=>'home_route',
 	'uses'=>'UsersController@getHome'
 ));
 
-												// download
-Route::get('user/download/{cloudName}/{cloudSourcePath}/{fileName}',array(
+											// download
+/*Route::get('user/download/{cloudName}/{cloudSourcePath}/{fileName}',array(
+	'as'=>'download_route',
+	'uses'=>'FilesController@getFile'
+));*/
+Route::get('user/download',array(
 	'as'=>'download_route',
 	'uses'=>'FilesController@getFile'
 ));
-
-													//upload
+											//upload
 Route::post('user/upload/{cloudName}',array(
 	'as'=>'upload_route',
 	'uses'=>'FilesController@postFile'
 ));
 
-												// get folder content
-Route::get('user/folder_content/{cloudName}/{folderPath}',array(
+											// get folder content
+Route::get('user/folder_content',array(
 	'as'=>'folder_content_route',
 	'uses'=>'FilesController@getFolderContents'
 ));

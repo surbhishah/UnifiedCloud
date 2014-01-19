@@ -1,0 +1,69 @@
+@import url(http://fonts.googleapis.com/css?family=Covered+By+Your+Grace);
+
+.clicked-row {
+	background-color: #f4655f !important;
+}
+
+.folder {
+	color: #ff34e1;
+}
+
+.control-panel .btn {
+    border: 0px !important;
+}
+
+.control-panel, .file-explorer-panel {
+    min-height: 500px;
+}
+.panel-heading {
+    padding: 0px !important;
+}
+
+.panel-body {
+    padding: 0px !important;
+}
+
+
+.breadcrumb {
+    margin-bottom: 0px !important;
+}
+
+.table {
+    margin-bottom: 0px !important;
+}
+
+#file-explorer tr {
+	padding: 15px;
+}
+
+
+#file-explorer thead tr {
+	font-size: 1.5em;
+}
+
+#file-explorer tbody tr {
+	font-size: 1.2em;
+}
+
+#file-explorer tbody tr > td:first-child {
+	cursor: pointer;
+}
+
+.cloud-controls .glyphicon {
+    font-size: 1.3em;
+    color: #595959;
+}
+
+.cloud-controls {
+    border: 0px !important;
+    box-shadow: none;
+}
+
+.cloud-controls .desc-text {
+    font-size: 1em;
+    color: #a9a9a9;
+}
+
+.breadcrumb li {
+	cursor: pointer;
+}

@@ -12,14 +12,22 @@ class UsersController extends BaseController {
         $this->beforeFilter('auth', array('only'=>array('getDashboard')));
     }
 
+    public function getDashboard() {
+        
+        $clouds = UnifiedCloud::getCloudsByEmail(Session::get('email'));
+        return View::make('dashboard.dashboard')->with('clouds',$clouds);    
+    }
+
     public function postSignin() {
         if (Auth::attempt(array('email'=>Input::get('email'),'password' =>Input::get('password')))) {
            //Session email variable to get user data from tables
             Session::put('email',Input::get('email'));
+            $clouds = UnifiedCloud::getCloudsByEmail(Session::get('email'));
 
-            return Redirect::to('users/dashboard')->with('message', 'You are now logged in!');
+            // return Redirect::route('dashboard',array('clouds' => $cloudIDArray))->with('message', 'You are now logged in!');
+            return View::make('dashboard.dashboard')->with('clouds',$clouds);
         } else {
-           return Redirect::to('users/login')
+           return Redirect::to('user/login')
               ->with('message', 'Your username/password combination was incorrect')
               ->withInput();
         }
@@ -38,7 +46,7 @@ class UsersController extends BaseController {
             $user->password = Hash::make(Input::get('password'));
             $user->save();
 
-            return Redirect::to('users/login')->with('message', 'Thanks for registering!');
+            return Redirect::to('user/login')->with('message', 'Thanks for registering!');
         // validation has passed, save user in DB
         } else {
             // validation has failed, display error messages
@@ -48,6 +56,11 @@ class UsersController extends BaseController {
         }
     }
 
+    public function getLogout() {
+        Auth::logout();
+        return Redirect::to('user/login')->with('message', 'Your are now logged out!');
+    }
+    
     public function getRegister() {
         return View::make('user.test');
     }
@@ -58,76 +71,59 @@ class UsersController extends BaseController {
     }
 
     public function getRegistrationPage(){
-        // Redirect user to app authentication page of dropbox
-        // uri of authentication is to be obtained using object of WebAuth class 
-        $webauth =$this->getWebAuth(); 
-        $authorizeUrl = $webauth->start();
-        return Redirect::to($authorizeUrl);
-    }
-    
-
-    private function getWebAuth(){
-        session_start();
+             try{
+            // Whenever user adds a new cloud, we first need to authenticate 
+            // and get access Token from the cloud and then we will fetch full file structure of 
+            // user's cloud 
+            // This function has been made only to check the functionality of getFullFileStructure
+            // It may not be required later 
+            // At present, I have hard coded the access token in the database 
+            // You need USERID from the session
+            $cloudName = Input::get('cloudName');
+            // YOU NEED userID from the session 
+            //$userID = '1';                                    //COMMENT THIS LATER
+            
+            $factory = new CloudFactory(); 
+            $cloud = $factory->createCloud($cloudName);
+            $result = $cloud->getRegistrationPage();
+            return View::make('complete')
+                        ->with('message',$result);
         
-        $path= app_path().'/database/dropbox-app-info.json';
-        $appInfo = Dropbox\AppInfo::loadFromJsonFile($path);
-        $clientIdentifier = "Project-Kumo";
-        $redirectUri = "http://localhost/UnifiedCloud/public/index.php/auth/dropbox";// This needs a Https link ..only localhost 
-                                                                    //is allowed for http
-        $csrfTokenStore = new Dropbox\ArrayEntryStore($_SESSION, 'date(format)ropbox-auth-csrf-token');
-        return new Dropbox\WebAuth($appInfo, $clientIdentifier, $redirectUri, $csrfTokenStore);
+        }catch(UnknownCloudException $e){
+             return View::make('complete')
+                        ->with('message',$e->getMessage());         
+        }catch(Exception $e){
+            return View::make('complete')
+                        ->with('message',$e->getMessage());
+        }
     }
 
-
-    function getCompletion(){
-        try {
-                
-            // Get access token of the user now he has authenticated our app
-
-            //$_GET is an array of variables passed to the current script via the URL parameters.
-                
-                list($accessToken, $userId, $urlState) = $this->getWebAuth()->finish($_GET);
-//              assert($urlState === null);  // Since we didn't pass anything in start()
-                $path =  app_path().'/accessToken.txt';
-                File::put($path, $accessToken);     
-                return View::make('complete');
-            }
-
-            catch (Dropbox\WebAuthException_BadRequest $ex) {
-               error_log("/dropbox-auth-finish: bad request: " . $ex->getMessage());
-               return View::make('user.error')
-                            ->with('message',$ex->getMessage());
-               // Respond with an HTTP 400 and display error page...
-            }
-
-            catch (Dropbox\WebAuthException_BadState $ex) {
-               // Auth session expired.  Restart the auth process.
-               header('Location: /dropbox-auth-start');
-            }
-
-            catch (Dropbox\WebAuthException_Csrf $ex) {
-               error_log("/dropbox-auth-finish: CSRF mismatch: " . $ex->getMessage());
-               return View::make('user.error')
-                            ->with('message',$ex->getMessage());
-               // Respond with HTTP 403 and display error page...
-            }
-
-            catch (Dropbox\WebAuthException_NotApproved $ex) {
-               error_log("/dropbox-auth-finish: not approved: " . $ex->getMessage());
-               return View::make('user.error')
-                            ->with('message',$ex->getMessage());
-            }
+    public function getCompletion(){
+             try{
+            // Whenever user adds a new cloud, we first need to authenticate 
+            // and get access Token from the cloud and then we will fetch full file structure of 
+            // user's cloud 
+            // This function has been made only to check the functionality of getFullFileStructure
+            // It may not be required later 
+            // At present, I have hard coded the access token in the database 
+            // You need USERID from the session
+            $cloudName = Input::get('cloudName');
+            // YOU NEED userID from the session 
+            //$userID = '1';                                    //COMMENT THIS LATER
             
-            catch (Dropbox\WebAuthException_Provider $ex) {
-               error_log("/dropbox-auth-finish: error redirect from Dropbox: " . $ex->getMessage());
-               return View::make('user.error')
-                            ->with('message',$ex->getMessage());
-            }
-            
-            catch (Dropbox\Exception $ex) {
-               error_log("/dropbox-auth-finish: error communicating with Dropbox API: " . $ex->getMessage());
-               return View::make('user.error')
-                            ->with('message',$ex->getMessage());
-            }
-    }    
+            $factory = new CloudFactory(); 
+            $cloud = $factory->createCloud($cloudName);
+            $result = $cloud->getCompletion();
+            return View::make('complete')
+                        ->with('message',$result);
+        
+        }catch(UnknownCloudException $e){
+             return View::make('complete')
+                        ->with('message',$e->getMessage());         
+        }catch(Exception $e){
+            return View::make('complete')
+                        ->with('message',$e->getMessage());
+        }
+    }
+        
 }

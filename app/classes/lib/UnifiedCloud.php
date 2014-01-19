@@ -94,7 +94,10 @@ class UnifiedCloud {
 	*/
 	public static function getFolderContentsPrecise($userID, $cloudID, $path){
 		return FileModel::where('userID','=',$userID)->where('cloudID','=',$cloudID)->where('path','=',$path)
+
 						->select(array('fileID','file_name','is_directory','rev'))->get()->toArray();
+
+		->select(array('file_name','last_modified_time','is_directory','size'))->get()->toJson();
 		//toJson() can also be used in place of toArray 
 	}
 /**********************************************************************************************/
@@ -173,4 +176,47 @@ class UnifiedCloud {
 
 	}
 /**********************************************************************************************/
+	
+	
+	public static function getCloudsByEmail($email) {
+		$userID = UnifiedCloud::getUserId($email);
+		// return DB::table('user_cloud_info')
+		// ->join('clouds',function($join){
+		// 	$join->on('user_cloud_info.cloudID','=','clouds.cloudID')
+		// 		 ->where('user_cloud_info.userID','=',UnifiedCloud::getUserId($email));
+		// })
+		// ->select('clouds.cloudID','clouds.name');
+		return DB::table('user_cloud_info')
+			->join('clouds','clouds.cloudID','=','user_cloud_info.cloudID')
+			->select('clouds.cloudID','clouds.name')
+			->where('userID','=',$userID)
+			->get();
+	}
+
+	public static function getUserId($email) {
+		//user cannot sign in without a valid email id, therefore no checking for
+		//validity of email.
+		return DB::table('users')->where('email',$email)->pluck('userID');
+	}
+
+	public static function setAccessToken($email,$cloudID,$accessToken) {
+		$userID = UnifiedCloud::getUserId($email);
+		DB::table('user_cloud_info')->insert(
+				array('userID' => $userID, 'cloudID' => $cloudID, 'access_token' => $accessToken)
+			);
+	}
+
+	public static function setHasUserFiles($userID,$cloudID,$value) {
+		$userCloudInfo = UserCloudInfo::where('userID','=',$userID)->where('cloudID','=',$cloudID)->get()->first();
+		$userCloudInfo->has_user_files = $value;
+		$userCloudInfo->save();
+	}
+
+	public static function getHasUserFiles($userID,$cloudID) {
+		Log::info('parameter passed: ',array('user' => $userID,'cloud' => $cloudID));
+		Log::info('Query result: ',array('result' => UserCloudInfo::where('userID','=',$userID)->where('cloudID','=',$cloudID)->get()->first()->pluck('has_user_files')));
+		return UserCloudInfo::where('userID','=',$userID)
+			->where('cloudID','=',$cloudID)
+			->pluck('has_user_files');
+	}
 }

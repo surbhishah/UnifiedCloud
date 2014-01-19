@@ -14,6 +14,7 @@ class CreateUserCloudInfoTable extends Migration {
 			$table->integer('cloudID')->unsigned();
 			$table->foreign('cloudID')->references('cloudID')->on('clouds')->onDelete('cascade');
 			$table->text('access_token');
+			$table->boolean('has_user_files');
 			//cursor :A string that encodes the latest information that has been returned. 
 			$table->text('cursor');
 			$table->unique(array('userID','cloudID'));

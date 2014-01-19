@@ -8,7 +8,7 @@ class CreateFilesTable extends Migration {
 	{
 		Schema::create('files',function($table) {
 			$table->increments('fileID');
-			$table->text('file_name'); // Name of the file or folder 
+			$table->string('file_name'); // Name of the file or folder 
 
 			// User ID of the user to which a file belongs
 			$table->integer('userID')->unsigned();
@@ -20,7 +20,7 @@ class CreateFilesTable extends Migration {
 
 			// Path not including the filename
 			// This path is the path of the file in the Cloud 
-			$table->text('path');
+			$table->string('path');
 			$table->boolean('is_encrypted');
 			$table->boolean('is_directory');// ADDED LATER 
 			$table->timestamp('last_modified_time');
@@ -29,6 +29,7 @@ class CreateFilesTable extends Migration {
 									// This field is also the HASH of a folder 
 									// In dropbox , documentation says that hash of a folder is rev equivalent
 			$table->timestamps();
+			//$table->unique(array('userID','file_name','path','cloudID'));
 			
 		});		
 	}

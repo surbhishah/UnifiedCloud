@@ -13,20 +13,23 @@ class FilesController extends BaseController{
 	*	@Exceptions:UnknownCloudException,	Exception
 	*/
 	// Upload	
-	public function postFile(){
+	public function postFile($cloudName){
 
 		if(Input::hasFile('userfile')){
 			try{
 
+				$userID = UnifiedCloud::getUserId(Session::get('email'));
 				$factory = new CloudFactory(); /////ASK Abhishek///////////in constructor ??
-				$cloudName= Input::get('cloudName');
+				//$cloudName= Input::get('cloudName');
 				$cloud = $factory->createCloud($cloudName);
-				$result =$cloud->upload(Input::get('userID'),
+				$result =$cloud->upload($userID,
 										Input::file('userfile'),
 										Input::get('cloudDestinationPath'));			
-				return View::make('complete')
-							->with('message',$result);
+				// return View::make('complete')
+				// 			->with('message',$result);
 
+				$cloud->refreshFullFileStructure($userID);
+				return $result;
 			}catch(UnknownCloudException $e){
 				error_log($e->getMessage());
 				return View::make('complete')
@@ -55,13 +58,13 @@ class FilesController extends BaseController{
 	*	@Exceptions:UnknownCloudException,	Exception
 	*/
 	// Download
-	public function getFile( $cloudName,$cloudSourcePath, $fileName){
+	public function getFile(){
 			try{
-				$userID = Input::get('userID');
+				$userID = UnifiedCloud::getUserId(Session::get('email'));
 				$cloudSourcePath=Input::get('cloudSourcePath');
 			 	$fileName = Input::get('fileName');
 			 	$cloudName = Input::get('cloudName');
-				$userID = '1';									// COMMENT THIS , YOU NEED USERID FROM THE SESSION
+				//$userID = '1';									// COMMENT THIS , YOU NEED USERID FROM THE SESSION
 				$factory = new CloudFactory(); /////ASK Abhishek///////////in constructor ??
 				$cloud = $factory->createCloud($cloudName);
 				$fileDestination =$cloud->download($userID, $cloudSourcePath, $fileName);			
@@ -90,18 +93,23 @@ class FilesController extends BaseController{
 	*	cloudName: Name of the cloud (case insensitive)
 	*	@Exceptions:UnknownCloudException,	Exception
 	*/
-	public function getFolderContents($cloudName,$folderPath){
+	public function getFolderContents(){
 		try{
 			$cloudName = Input::get('cloudName');
 			$folderPath = Input::get('folderPath'); 
 			
 			// YOU NEED userID from the session 
-			$userID = '1';						//COMMENT THIS LATER
+			//$userID = '1';						//COMMENT THIS LATER
+			$userID = UnifiedCloud::getUserId(Session::get('email'));
+			Log::info('sending userID: ',array('userID',$userID));
+
 			$factory = new CloudFactory(); /////ASK Abhishek///////////in constructor ??
-			$cloud = $factory->createCloud($cloudName);		
+			$cloud = $factory->createCloud($cloudName);
 			$result=$cloud->getFolderContents($userID, $folderPath);
-			return View::make('complete')
-						->with('message',$result);
+
+
+			return $result;
+			//return View::make('complete')->with('message',$result);
 			
 
 		}catch(UnknownCloudException $e){
@@ -129,7 +137,8 @@ class FilesController extends BaseController{
 			$cloudName = Input::get('cloudName');
 			$folderPath= Input::get('folderPath');
 			// YOU NEED userID from the session 
-			$userID = '1';									//COMMENT THIS LATER
+			//$userID = '1';									//COMMENT THIS LATER
+			$userID = UnifiedCloud::getUserId(Session::get('email')); 
 			$factory = new CloudFactory(); 
 			$cloud = $factory->createCloud($cloudName);
 			$result = $cloud->createFolder($userID, $folderPath);
@@ -163,7 +172,7 @@ class FilesController extends BaseController{
 			$cloudName = Input::get('cloudName');
 			$path= Input::get('path');
 			// YOU NEED userID from the session 
-			$userID = '1';									//COMMENT THIS LATER
+			//$userID = '1';									//COMMENT THIS LATER
 			$factory = new CloudFactory(); 
 			$cloud = $factory->createCloud($cloudName);
 			$result = $cloud->delete($userID,$path);
@@ -203,7 +212,8 @@ public function getAddCloud($cloudName){
 			// You need USERID from the session
 			$cloudName = Input::get('cloudName');
 			// YOU NEED userID from the session 
-			$userID = '1';									//COMMENT THIS LATER
+			//$userID = '1';									//COMMENT THIS LATER
+			
 			$factory = new CloudFactory(); 
 			$cloud = $factory->createCloud($cloudName);
 			$result = $cloud->getFullFileStructure($userID);
@@ -241,12 +251,13 @@ public function getAddCloud($cloudName){
 			
 			$cloudName = Input::get('cloudName');
 			// YOU NEED userID from the session 
-			$userID = '1';									//COMMENT THIS LATER
+			//$userID = '1';									//COMMENT THIS LATER
+			$userID = UnifiedCloud::getUserId(Session::get('email'));
 			$factory = new CloudFactory(); 
 			$cloud = $factory->createCloud($cloudName);
 			$result = $cloud->refreshFullFileStructure($userID);
-			return View::make('complete')
-						->with('message',$result);
+			//return View::make('complete')
+			//			->with('message',$result);
 		
 		}catch(UnknownCloudException $e){
 			return View::make('complete')
@@ -258,6 +269,7 @@ public function getAddCloud($cloudName){
 
 	}
 /************************************************************************************************/
+
 	public function getDownloadFolder(){
 			// try{
 				$cloudName = Input::get('cloudName');
@@ -353,3 +365,7 @@ public function getAddCloud($cloudName){
 
 
 
+=======
+	
+}
+>>>>>>> 3ce8863d422f06d8e462c33e3fd53bf218fce6ba
