@@ -365,7 +365,4 @@ public function getAddCloud($cloudName){
 
 
 
-=======
-	
 }
->>>>>>> 3ce8863d422f06d8e462c33e3fd53bf218fce6ba
