@@ -1,11 +1,27 @@
+<br>
+<br>
+<br>
+
+{{ Form::open(array('route'=>'upload_multiple_route', 'files' => true, 'as'=>'upload_multiple','method'=>'post')) }}
+{{ Form::hidden('cloudName','Dropbox' )	}}
+{{ Form::hidden('userID','1' )	}}
+{{ Form::label('cloudDestination path', 'Cloud destination without trailing slash:')	}}
+{{ Form::text('cloudDestinationPath')}}			
+{{ Form::label('file', 'File:')	}}
+{{ Form::file('files[]',array('multiple'=>true))	}}
+{{ Form::submit('Upload Files ')	}}
+{{ Form::close()	}}
+
+<br>
+<br>
+<br>
 {{ Form::open(array('route'=>'download_folder_route', 'as'=>'download_folder','method'=>'get')) }}
 {{ Form::hidden('userID','1' )	}}
-{{ Form::hidden('cloudName','Dropbox' )	}}
+{{ Form::hidden('cloudName','Dropbox') }}
 {{ Form::label('Folder Path', 'Folder Path:')	}}
-{{ Form::text('folderPath')}}			
-{{ Form::submit('Download folder ')	}}
-{{ Form::close()}}
-
+{{ Form::text('folderPath')	}}<br>
+{{ Form::submit('Download Folder')	}}
+{{ Form::close()	}}
 
 <br>
 <br>

@@ -2,7 +2,7 @@
 class Dropbox implements CloudInterface{
 	private static $clientIdentifier = "Project-Kumo";
 	private static $cloudID = '1';	
-
+	private static $cloudName = 'dropbox';// Do not change used by DownloadFolder 
 /************************************************************************************************/
 	/*
 	 *	@params : 
@@ -390,7 +390,7 @@ class Dropbox implements CloudInterface{
 						}
 					}
 
-				$i++;
+				$i++;	
 			}while($hasMore==true && $i<10);
 			//return $data;
 
@@ -482,23 +482,48 @@ class Dropbox implements CloudInterface{
     }
 /************************************************************************************************/
 
+	/*
+	*	@params:
+	*	userID = ID of the user 
+	*	folderPath = Path to the folder to be downloaded
+	*	@return value: 
+	* 	@Exceptions:	Exception
+	*	@description: Path to the zip file created 
+	*					This function calls downloadFolderOnServer and passes an array by reference
+	*/
+
 	public function downloadFolder($userID, $folderPath){
-		// try{
+		 try{
 		 		list($path, $folderName)=	Utility::splitPath($folderPath);
 				$folder = UnifiedCloud::getFile($userID, self::$cloudID, $path, $folderName );
 				$folderID = $folder->fileID;	
 				$client = self::getClient($userID);
 				$array = array();
 				$this->downloadFolderOnServer($userID,$folderPath,$client,$array);
-				$path = public_path().'/temp/dropbox/downloads/'.$folderID.'.json';
-				File::put($path,json_encode($array));
-				return $array;
-		// }catch(Exception $e){
-		// 	throw new Exception($e->getMessage());
-		// }
+				$jsonFilePath = public_path().'/temp/dropbox/downloads/'.$folderID.'.json';
+				File::put($jsonFilePath,json_encode($array));
+				return UnifiedCloud::createZip($jsonFilePath,self::$cloudName);
+
+		}catch(Exception $e){
+			throw new Exception($e->getMessage());
+		}
 	}
 /************************************************************************************************/
-	// NOTE :: THIS FUNCTION NEEDS ARRAY NOT JSON FROM UnifiedCloud::getFolderContents 
+	/*
+	*	@params:
+	*	userID = ID of the user 
+	*	folderPath = Path to the folder to be downloaded
+	*	client = client object of class Dropbox/Client.php
+	*	array = Passed by reference because we will make recursive calls to it 
+	*	@return value: None..array has been passed by reference which is what we need
+	* 	@Exceptions:	Exception
+	*	@description: the function downloadFolder calls this function to create an associative array whose 
+	*					elements are of the form folderPath => files 
+	*					This function recursively parses all the folders inside folder and their successors 
+	*					to create an array 
+	*					This array is created recursively.
+	*/
+
 	private function downloadFolderOnServer($userID, $folderPath,$client, &$array){
 		$serverDestinationPath = public_path().'/temp/dropbox/downloads/';
 		$files = UnifiedCloud::getFolderContentsPrecise($userID, self::$cloudID, $folderPath);
@@ -526,6 +551,6 @@ class Dropbox implements CloudInterface{
 			}
 		}
 	}
-	/************************************************************************************************/
-
+/************************************************************************************************/
+	
 }
