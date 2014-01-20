@@ -360,7 +360,9 @@ class Dropbox implements CloudInterface{
 			do{
 					$data = $client->getDelta($oldCursor,null);
 					$hasMore = $data['has_more'];
-					$cursor = $data['cursor'];
+					$oldCursor = $data['cursor'];// Setting oldCursor to this new cursor to pass it
+//TODO test if this works ok 						// to getDelta if has_more = true
+					
 					UnifiedCloud::setNewCursor($userID, self::$cloudID, $cursor);
 					$fileData = $data['entries'];
 					$reset = $data['reset'];
