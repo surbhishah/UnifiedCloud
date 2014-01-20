@@ -183,10 +183,7 @@ $('.cloud').click(function(){
 });
 
 $("#file-explorer tbody").on("click","a.directory",function(){
-	//alert("working!" + $(this).find('td.directory').html());
-	//var nextPath =	$(this).find('td.directory').html();
-
-	alert("working!" + $(this).html());
+	//alert("working!" + $(this).html());
 	var nextPath =	$(this).html();
 	var cwd = $('#cwd').html();
 
@@ -200,15 +197,23 @@ $("#file-explorer tbody").on("click","a.directory",function(){
 	breadcrumb.append('<li>'+nextPath+'</li>');
 	$('#cwd').html(fPath);
 
-	//TODO change this hardcoded Dropbox.
 	getFolderContents(cloud,fPath);
 });
 
 //register click on table row.
-$('#file-explorer tbody').on('click','tr',function(){
+$('#file-explorer tbody').on('click','tr',function(e){
 	//alert('clicked');
 	$('tr').not(this).removeClass('clicked-row');
     $(this).toggleClass('clicked-row'); 
+    e.stopPropagation();
+});
+
+//remove class clicked-row when tbody loses focus 
+//NOTE: focus is only associated with elements like input, table
+//cannot have that is why I'm using this trick to handle focusout. 
+$(document).on('click',function(){
+	//alert('focusout');
+	$('tr.clicked-row').removeClass('clicked-row');
 });
 
 //breacrumb controls
@@ -248,8 +253,21 @@ $('#download').on('click',function(){
 	var cwd = $('#cwd').html();
 	var file = $('#file-explorer tbody tr.clicked-row').find('a.file').html(); 
 	
+	if(typeof(file) == 'undefined') {
+		$('.container').notify('Select a file first',{
+			'arrowShow' : false,
+			'elementPosition' : 'top center',
+			'globalPosition' : 'top center',
+			'className' : 'error',
+			'autoHideDelay' : '2000',
+			'showAnimation' : 'fadeIn',
+			'hideAnimation' : 'fadeOut'
+ 		});
+	}
+	else {
 	//alert(cwd + " : "+ file);
-	window.location.href = "http://localhost/UnifiedCloud/public/index.php/user/download/?cloudName=" + cloud + "&cloudSourcePath=" + cwd + "&fileName=" + file; 
+		window.location.href = "http://localhost/UnifiedCloud/public/index.php/user/download/?cloudName=" + cloud + "&cloudSourcePath=" + cwd + "&fileName=" + file; 
+	}
 });
 
 
@@ -311,4 +329,79 @@ $('#new-folder').tooltip({
 	'trigger' : 'hover',
 	'title' : 'New Folder'
 });
+
+$('#new-folder').on('click',function(){
+	var tbody = $('tbody');
+	var tr = $('<tr></tr>');
+	tbody.prepend(tr);
+	var td = $('<td></td>');
+	var td_input = $('<td><input type="text" class="form-control" placeholder="new folder" id="new-folder-input"></td>');
+	tr.append(td_input);
+	tr.append(td);
+	var td = $('<td>Folder</td>');
+	tr.append(td);
+	var td = $('<td></td>');
+	tr.append(td);
+	$('#new-folder-input').focus();
+});
+
+$('tbody').on('focusout','#new-folder-input',function(){
+	var folderName = $('#new-folder-input').val();
+
+	createNewFolder(folderName,$(this));
+
+});
+
+$('tbody').on('keypress','#new-folder-input',function(e){
+	
+	//keyCode for Enter key is 13
+	if(e.keyCode == 13) {
+		e.preventDefault();
+
+		var folderName = $('#new-folder-input').val();
+		createNewFolder(folderName,$(this));
+	}
+});
+
+function createNewFolder(folderName,jObj) {
+		if(folderName == '') {
+		
+		//remove tr when not folder name specified
+		jObj.parent().parent().remove();
+		$('.container').notify('folder name required',{
+			'arrowShow' : false,
+			'elementPosition' : 'top center',
+			'globalPosition' : 'top center',
+			'className' : 'error',
+			'autoHideDelay' : '2000',
+			'showAnimation' : 'fadeIn',
+			'hideAnimation' : 'fadeOut'
+ 		});
+
+	} else {
+
+		var fPath = $('#cwd').html() + '/' + folderName;
+		$.ajax({
+			 type: 'GET',
+            url: 'new_folder',
+            data: {cloudName: cloud, folderPath : fPath},
+            cache: false 
+		}).done(function() {
+
+			$('.container').notify('Folder created',{
+				'arrowShow' : false,
+				'elementPosition' : 'top center',
+				'globalPosition' : 'top center',
+				'className' : 'success',
+				'autoHideDelay' : '2000',
+				'showAnimation' : 'fadeIn',
+				'hideAnimation' : 'fadeOut'
+	 		});	
+		});
+
+		jObj.parent().parent().remove();
+	}
+
+}
+
 });//end of document

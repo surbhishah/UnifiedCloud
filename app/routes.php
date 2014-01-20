@@ -102,7 +102,7 @@ Route::get('user/folder_content',array(
 ));
 
 // create folder 
-Route::get('user/new_folder/{cloudName}/{folderPath}',array(
+Route::get('user/new_folder',array(
 	'as'=>'create_folder_route',
 	'uses'=>'FilesController@getCreateFolder'
 ));

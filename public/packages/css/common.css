@@ -32,6 +32,16 @@
     font-size: 3em !important;
 }
 
+.btn-default-new {
+    background-color: #fff;
+    color: #595959;
+}
+
+.btn-default-new:hover {
+    background-color: #ddd;
+    color: #595959;
+}
+
 /* ========== for login page ============== */
 .card {
     background-color: #fff;
@@ -69,3 +79,4 @@
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(244, 101, 95, 0.6);
           box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(244, 101, 95, 0.6);
 }
+

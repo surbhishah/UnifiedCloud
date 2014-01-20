@@ -7,16 +7,17 @@
     @include('dashboard.cloudSelectModal')
     @include('dashboard.fileUploadModal')
     {{-- print_r($clouds) --}}
-<div class="row">
+<!-- <div class="row">
     <div class="col-xs-6 col-md-3">
-        <h2 class="dashboard-heading">Dashboard</h2>
+        
     </div>
     <div class="col-xs-12 col-md-9">
     </div>
 </div>
-
+ -->
 <div class="row">
     <div class="col-xs-6 col-md-3">
+        <h3 class="dashboard-heading">Dashboard</h3>
     </div>
     <div class="col-xs-12 col-md-9">
             @include('dashboard.cloudControls')
@@ -24,7 +25,7 @@
 </div>
 <div class="row">
     <div class="col-xs-6 col-md-3">
-        <div class="panel panel-default control-panel">
+        <div class="panel panel-default user-panel">
         <div class="btn-group-vertical btn-block">
             <button class="btn btn-custom ">
                 <span class="pull-left btn-label-lg">Clouds</span>
@@ -79,6 +80,7 @@
     {{ HTML::script('packages/js/dashboard.js')}}
     {{ HTML::script('packages/js/jquery-dateformat.js')}}
     {{ HTML::script('packages/bootstrap/js/modal.js' )}}
+    {{ HTML::script('packages/js/notify.js' )}}
 @stop
 
 @section('links')

@@ -131,7 +131,7 @@ class FilesController extends BaseController{
 	*	Otherwise metadata of the folder 
 	*	@Exceptions: UnknownCloudException, Exception
 	*/
-	public function getCreateFolder($cloudName, $folderPath){
+	public function getCreateFolder(){
 		try{
 		
 			$cloudName = Input::get('cloudName');
@@ -144,8 +144,7 @@ class FilesController extends BaseController{
 			$result = $cloud->createFolder($userID, $folderPath);
 
 			//if $result == null then folder already exists
-			return View::make('complete')
-						->with('message',$result);	
+			//return View::make('complete')->with('message',$result);	
 
 		}catch(UnknownCloudException $e){
 			return View::make('complete')
@@ -249,7 +248,7 @@ public function getAddCloud($cloudName){
 			// rather only the things that might have changed
 			// SAVES bandwidth
 			
-			$cloudName = Input::get('cloudName');
+			//$cloudName = Input::get('cloudName');
 			// YOU NEED userID from the session 
 			//$userID = '1';									//COMMENT THIS LATER
 			$userID = UnifiedCloud::getUserId(Session::get('email'));
