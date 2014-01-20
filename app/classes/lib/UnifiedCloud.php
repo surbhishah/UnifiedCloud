@@ -235,56 +235,56 @@ class UnifiedCloud {
 	*/	
 	// Pass static constant of cloud class as cloudName ONLY
 		public static function createZip($jsonFilePath, $cloudName){
-			if(!file_exists($jsonFilePath)){
-				throw new Exception("Json file not found in createZip function ");
-			}	
-			// Path where temp files have been stored
-			$filesDestination = public_path().'/temp/'.$cloudName.'/downloads/';
+				if(!file_exists($jsonFilePath)){
+					throw new Exception("Json file not found in createZip function ");
+				}	
+				// Path where temp files have been stored
+				$filesDestination = public_path().'/temp/'.$cloudName.'/downloads/';
+				
+				//Get file from json
+				$fileJson= File::get($jsonFilePath);
+				
+				// Map json to array
+				$fileArray=json_decode($fileJson, true);// True for associative array 
+				
+				// We assume that first element is the main folder to be zipped 
+				list($folderPath, $files )= each($fileArray);
+				list($path, $folderName)= Utility::splitPath($folderPath);
+				
+				// Zip directory
+				$zipFileName = uniqid().'___'.$folderName.'.zip';
 			
-			//Get file from json
-			$fileJson= File::get($jsonFilePath);
-			
-			// Map json to array
-			$fileArray=json_decode($fileJson, true);// True for associative array 
-			
-			// We assume that first element is the main folder to be zipped 
-			list($folderPath, $files )= each($fileArray);
-			list($path, $folderName)= Utility::splitPath($folderPath);
-			
-			// Zip directory
-			$zipFileName = uniqid().'___'.$folderName.'.zip';
-		
 
-			// Removing extraneous path . Keep path starting from the folder to be downloaded 
-			$pathLength = strlen($path);
-			foreach ($fileArray as $folderPath => $files) {
-				$newFolderPath = substr($folderPath, $pathLength);			
-				$newFileArray[$newFolderPath]= $files;
-			}
-		
-			// Create a zip			
-			$zip = new ZipArchive;
-			if(!$zip->open($zipFileName, ZipArchive::CREATE)){
-					Log::error("Zipped file could not be opened ");
-					throw new Exception('Zipped file could not be opened');
-			}
-		
-			// Add files and folders to zip 
-	        foreach($newFileArray as $folderPath => $files){
-			 	Log::info("Adding to zip ",array('folderPath',$folderPath));
-			 	foreach ($files as  $file) {
-			 		$fileLocation  = $filesDestination.$file['fileID'];
-			 		if($file['is_directory']==false && file_exists($fileLocation) == false){
-			 			Log::info("File does not exist",array('file/folder'=>$file['file_name'] , 'fileLocation'=>$fileLocation));
-			 			throw new Exception('File does not exist');		
-			 		}
-			 		$zip->addFile($fileLocation, $folderPath.'/'.$file['file_name']);
-			 	}
-			 	$zip->addEmptyDir($folderPath);
-			 }	
-			$zip->close();
-			return $zipFileName;
-	}	
+				// Removing extraneous path . Keep path starting from the folder to be downloaded 
+				$pathLength = strlen($path);
+				foreach ($fileArray as $folderPath => $files) {
+					$newFolderPath = substr($folderPath, $pathLength);			
+					$newFileArray[$newFolderPath]= $files;
+				}
+			
+				// Create a zip			
+				$zip = new ZipArchive;
+				if(!$zip->open($zipFileName, ZipArchive::CREATE)){
+						Log::error("Zipped file could not be opened ");
+						throw new Exception('Zipped file could not be opened in UnifiedCloud::createZip');
+				}
+			
+				// Add files and folders to zip 
+		        foreach($newFileArray as $folderPath => $files){
+				 	Log::info("Adding to zip ",array('folderPath',$folderPath));
+				 	foreach ($files as  $file) {
+				 		$fileLocation  = $filesDestination.$file['fileID'];
+				 		if($file['is_directory']==false && file_exists($fileLocation) == false){
+				 			Log::info("File does not exist in UnifiedCloud::createZip",array('file/folder'=>$file['file_name'] , 'fileLocation'=>$fileLocation));
+				 			throw new Exception('File does not exist');		
+				 		}
+				 		$zip->addFile($fileLocation, $folderPath.'/'.$file['file_name']);
+				 	}
+				 	$zip->addEmptyDir($folderPath);
+				 }	
+				$zip->close();
+				return $zipFileName;
+		}	
 /**********************************************************************************************/
 
 }

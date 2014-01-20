@@ -31,19 +31,19 @@ class FilesController extends BaseController{
 				$cloud->refreshFullFileStructure($userID);
 				return $result;
 			}catch(UnknownCloudException $e){
-				error_log($e->getMessage());
-				return View::make('complete')
-							->with('message',$e->getMessage().'UnknownCloudException');
-			
+				Log::info("UnknownCloudException raised in FilesController::postFile");
+				Log::error($e->getMessage());
+				throw $e;
 			}catch(Exception $e){
-				error_log($e->getMessage());
-				return View::make('complete')
-							->with('message',$e->getMessage().'Exception');
+				Log::info("Exception raised in FilesController::postFile");
+				Log::error($e->getMessage());
+				throw $e;
+				
 			}
 
 		}
 		else {
-
+//TODO			
 			return View::make('complete')
 						->with('message','Error:::Uploaded file not found');
 		}
@@ -68,20 +68,19 @@ class FilesController extends BaseController{
 				$factory = new CloudFactory(); /////ASK Abhishek///////////in constructor ??
 				$cloud = $factory->createCloud($cloudName);
 				$fileDestination =$cloud->download($userID, $cloudSourcePath, $fileName);			
-				
-	// Return the file with the response so that browser shows an option to user to download a file
-
+				// Return the file with the response so that browser shows an option to user to download a file
 				return Response::download($fileDestination,$fileName);
 
 			}catch(UnknownCloudException $e){
-				error_log($e->getMessage());
-				return View::make('complete')
-							->with('message',$e->getMessage());
-			
+				Log::info("UnknownCloudException raised in FilesController::getFile");
+				Log::error($e->getMessage());
+				throw $e;
+
 			}catch(Exception $e){
-				error_log($e->getMessage());
-				return View::make('complete')
-							->with('message',$e->getMessage());
+				Log::info("Exception raised in FilesController::getFile");
+				Log::error($e->getMessage());
+				throw $e;
+			
 			}		
 	}
 /************************************************************************************************/
@@ -113,12 +112,15 @@ class FilesController extends BaseController{
 			
 
 		}catch(UnknownCloudException $e){
-			return View::make('complete')
-						->with('message',$e->getMessage());			
-		}
-		catch(Exception $e){
-			return View::make('complete')
-						->with('message',$e->getMessage());
+				Log::info("UnknownCloudException raised in FilesController::getFile");
+				Log::error($e->getMessage());
+				throw $e;
+
+		}catch(Exception $e){
+				Log::info("Exception raised in FilesController::getFolderContents");
+				Log::error($e->getMessage());
+				throw $e;
+			
 		}
 	}
 /************************************************************************************************/
@@ -148,12 +150,15 @@ class FilesController extends BaseController{
 						->with('message',$result);	
 
 		}catch(UnknownCloudException $e){
-			return View::make('complete')
-						->with('message',$e->getMessage());			
-		}catch(Exception $e){
-			return View::make('complete')
-						->with('message',$e->getMessage());
+				Log::info("UnknownCloudException raised in FilesController::getCreateFolder");
+				Log::error($e->getMessage());
+				throw $e;
 
+		}catch(Exception $e){
+				Log::info("Exception raised in FilesController::getCreateFolder");
+				Log::error($e->getMessage());
+				throw $e;
+			
 		}
 	}
 
@@ -182,11 +187,15 @@ class FilesController extends BaseController{
 						->with('message',$result);
 		
 		}catch(UnknownCloudException $e){
-			return View::make('complete')
-						->with('message',$e->getMessage());			
+				Log::info("UnknownCloudException raised in FilesController::delete");
+				Log::error($e->getMessage());
+				throw $e;
+
 		}catch(Exception $e){
-			return View::make('complete')
-						->with('message',$e->getMessage());
+				Log::info("Exception raised in FilesController::delete");
+				Log::error($e->getMessage());
+				throw $e;
+			
 		}
 	}
 /************************************************************************************************/
@@ -221,11 +230,15 @@ public function getAddCloud($cloudName){
 						->with('message',$result);
 		
 		}catch(UnknownCloudException $e){
-			 return View::make('complete')
-						->with('message',$e->getMessage());			
+				Log::info("UnknownCloudException raised in FilesController::getAddCloud");
+				Log::error($e->getMessage());
+				throw $e;
+
 		}catch(Exception $e){
-			return View::make('complete')
-						->with('message',$e->getMessage());
+				Log::info("Exception raised in FilesController::getAddCloud");
+				Log::error($e->getMessage());
+				throw $e;
+			
 		}
 	}
 /************************************************************************************************/
@@ -260,17 +273,21 @@ public function getAddCloud($cloudName){
 			//			->with('message',$result);
 		
 		}catch(UnknownCloudException $e){
-			return View::make('complete')
-						->with('message',$e->getMessage());			
+				Log::info("UnknownCloudException raised in FilesController::getRefresh");
+				Log::error($e->getMessage());
+				throw $e;
+
 		}catch(Exception $e){
-			return View::make('complete')
-						->with('message',$e->getMessage());
-		}	
+				Log::info("Exception raised in FilesController::getRefresh");
+				Log::error($e->getMessage());
+				throw $e;
+			
+		}
 
 	}
 /************************************************************************************************/
 
-		/*
+	/*
 	*	@params : GET parameters
 	*	cloudName: Name of the cloud to be added 
 	*	userID = userID of the user 
@@ -296,15 +313,28 @@ public function getAddCloud($cloudName){
 			unlink($zipFileName);
 		
 		}catch(UnknownCloudException $e){
-			return View::make('complete')
-						->with('message',$e->getMessage());			
+				Log::info("UnknownCloudException raised in FilesController::getDownloadFolder");
+				Log::error($e->getMessage());
+				throw $e;
+
 		}catch(Exception $e){
-			return View::make('complete')
-						->with('message',$e->getMessage());
-		}	
+				Log::info("Exception raised in FilesController::getDownloadFolder");
+				Log::error($e->getMessage());
+				throw $e;
+			
+		}
 
 	}
 /************************************************************************************************/
+	/*
+	*	@params : GET parameters
+	*	cloudName: Name of the cloud to be added 
+	*	userID = userID of the user 
+	* 	files = array which holds multiple files 
+	*	@return value: returns zip file to be downloaded by user 
+	*	@description:	This function is called when user wants to upload multiple files
+	*	@Exceptions:UnknownCloudException,	Exception
+	*/
 	public function postUploadMultiple(){
 		try{
 			
@@ -325,12 +355,15 @@ public function getAddCloud($cloudName){
 						->with('message',$result);
 				
 		}catch(UnknownCloudException $e){
-			return View::make('complete')
-						->with('message',$e->getMessage());			
+				Log::info("UnknownCloudException raised in FilesController::postUploadMultiple");
+				Log::error($e->getMessage());
+				throw $e;
+
 		}catch(Exception $e){
-			return View::make('complete')
-						->with('message',$e->getMessage());
-		}	
+				Log::info("Exception raised in FilesController::postUploadMultiple");
+				Log::error($e->getMessage());
+				throw $e;
+		}
 
 		
 	}	
