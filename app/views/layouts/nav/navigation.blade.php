@@ -13,7 +13,7 @@
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
            <ul class="nav navbar-nav navbar-right">
             @if(!Auth::check())
-              <li class="active"><a href="#">Sign in</a></li>
+              <li><a href="#">Sign in</a></li>
               <li><a href="#">Sign up</a></li>
             @else 
               <li>{{ HTML::link('user/logout', 'Logout') }}</li>

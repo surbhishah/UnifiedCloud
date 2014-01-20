@@ -23,7 +23,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-xs-12 text-center">
-                    <h1 class="white brand">Kumo.</h1>
+                    <h1 class="white brand brand-shadow">Kumo.</h1>
                     <h3 class="">Unifying every cloud you own into one. <br />Join us to enjoy our services!</h3>
                 </div><!-- end col-->
             </div><!--end row -->

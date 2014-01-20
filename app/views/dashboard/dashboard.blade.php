@@ -9,7 +9,7 @@
     {{-- print_r($clouds) --}}
 <div class="row">
     <div class="col-xs-6 col-md-3">
-        <h2>Dashboard</h2>
+        <h2 class="dashboard-heading">Dashboard</h2>
     </div>
     <div class="col-xs-12 col-md-9">
     </div>
@@ -26,16 +26,15 @@
     <div class="col-xs-6 col-md-3">
         <div class="panel panel-default control-panel">
         <div class="btn-group-vertical btn-block">
-            <button class="btn btn-primary ">
-                <span class="pull-left">Clouds</span>
+            <button class="btn btn-custom ">
+                <span class="pull-left btn-label-lg">Clouds</span>
                 <span class="glyphicon glyphicon-plus pull-right" data-toggle="modal" data-target="#SelectModal"></span>
             </button>
             @include('dashboard.clouds')
-        <button class="btn btn-primary">
-            <span class="pull-left">Account Settings</span>
+        <button class="btn btn-custom ">
+            <span class="pull-left btn-label-lg">Account Settings</span>
             <span class="glyphicon glyphicon-cog pull-right"></span>
         </button>
-        <button class="btn btn-default"></button>
         </div><!-- vertical btn group-->
         </div><!-- control panel-->
     </div>
@@ -49,16 +48,16 @@
                      <thead>
                         <tr>
                              <td>
-                                <strong>Name</strong>
+                                Name
                             </td>
                             <td>
-                                <strong>Modified On</strong>
+                                Modified On
                             </td>
                             <td>
-                                <strong>Size</strong>
+                                Size
                             </td>
                             <td>
-                                <strong>Type</strong>
+                                Type
                             </td>
                         </tr>
                      </thead>
@@ -67,7 +66,7 @@
                         </tbody>
                 </table>
             </div><!-- panel-body -->
-            <div class="panel-footer"></div>
+            
         </div>
     </div>
 </div>
