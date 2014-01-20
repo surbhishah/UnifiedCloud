@@ -20,16 +20,16 @@ class UsersController extends BaseController {
 
     public function postSignin() {
         if (Auth::attempt(array('email'=>Input::get('email'),'password' =>Input::get('password')))) {
+           
            //Session email variable to get user data from tables
             Session::put('email',Input::get('email'));
             $clouds = UnifiedCloud::getCloudsByEmail(Session::get('email'));
 
-            // return Redirect::route('dashboard',array('clouds' => $cloudIDArray))->with('message', 'You are now logged in!');
             return View::make('dashboard.dashboard')->with('clouds',$clouds);
         } else {
-           return Redirect::to('user/login')
-              ->with('message', 'Your username/password combination was incorrect')
-              ->withInput();
+           return Redirect::route('sign_in_page')
+              ->with('message', 'Incorrect email or password')
+              ->withInput(Input::except('password'));
         }
     }
 
@@ -46,30 +46,21 @@ class UsersController extends BaseController {
             $user->password = Hash::make(Input::get('password'));
             $user->save();
 
-            return Redirect::to('user/login')->with('message', 'Thanks for registering!');
-        // validation has passed, save user in DB
+            return Redirect::route('landing')->with('message', 'Thanks for registering!');
+        // validation passed, save user in DB
         } else {
-            // validation has failed, display error messages
-            return Redirect::route('register')
+            // validation failed, display error messages
+            return Redirect::to('signup')
                 ->with('message', 'The following errors occurred')
-                ->withErrors($validator)->withInput();
+                ->withErrors($validator)->withInput(Input::except('password'));
         }
     }
 
     public function getLogout() {
         Auth::logout();
-        return Redirect::to('user/login')->with('message', 'Your are now logged out!');
+        return Redirect::route('landing')->with('message', 'Your are now logged out!');
     }
     
-    public function getRegister() {
-        return View::make('user.test');
-    }
-
-    public function getHome(){
-
-        return View::make('home');
-    }
-
     public function getRegistrationPage(){
              try{
             // Whenever user adds a new cloud, we first need to authenticate 
