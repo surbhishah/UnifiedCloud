@@ -8,6 +8,50 @@ function testFunction(str) {
 	});
 }
 
+
+function getReadableSize(size) {
+	if(size < 1024) {
+		return size.toString() + " Bytes";
+	}
+	else if(size >= 1024 && size < 1048576) {
+		return (size/1024).toString() + "Kb";
+	}
+	else if(size >= 1048576 && size < 1073741824) {
+		return (size/1048576).toString() + "Mb";
+	} else {
+		return(size/1073741824).toString() + "Gb";
+	}
+}	
+
+/*
+* @parem: string file extension
+* @return: associative array: class for glyphicon
+*							ext for extension
+*/
+function getClassFromExtension(ext) {
+	var result = {};
+	if(ext == 'png' || ext == 'jpeg' || ext == 'jpg' || ext == 'gif') {
+		result['class'] = 'glyphicon glyphicon-picture';
+		result['ext'] = 'Image';
+		return result;
+	}
+	else if(ext == 'mp3') {
+		result['class'] = 'glyphicon glyphicon-music';
+		result['ext'] = 'Music';
+		return result;
+	}
+	else if(ext == 'avi' || ext == 'mp4' || ext == 'wmv' || ext == 'mkv') {
+		result['class'] = 'glyphicon glyphicon-film';
+		result['ext'] = 'Video';
+		return result;	
+	} 
+	else {
+		result['class'] = 'glyphicon glyphicon-file';
+		result['ext'] = "Document";
+		return result;
+	}
+}
+
 function getFolderContents(cloud,fPath) {
 	$.ajax({
 		type:"GET",
@@ -30,20 +74,26 @@ function getFolderContents(cloud,fPath) {
 		//tbody.addClass(cloud);
 		tbody.empty();
 		$.each(jsonData,function(i,file){
+			var ext, extClass;
+
 			if(file.is_directory == '1') {
 				var tr=$("<tr class='folder'></tr>");
 				tbody.append(tr);
-				var td = $("<td class='directory'>" + file.file_name +"</td>" );
+				var td = $("<td><span class='glyphicon glyphicon-folder-close'></span><a  href='#' class='directory'>" + file.file_name +"</a></td>" );
 				tr.append(td);
 			} else {
 				var tr=$("<tr></tr>");
 				tbody.append(tr);
-				var td = $("<td>" + file.file_name +"</td>" );
+
+				//getting file extension
+				ext = file.file_name.split('.').pop();
+				extClass = getClassFromExtension(ext);
+				var td = $('<td><span class="' + extClass['class'] + '"></span><a href="#" class="file">' + file.file_name +'</a></td>' );
 				tr.append(td);
 			}
 
 			//getting extension of file
-			var ext = file.file_name.split('.').pop();
+			//ext = file.file_name.split('.').pop();
 
 			//using jqery-dateformat plugin to get more readable date data.
 			var td = $("<td>" + $.format.prettyDate(file.last_modified_time) +"</td>" );
@@ -55,9 +105,9 @@ function getFolderContents(cloud,fPath) {
 				var td = $("<td>Folder</td>" );
 				tr.append(td);
 			} else {
-				var td = $("<td>" + file.size +"</td>" );
+				var td = $("<td>" + getReadableSize(file.size) +"</td>" );
 				tr.append(td);
-				var td = $("<td>" + ext +"</td>" );
+				var td = $("<td>" + extClass['ext'] +"</td>" );
 				tr.append(td);
 
 			}
@@ -132,9 +182,12 @@ $('.cloud').click(function(){
 	getFolderContents(cloud,fPath);
 });
 
-$("#file-explorer tbody").on("click","tr.folder",function(){
+$("#file-explorer tbody").on("click","a.directory",function(){
 	//alert("working!" + $(this).find('td.directory').html());
-	var nextPath =	$(this).find('td.directory').html();
+	//var nextPath =	$(this).find('td.directory').html();
+
+	alert("working!" + $(this).html());
+	var nextPath =	$(this).html();
 	var cwd = $('#cwd').html();
 
 	//get breadcrumb list
@@ -183,12 +236,17 @@ $('.breadcrumb').on('click','li',function(){
 });
 
 //download
+$('#download').tooltip({
+	'trigger' : 'hover',
+	'title' : 'Download'
+});
+
 $('#download').on('click',function(){
 	//alert("working!");
 
 	//set variables for ajax call
 	var cwd = $('#cwd').html();
-	var file = $('#file-explorer tbody tr.clicked-row').find('td').html(); 
+	var file = $('#file-explorer tbody tr.clicked-row').find('a.file').html(); 
 	
 	//alert(cwd + " : "+ file);
 	window.location.href = "http://localhost/UnifiedCloud/public/index.php/user/download/?cloudName=" + cloud + "&cloudSourcePath=" + cwd + "&fileName=" + file; 
@@ -196,6 +254,11 @@ $('#download').on('click',function(){
 
 
 //upload
+$('#upload').tooltip({
+	'trigger' : 'hover',
+	'title' : 'Upload'
+});
+
 $('#fileUploadForm').submit(function(e) {
        	e.preventDefault();
 
@@ -220,6 +283,11 @@ $('#fileUploadForm').submit(function(e) {
 
 
 //refresh
+$('#refresh').tooltip({
+	'trigger' : 'hover',
+	'title' : 'Refresh'
+});
+
 $('#refresh').on('click',function(){
 	$.ajax({
 		type:"GET",
@@ -232,4 +300,15 @@ $('#refresh').on('click',function(){
 	getFolderContents(cloud,$('#cwd').html());
 });
 
+//settings
+$('#settings').tooltip({
+	'trigger' : 'hover',
+	'title' : 'Settings'
+});
+
+//new-folder
+$('#new-folder').tooltip({
+	'trigger' : 'hover',
+	'title' : 'New Folder'
+});
 });//end of document
