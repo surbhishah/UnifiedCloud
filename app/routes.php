@@ -66,13 +66,13 @@ Route::get('user/dashboard', array(
 //Route::get('user/{cloud}',array('as'=>'authenticate', 'uses'=>'UsersController@getRegistrationPage'));
 
 // Route to user authentication
-Route::get('authenticate',array(
+Route::get('authenticate/{cloudName}',array(
 	'as'=>'authenticate_route',
 	'uses'=>'UsersController@getRegistrationPage'
 	));
 
 //authorization from dropbox
-Route::get('auth/dropbox',array(
+Route::get('auth/{cloudName}',array(
 	'as'=>'completion_route',
 	'uses'=>'UsersController@getCompletion'
 	));

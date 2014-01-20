@@ -61,7 +61,7 @@ class UsersController extends BaseController {
         return Redirect::route('landing')->with('message', 'Your are now logged out!');
     }
     
-    public function getRegistrationPage(){
+    public function getRegistrationPage($cloudName){
              try{
             // Whenever user adds a new cloud, we first need to authenticate 
             // and get access Token from the cloud and then we will fetch full file structure of 
@@ -69,52 +69,45 @@ class UsersController extends BaseController {
             // This function has been made only to check the functionality of getFullFileStructure
             // It may not be required later 
             // At present, I have hard coded the access token in the database 
-            // You need USERID from the session
-            $cloudName = Input::get('cloudName');
-            // YOU NEED userID from the session 
-            //$userID = '1';                                    //COMMENT THIS LATER
             
             $factory = new CloudFactory(); 
             $cloud = $factory->createCloud($cloudName);
-            $result = $cloud->getRegistrationPage();
-            return View::make('complete')
-                        ->with('message',$result);
+            return $cloud->getRegistrationPage();
+            //return View::make('complete')->with('message',$result);
         
         }catch(UnknownCloudException $e){
-             return View::make('complete')
-                        ->with('message',$e->getMessage());         
+            Log::info('UnknownCloudException raised in UsersController::getRegistrationPage',array('cloudName' => $cloudName));
+            Log::error($e);
+
         }catch(Exception $e){
-            return View::make('complete')
-                        ->with('message',$e->getMessage());
+            Log::info('Exception raised in UsersController::getRegistrationPage',array('cloudName' => $cloudName));
+            Log::error($e);
+
         }
     }
 
-    public function getCompletion(){
-             try{
+    public function getCompletion($cloudName){
+       try{
             // Whenever user adds a new cloud, we first need to authenticate 
             // and get access Token from the cloud and then we will fetch full file structure of 
             // user's cloud 
             // This function has been made only to check the functionality of getFullFileStructure
             // It may not be required later 
             // At present, I have hard coded the access token in the database 
-            // You need USERID from the session
-            $cloudName = Input::get('cloudName');
-            // YOU NEED userID from the session 
-            //$userID = '1';                                    //COMMENT THIS LATER
-            
-            $factory = new CloudFactory(); 
-            $cloud = $factory->createCloud($cloudName);
-            $result = $cloud->getCompletion();
-            return View::make('complete')
-                        ->with('message',$result);
+
+        $factory = new CloudFactory(); 
+        $cloud = $factory->createCloud($cloudName);
+        return $cloud->getCompletion();
+            //return View::make('complete')->with('message',$result);
         
         }catch(UnknownCloudException $e){
-             return View::make('complete')
-                        ->with('message',$e->getMessage());         
+            Log::info('UnknownCloudException raised in UsersController::getCompletion',array('cloudName' => $cloudName));
+            Log::error($e);
+
         }catch(Exception $e){
-            return View::make('complete')
-                        ->with('message',$e->getMessage());
+            Log::info('Exception raised in UsersController::getCompletion',array('cloudName' => $cloudName));
+            Log::error($e);
+
         }
-    }
-        
+    }        
 }

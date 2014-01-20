@@ -347,9 +347,7 @@ $('#new-folder').on('click',function(){
 
 $('tbody').on('focusout','#new-folder-input',function(){
 	var folderName = $('#new-folder-input').val();
-
 	createNewFolder(folderName,$(this));
-
 });
 
 $('tbody').on('keypress','#new-folder-input',function(e){

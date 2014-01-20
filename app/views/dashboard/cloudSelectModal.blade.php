@@ -6,7 +6,7 @@
         <h4 class="modal-title">Select Clouds</h4>
       </div>
       <div class="modal-body">
-        <a href="{{ route('authenticate_route') }}"><img src={{ asset('packages/img/dropbox-icon.png') }}></a>
+        <a href="{{ route('authenticate_route',array('cloudName' => 'Dropbox')) }}"><img src={{ asset('packages/img/dropbox-icon.png') }}></a>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->

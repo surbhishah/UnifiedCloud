@@ -100,7 +100,7 @@ class FilesController extends BaseController{
 			// YOU NEED userID from the session 
 			//$userID = '1';						//COMMENT THIS LATER
 			$userID = UnifiedCloud::getUserId(Session::get('email'));
-			Log::info('sending userID: ',array('userID',$userID));
+			//Log::info('from FilesController::getFolderCOntents sending userID: ',array('userID',$userID));
 
 			$factory = new CloudFactory(); /////ASK Abhishek///////////in constructor ??
 			$cloud = $factory->createCloud($cloudName);

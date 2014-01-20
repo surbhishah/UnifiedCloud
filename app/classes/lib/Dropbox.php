@@ -199,16 +199,13 @@ class Dropbox implements CloudInterface{
 			// $fileMetaData=$client->getMetadataWithChildren($folderPath);
 			// return $fileMetaData;
 			
-			Log::info('getHasUserFiles values returned',array('userID' => $userID,'cloud' => self::$cloudID, 'values' => UnifiedCloud::getHasUserFiles($userID,self::$cloudID)));
+			//Log::info('getHasUserFiles checked in Dropbox::getFolderContents',array('userID' => $userID,'cloud' => self::$cloudID, 'values' => UnifiedCloud::getHasUserFiles($userID,self::$cloudID)));
 
 			if(UnifiedCloud::getHasUserFiles($userID,self::$cloudID) == false) {
-				Log::info('running getFullFileStructure');
+				//Log::info('running getFullFileStructure');
 				$this->getFullFileStructure($userID);
 			}
-
 			$fileArrayJson = UnifiedCloud::getFolderContents($userID,self::$cloudID,$folderPath);
-
-
 			return $fileArrayJson;
 
 		}catch(Exception $e){
@@ -287,15 +284,18 @@ class Dropbox implements CloudInterface{
 			// First null : cursor
 			// Second null: path_prefix
 			$i=0;
+			$cursor = null;
 			do{
-				$data = $client->getDelta(null,null);
+				$data = $client->getDelta($cursor,null);
 				$hasMore = $data['has_more'];// if hasMore = true then we are supposed to call 
+				Log::info('from Dropbox::getFullFileStructure hasMore',array('hasMore' => $hasMore));
 				// getDelta again so as to get more data
 				//cursor :A string that encodes the latest information that has been returned. 
 				//On the next call to /delta, pass in this value.
 				$cursor = $data['cursor'];
 				UnifiedCloud::setNewCursor($userID, self::$cloudID, $cursor);
 				$fileData = $data['entries'];
+				Log::info('data received: ',array('data' => serialize($fileData)));
 				//reset is always true on the initial call to /delta (i.e. when no cursor is passed in). 
 				//$reset = $data['reset'];
 				foreach ($fileData as $file) {
@@ -313,7 +313,7 @@ class Dropbox implements CloudInterface{
 
 			//update user cloud info table.
 			UnifiedCloud::setHasUserFiles($userID,self::$cloudID,true);
-			Log::info('setHasUserFiles=',array('get' => UnifiedCloud::getHasUserFiles($userID,self::$cloudID)));
+			Log::info('setHasUserFiles set in Dropbox::getFullFileStructure',array('get' => UnifiedCloud::getHasUserFiles($userID,self::$cloudID)));
 			
 			//return $data;
 
