@@ -19,16 +19,20 @@ html , body {
     height: 90%;
 }
 
+.brand-shadow {
+    text-shadow: 0px -2px 5px rgba(134, 13, 9, 0.4);
+}
 
 
 .btn-custom-common {
     font-size: 0.8em !important;   
 }
-.btn-custom:hover {
-    color: #ffffff;
-    border-color: #ffffff;
-    background-color: #f4655f;
+
+.btn-custom a {
+    color: #f4655f;
+    text-decoration: none;
 }
+
 
 .btn-custom a:hover {
     color: #ffffff;
@@ -42,10 +46,12 @@ html , body {
     background-color: #ffffff;
 }
 
-.btn-custom a {
-    color: #f4655f;
-    text-decoration: none;
+.btn-custom:hover {
+    color: #ffffff;
+    border-color: #ffffff;
+    background-color: #f4655f;
 }
+
 
 .button-row {
     margin-top: 21px;
@@ -87,3 +93,7 @@ html , body {
     padding: 7px 14px !important;
 }
 
+/* ====== css for signup and signin pages ===== */
+.hide {
+    display: none;
+}

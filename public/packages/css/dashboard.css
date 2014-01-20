@@ -1,11 +1,44 @@
 @import url(http://fonts.googleapis.com/css?family=Covered+By+Your+Grace);
 
 .clicked-row {
-	background-color: #f4655f !important;
+	background-color: #fbc8c6 !important;
 }
 
-.folder {
-	color: #ff34e1;
+.btn-custom {
+    color: #f4655f;
+    border: 1px solid;
+    border-color: #f4655f;
+    background-color: #ffffff;
+}
+
+.btn-custom:hover {
+    color: #ffffff;
+    border-color: #ffffff;
+    background-color: #f4655f;
+}
+
+.btn-label-lg {
+    font-size: 1.2em;
+}
+
+.panel , .file-explorer-panel .panel-heading {
+    border: 0px !important;
+}
+
+tbody {
+	color: #7e7e7e;
+}
+
+tbody a {
+    color: #7e7e7e;
+}
+
+tbody a:hover {
+    color: #7e7e7e;
+}
+
+tbody tr:hover {
+    background-color: #fcdad9;
 }
 
 .control-panel .btn {
@@ -23,7 +56,6 @@
     padding: 0px !important;
 }
 
-
 .breadcrumb {
     margin-bottom: 0px !important;
 }
@@ -38,7 +70,8 @@
 
 
 #file-explorer thead tr {
-	font-size: 1.5em;
+	font-size: 1.4em;
+    color: #595959;
 }
 
 #file-explorer tbody tr {
@@ -49,21 +82,43 @@
 	cursor: pointer;
 }
 
-.cloud-controls .glyphicon {
+.cloud-control-buttons .glyphicon {
     font-size: 1.3em;
+    cursor: pointer;
     color: #595959;
 }
+
+.cloud-control-buttons .glyphicon:hover {
+    color: #8a8a8a;
+}
+
+.cloud-control-buttons li {
+    margin-left: 5px;
+}
+
 
 .cloud-controls {
     border: 0px !important;
     box-shadow: none;
 }
 
-.cloud-controls .desc-text {
+/*.cloud-controls .desc-text {
     font-size: 1em;
     color: #a9a9a9;
 }
-
+*/
 .breadcrumb li {
 	cursor: pointer;
+    font-size: 1.2em;
+    color: #ac110c;
+}
+
+tbody .glyphicon {
+    font-size: 1.2em;
+    margin-right: 10px;
+}
+
+.dashboard-heading {
+    font-size: 3em;
+    color: #f4655f;
 }
