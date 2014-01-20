@@ -51,6 +51,8 @@ Log::useFiles(storage_path().'/logs/laravel.log');
 App::error(function(Exception $exception, $code)
 {
 	Log::error($exception);
+	Log::info("Info: ", array('*****Code*****'=>$code));
+	Log::info("\n");
 });
 
 /*

@@ -57,7 +57,7 @@ return array(
 			'host'      => 'localhost',
 			'database'  => 'UnifiedCloud',
 			'username'  => 'root',
-			'password'  => 'password',
+			'password'  => 'surbhishah',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
@@ -72,7 +72,7 @@ return array(
 			'charset'  => 'utf8',
 			'prefix'   => '',
 			'schema'   => 'public',
-		),
+			),
 
 		'sqlsrv' => array(
 			'driver'   => 'sqlsrv',

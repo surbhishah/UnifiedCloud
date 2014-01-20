@@ -61,7 +61,6 @@ class UnifiedCloud {
 	public static function getFile($userID, $cloudID, $path, $fileName){
 			return FileModel::where('userID','=',$userID)->where('cloudID','=',$cloudID)->where('path','=',$path)->where('file_name','=',$fileName)->get()->first();
 	}
-
 /**********************************************************************************************/
 	/*
 	*	@params:
@@ -77,8 +76,27 @@ class UnifiedCloud {
 	*/
 	public static function getFolderContents($userID, $cloudID, $path){
 		return FileModel::where('userID','=',$userID)->where('cloudID','=',$cloudID)->where('path','=',$path)
-		->select(array('file_name','last_modified_time','is_directory','size'))->get()->toJson();
+				->select(array('file_name','last_modified_time','is_directory','size'))->get()->toArray();
 		//toJson() can also be used in place of toArray 
+	}
+/**********************************************************************************************/
+	/*
+	*	@params:
+	*		userID : ID of the user 
+	*		cloudID: ID of the cloud
+	*		path : 	Path to the folder 
+	*				For eg if path = '/Project/UniCloud'
+	*				The function shall return the contents of this folder 
+	*	@return value:
+	*				an Array of files each containing fileID, file_name, is_directory
+	*	@decription : Returns the file(s) of a user at a particular path on the cloud 
+	*
+	*/
+	public static function getFolderContentsPrecise($userID, $cloudID, $path){
+		return FileModel::where('userID','=',$userID)->where('cloudID','=',$cloudID)->where('path','=',$path)
+
+						->select(array('fileID','file_name','is_directory','rev'))->get()->toArray();
+
 	}
 /**********************************************************************************************/
 	/*
@@ -199,4 +217,74 @@ class UnifiedCloud {
 			->where('cloudID','=',$cloudID)
 			->pluck('has_user_files');
 	}
+/**********************************************************************************************/
+
+	/*
+	*	@params:
+	*		jsonFilePath : path to the json file created by downloadFolder function
+	*						This json must be of the form folder=>files 
+
+	*					
+	*		cloudName : Name of the cloud ..but note that this name will be used to access that folder
+	*					under public/temp so the name is not case insensitive 
+	*					Make a static private constant in the respective cloud class and pass it
+	*	@return value:
+	*	 	Returns the name of the new zip file created . This file should be sent to user and then deleted
+	*	@decription : Creates a zip file with all subfolders and files and returns it 
+	*
+	*/	
+	// Pass static constant of cloud class as cloudName ONLY
+		public static function createZip($jsonFilePath, $cloudName){
+				if(!file_exists($jsonFilePath)){
+					throw new Exception("Json file not found in createZip function ");
+				}	
+				// Path where temp files have been stored
+				$filesDestination = public_path().'/temp/'.$cloudName.'/downloads/';
+				
+				//Get file from json
+				$fileJson= File::get($jsonFilePath);
+				
+				// Map json to array
+				$fileArray=json_decode($fileJson, true);// True for associative array 
+				
+				// We assume that first element is the main folder to be zipped 
+				list($folderPath, $files )= each($fileArray);
+				list($path, $folderName)= Utility::splitPath($folderPath);
+				
+				// Zip directory
+				$zipFileName = uniqid().'___'.$folderName.'.zip';
+			
+
+				// Removing extraneous path . Keep path starting from the folder to be downloaded 
+				$pathLength = strlen($path);
+				foreach ($fileArray as $folderPath => $files) {
+					$newFolderPath = substr($folderPath, $pathLength);			
+					$newFileArray[$newFolderPath]= $files;
+				}
+			
+				// Create a zip			
+				$zip = new ZipArchive;
+				if(!$zip->open($zipFileName, ZipArchive::CREATE)){
+						Log::error("Zipped file could not be opened ");
+						throw new Exception('Zipped file could not be opened in UnifiedCloud::createZip');
+				}
+			
+				// Add files and folders to zip 
+		        foreach($newFileArray as $folderPath => $files){
+				 	Log::info("Adding to zip ",array('folderPath',$folderPath));
+				 	foreach ($files as  $file) {
+				 		$fileLocation  = $filesDestination.$file['fileID'];
+				 		if($file['is_directory']==false && file_exists($fileLocation) == false){
+				 			Log::info("File does not exist in UnifiedCloud::createZip",array('file/folder'=>$file['file_name'] , 'fileLocation'=>$fileLocation));
+				 			throw new Exception('File does not exist');		
+				 		}
+				 		$zip->addFile($fileLocation, $folderPath.'/'.$file['file_name']);
+				 	}
+				 	$zip->addEmptyDir($folderPath);
+				 }	
+				$zip->close();
+				return $zipFileName;
+		}	
+/**********************************************************************************************/
+
 }

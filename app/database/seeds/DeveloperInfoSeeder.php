@@ -21,6 +21,7 @@ class DeveloperInfoSeeder extends Seeder {
           'first_name'  =>  'surbhi',
           'last_name'   =>  'shah',
           'password' => Hash::make('password')
+      ));
       ));*/
       
       DB::table('clouds')->delete();    
