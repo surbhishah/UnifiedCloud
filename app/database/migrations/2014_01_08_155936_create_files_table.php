@@ -29,7 +29,7 @@ class CreateFilesTable extends Migration {
 									// This field is also the HASH of a folder 
 									// In dropbox , documentation says that hash of a folder is rev equivalent
 			$table->timestamps();
-			//$table->unique(array('userID','file_name','path','cloudID'));
+			$table->unique(array('userID','file_name','path','cloudID'));
 			
 		});		
 	}

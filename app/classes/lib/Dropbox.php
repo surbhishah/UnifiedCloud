@@ -288,14 +288,14 @@ class Dropbox implements CloudInterface{
 			do{
 				$data = $client->getDelta($cursor,null);
 				$hasMore = $data['has_more'];// if hasMore = true then we are supposed to call 
-				Log::info('from Dropbox::getFullFileStructure hasMore',array('hasMore' => $hasMore));
+			//	Log::info('from Dropbox::getFullFileStructure hasMore',array('hasMore' => $hasMore));
 				// getDelta again so as to get more data
 				//cursor :A string that encodes the latest information that has been returned. 
 				//On the next call to /delta, pass in this value.
 				$cursor = $data['cursor'];
 				UnifiedCloud::setNewCursor($userID, self::$cloudID, $cursor);
 				$fileData = $data['entries'];
-				Log::info('data received: ',array('data' => serialize($fileData)));
+			//	Log::info('data received: ',array('data' => serialize($fileData)));
 				//reset is always true on the initial call to /delta (i.e. when no cursor is passed in). 
 				//$reset = $data['reset'];
 				foreach ($fileData as $file) {
@@ -360,7 +360,9 @@ class Dropbox implements CloudInterface{
 			do{
 					$data = $client->getDelta($oldCursor,null);
 					$hasMore = $data['has_more'];
-					$cursor = $data['cursor'];
+					$oldCursor = $data['cursor'];// Setting oldCursor to this new cursor to pass it
+//TODO test if this works ok 						// to getDelta if has_more = true
+					
 					UnifiedCloud::setNewCursor($userID, self::$cloudID, $cursor);
 					$fileData = $data['entries'];
 					$reset = $data['reset'];
