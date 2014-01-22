@@ -454,11 +454,11 @@ class Dropbox implements CloudInterface{
 	        session_start();
 	        $path= app_path().'/database/dropbox-app-info.json';
 	        $appInfo = Dropbox\AppInfo::loadFromJsonFile($path);
-	        $clientIdentifier = "Project-Kumo";
-	        $redirectUri = "http://localhost/UnifiedCloud/public/index.php/auth/dropbox";// This needs a Https link ..only localhost 
+	        //$clientIdentifier = "Project-Kumo";
+	        $redirectUri = "http://localhost/UnifiedCloud/public/auth/dropbox";// This needs a Https link ..only localhost 
 	                                                                    //is allowed for http
 	        $csrfTokenStore = new Dropbox\ArrayEntryStore($_SESSION, 'date(format)ropbox-auth-csrf-token');
-	        return new Dropbox\WebAuth($appInfo, $clientIdentifier, $redirectUri, $csrfTokenStore);
+	        return new Dropbox\WebAuth($appInfo, self::$clientIdentifier, $redirectUri, $csrfTokenStore);
     	
     	}catch(Exception $e){
 				Log::info("Exception raised in Dropbox::getWebAuth");
@@ -484,15 +484,10 @@ class Dropbox implements CloudInterface{
             //$_GET is an array of variables passed to the current script via the URL parameters.
                 
                 list($accessToken, $userId, $urlState) = $this->getWebAuth()->finish($_GET);
-//              assert($urlState === null);  // Since we didn't pass anything in start()
-                //$path =  app_path().'/accessToken.txt';
-                //File::put($path, $accessToken);
-
                 //Hard coding Dropbox id because this auth belongs to dropbox.
                 UnifiedCloud::setAccessToken(Session::get('email'),self::$cloudID,$accessToken);
 
                 return Redirect::route('dashboard');
-                //return View::make('complete');
             }
             catch (Dropbox\WebAuthException_BadRequest $ex) {
                Log::info("Dropbox\WebAuthException_BadRequest raised in Dropbox::getCompletion");
