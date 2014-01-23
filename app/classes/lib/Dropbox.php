@@ -1,18 +1,18 @@
 <?php
 class Dropbox implements CloudInterface{
 	private static $clientIdentifier = "Project-Kumo";
-	private static $cloudID = '1';	
-	private static $cloudName = 'dropbox';// Do not change used by DownloadFolder 
+	private static $cloudID = '1';
+	private static $cloudName = 'dropbox';// Do not change used by DownloadFolder
 /************************************************************************************************/
 	/*
-	 *	@params : 
-	 *	'userID'				: ID of the user 
+	 *	@params :
+	 *	'userID'				: ID of the user
 	 *	'userfile' 				: File uploaded by the user
-	 *	'cloudDestinationPath': The path where the file is to be uploaded 	
+	 *	'cloudDestinationPath': The path where the file is to be uploaded
 	 *	For eg : if cloudDestinationPath =  '/Project/Files' then file will be uploaded at '/Project/Files/[filename]'
 	 *			if cloudDestinationPath='/' then file will be uploaded at '/[filename]'
 	 *	@return value : if file upload is successful then this method returns Metadata of that file
-	 *	@exceptions: Exception	
+	 *	@exceptions: Exception
 	*/
 	public function upload($userID, $userfile, $cloudDestinationPath){
 			$result = null;
@@ -25,7 +25,7 @@ class Dropbox implements CloudInterface{
 				}
 
 				$serverDestinationPath = public_path().'/temp/dropbox/uploads/'.$userID.'/';
-				
+
 				// Get the file from the form
 				$file = $userfile;
 
@@ -38,7 +38,7 @@ class Dropbox implements CloudInterface{
 				// Open the "stream" of the file so that it can be uploaded on the cloud
 				$fileStream = fopen($serverDestinationPath.$fileName, 'rb');
 
-				// Get client object 
+				// Get client object
 				$client = $this->getClient($userID);
 
 				// Upload file using client , This method returns the metadata of the file uploaded
@@ -51,29 +51,29 @@ class Dropbox implements CloudInterface{
 				}
 				$result = $client->uploadFile($cloudDestinationFullPath, Dropbox\WriteMode::add(), $fileStream);
 
-				// Update UnifiedCloud database that a new file has been uploaded 
-//				UnifiedCloud::addFileInfo($fileName, $userID,self::$cloudID, $cloudDestinationPath, 
+				// Update UnifiedCloud database that a new file has been uploaded
+//				UnifiedCloud::addFileInfo($fileName, $userID,self::$cloudID, $cloudDestinationPath,
 //					$result['is_dir'],$result['modified'],$result['size'],$result['rev']);
-			
+
 
 				// DO NOT UPDATE THIS may create inconsistencies
-				// Rather, bring in delta from dropbox so that 
+				// Rather, bring in delta from dropbox so that
 				// there is no chance of an inconsistency
-				// CALL refresh Folder or something like that	
+				// CALL refresh Folder or something like that
 
-				// Delete the file on the server, Deleting the files because it is highly unlikely that 	
-				// user will download a file he has uploaded right now 
+				// Delete the file on the server, Deleting the files because it is highly unlikely that
+				// user will download a file he has uploaded right now
 				chmod($serverDestinationPath.$fileName, 0750);
 				File::delete($serverDestinationPath.$fileName);
 				Utility::removeDir($serverDestinationPath);
-			
+
 			}catch(Exception $e){
 				Log::info("Exception raised in Dropbox::upload");
-				Log::error($e);				
+				Log::error($e);
 				throw $e;
 			}
-			// If upload failed $result will have null 
-			// If upload was successful $result will have Metadata of the file 
+			// If upload failed $result will have null
+			// If upload was successful $result will have Metadata of the file
 			return $result;
 
 		}
@@ -81,18 +81,18 @@ class Dropbox implements CloudInterface{
 
 	/*
 	 *	@params : must contain 'userID', 'fileName' and 'cloudSourcePath'
-	 *	'userID'				: ID of the user 
+	 *	'userID'				: ID of the user
 	 *	'fileName' 				: Name of the file
 	 *	'cloudSourcePath': The path from where file is to be downloaded
-	 *	
+	 *
 	 *	For eg : if cloudSourcePath =  '/Project/Files' then file will be downloaded from '/Project/Files/[filename]'
-	 *	@return value: fileDestination : Path on server where file is saved  
+	 *	@return value: fileDestination : Path on server where file is saved
 	 *	@exceptions: Exception
 	*/
 	public function download($userID, $cloudSourcePath, $fileName){
-	
+
 		$serverDestinationPath = public_path().'/temp/dropbox/downloads/';
-		
+
 		 try{
 			if($cloudSourcePath=='/'){
 				$cloudFullSourcePath = $cloudSourcePath.$fileName;
@@ -110,11 +110,11 @@ class Dropbox implements CloudInterface{
 			}
 			$fileID = $file->fileID;										//UNCOMMENT THIS LATER
 //			$fileID='1';													//COMMENT THIS LATER
-			
+
 
 			// Check if file with this fileID is already present on the server, if yes DO NOT download
 			// However, we also need to check if the file is up-to-date
-			// fileDestination = destination of file on our server 
+			// fileDestination = destination of file on our server
 			$fileDestination= $serverDestinationPath.$fileID;
 // SEE THIS ONCE AGAIN
 			if(UnifiedCloud::TempFileExists($fileID)	){
@@ -124,40 +124,40 @@ class Dropbox implements CloudInterface{
 				if($fileMetaData['rev']==$file->rev){ //otherwise download the file
 						return $fileDestination;
 					}
-			}// otherwise download the file 
-					
-	
+			}// otherwise download the file
+
+
 			// Open the "stream" of the file so that file coming from dropbox can be saved to it
 			$fileStream=fopen($fileDestination, "wb");
-	
+
 			// Download file from Dropbox
-			$result=$client->getFile($cloudFullSourcePath.'/'.$fileName, $fileStream);	
-			
+			$result=$client->getFile($cloudFullSourcePath.'/'.$fileName, $fileStream);
+
 			// Update the database table temp that we have stored this file on server
-			UnifiedCloud::addTempEntry($fileID);	
+			UnifiedCloud::addTempEntry($fileID);
 			// return the destination on the server where the file is saved
 			return $fileDestination;
 
 		}catch(Exception $e){
 				Log::info("Exception raised in Dropbox::download",
 					array('userID'=>$userID, 'cloudSourcePath'=>$cloudSourcePath, 'fileName'=>$fileName));
-				Log::error($e);				
+				Log::error($e);
 				throw $e;
 		}
-			
+
 
 	}
 /************************************************************************************************/
 	/*
-	 *	@params : 
-	 *	'userID'				: ID of the user 
+	 *	@params :
+	 *	'userID'				: ID of the user
 	 *	@return value: instance of Dropbox/Client class
 	 *	@exceptions: AccessTokenNotFoundException
 	*/
 	private function getClient($userID){
-		// We can save email ID of the user in session or 
+		// We can save email ID of the user in session or
 		// we can save the user ID directly
-		// This will prevent one query on the database 
+		// This will prevent one query on the database
 		// because ultimately we always need the userID of the user
 		// Security concerns: In case attacker gets hold of userID from the session
 		// For now, I am hard coding the user ID and have also hard coded the access token in db
@@ -175,7 +175,7 @@ class Dropbox implements CloudInterface{
 				}
 			}catch(Exception $e){
 				Log::info("Exception raised in Dropbox::getClient",array('userID'=>$userID));
-				Log::error($e);				
+				Log::error($e);
 				throw $e;
 			}
 
@@ -183,7 +183,7 @@ class Dropbox implements CloudInterface{
 /************************************************************************************************/
 	/*
 	*	@params:
-	*	userID = ID of the user 
+	*	userID = ID of the user
 	* 	folderPath = Path of the folder whose contents have been sought
 	*	For eg : if folderPath = /Projects/Unicloud then contents of Unicloud will be returned
 	*	@return value: Meta data of the folder and its files and folders
@@ -191,14 +191,14 @@ class Dropbox implements CloudInterface{
 	*/
 	public function getFolderContents($userID, $folderPath){
 		// Get client object
-		 
+
 		try{
 			// $client = self::getClient($userID);
 			// // Dropbox API requires that there should be no trailing slash except if it is root '/'
 			// // Obtain fileMetaData from Dropbox
 			// $fileMetaData=$client->getMetadataWithChildren($folderPath);
 			// return $fileMetaData;
-			
+
 			//Log::info('getHasUserFiles checked in Dropbox::getFolderContents',array('userID' => $userID,'cloud' => self::$cloudID, 'values' => UnifiedCloud::getHasUserFiles($userID,self::$cloudID)));
 
 			if(UnifiedCloud::getHasUserFiles($userID,self::$cloudID) == false) {
@@ -210,66 +210,66 @@ class Dropbox implements CloudInterface{
 
 		}catch(Exception $e){
 				Log::info("Exception raised in Dropbox::getClient",array('userID'=>$userID));
-				Log::error($e);				
+				Log::error($e);
 				throw $e;
-		}	
-	}	
+		}
+	}
 /************************************************************************************************/
 	/*
 	*	@params:
-	*	userID = ID of the user 
-	* 	folderPath = Path of the folder to be created 
-	*	For eg : if folderPath = /Projects/Unicloud then Unicloud folder will be created 
-	*	@return value: Meta data of the new folder 
+	*	userID = ID of the user
+	* 	folderPath = Path of the folder to be created
+	*	For eg : if folderPath = /Projects/Unicloud then Unicloud folder will be created
+	*	@return value: Meta data of the new folder
 	* 	@Exceptions:	Exception
 	*/
 	public function createFolder($userID, $folderPath){
 		try{
-			// We cannot create root directory 
+			// We cannot create root directory
 			if($folderPath == '/'){
 				throw new Exception('Invalid folder path passed to createFolder function in Dropbox.php');
 			}
 			// Remove the trailing /
 			$client = self::getClient($userID);
 			return $client->createFolder($folderPath);
-		
+
 		}catch(Exception $e){
 				Log::info("Exception raised in Dropbox::createFolder",array('userID'=>$userID,'folderPath'=>$folderPath));
-				Log::error($e);				
+				Log::error($e);
 				throw $e;
 		}
 	}
 /************************************************************************************************/
 	/*
 	*	@params:
-	*	userID = ID of the user 
-	* 	path = Path of the file/folder to be deleted 
-	*	For eg : if folderPath = /Projects/Unicloud then Unicloud folder will be deleted  
-	*	@return value: Meta data of the new folder 
+	*	userID = ID of the user
+	* 	path = Path of the file/folder to be deleted
+	*	For eg : if folderPath = /Projects/Unicloud then Unicloud folder will be deleted
+	*	@return value: Meta data of the new folder
 	* 	@Exceptions:	Exception
 	*/
 	public function delete($userID , $path){
 		try{
 			$client = self::getClient($userID);
-			if($path == '/'){	
+			if($path == '/'){
 				throw new Exception('Invalid folder path passed to delete function in Dropbox.php');
-			}			
+			}
 			$result =$client->delete($path);
 			return $result;
 
 		}catch(Exception $e){
 				Log::info("Exception raised in Dropbox::delete",array('userID'=>$userID, 'path'=>$path));
-				Log::error($e);				
+				Log::error($e);
 				throw $e;
 		}
 	}
 /************************************************************************************************/
 	/*
 	*	@params:
-	*	userID = ID of the user 
-	*	@return value: Complete Information regarding files on user's cloud 
+	*	userID = ID of the user
+	*	@return value: Complete Information regarding files on user's cloud
 	* 	@Exceptions:	Exception
-	*	@description:	This function stores complete information of a user's dropbox files 
+	*	@description:	This function stores complete information of a user's dropbox files
 	*					in database of UnifiedCloud
 	*/
 
@@ -287,16 +287,16 @@ class Dropbox implements CloudInterface{
 			$cursor = null;
 			do{
 				$data = $client->getDelta($cursor,null);
-				$hasMore = $data['has_more'];// if hasMore = true then we are supposed to call 
+				$hasMore = $data['has_more'];// if hasMore = true then we are supposed to call
 			//	Log::info('from Dropbox::getFullFileStructure hasMore',array('hasMore' => $hasMore));
 				// getDelta again so as to get more data
-				//cursor :A string that encodes the latest information that has been returned. 
+				//cursor :A string that encodes the latest information that has been returned.
 				//On the next call to /delta, pass in this value.
 				$cursor = $data['cursor'];
 				UnifiedCloud::setNewCursor($userID, self::$cloudID, $cursor);
 				$fileData = $data['entries'];
 			//	Log::info('data received: ',array('data' => serialize($fileData)));
-				//reset is always true on the initial call to /delta (i.e. when no cursor is passed in). 
+				//reset is always true on the initial call to /delta (i.e. when no cursor is passed in).
 				//$reset = $data['reset'];
 				foreach ($fileData as $file) {
 
@@ -314,20 +314,20 @@ class Dropbox implements CloudInterface{
 			//update user cloud info table.
 			UnifiedCloud::setHasUserFiles($userID,self::$cloudID,true);
 			Log::info('setHasUserFiles set in Dropbox::getFullFileStructure',array('get' => UnifiedCloud::getHasUserFiles($userID,self::$cloudID)));
-			
+
 			//return $data;
 
 		}catch(Exception $e){
 				Log::info("Exception raised in Dropbox::getFullFileStructure",array('userID'=>$userID));
-				Log::error($e);				
+				Log::error($e);
 				throw $e;
 		}
 	}
 /************************************************************************************************/
 	/*
 	*	@params:
-	*	userID = ID of the user 
-	*	@return value: Data received from dropbox when refresh is called 
+	*	userID = ID of the user
+	*	@return value: Data received from dropbox when refresh is called
 	* 	@Exceptions:	Exception
 	*	@description:
 	*/
@@ -336,7 +336,7 @@ class Dropbox implements CloudInterface{
 	*	This function is a way to catch up with the changes occuring to user's dropbox
 	*	First, when user adds dropbox to his account, we bring in all his file Information
 	*	from dropbox using function getFullFileStructure.
-	*	However, to catch up with the changes occuring on the cloud , this function can be 
+	*	However, to catch up with the changes occuring on the cloud , this function can be
 	*	repeatedly called so that only the changes will be sent by dropbox
 	*/
 
@@ -351,8 +351,8 @@ class Dropbox implements CloudInterface{
 
 			$oldCursor = UnifiedCloud::getOldCursor($userID, self::$cloudID);
 
- 			//Cursor  : A string that is used to keep track of your current state. 
-			//On the next call pass in this value to return delta entries 
+ 			//Cursor  : A string that is used to keep track of your current state.
+			//On the next call pass in this value to return delta entries
 			//that have been recorded since the cursor was returned.
 			// if oldCursor = null , directly null will be passed to function call delta
 			// everything remains the same
@@ -362,31 +362,31 @@ class Dropbox implements CloudInterface{
 					$hasMore = $data['has_more'];
 					$oldCursor = $data['cursor'];// Setting oldCursor to this new cursor to pass it
 //TODO test if this works ok 						// to getDelta if has_more = true
-					
-					UnifiedCloud::setNewCursor($userID, self::$cloudID, $cursor);
+
+					UnifiedCloud::setNewCursor($userID, self::$cloudID, $oldCursor);
 					$fileData = $data['entries'];
 					$reset = $data['reset'];
 					if($reset == true){
-						 // If true, clear your local state before processing the delta entries. 
-						 // reset is always true on the initial call to /delta (i.e. when no cursor is passed in). 
-						 // Otherwise, it is true in rare situations, such as after server or account maintenance, 
+						 // If true, clear your local state before processing the delta entries.
+						 // reset is always true on the initial call to /delta (i.e. when no cursor is passed in).
+						 // Otherwise, it is true in rare situations, such as after server or account maintenance,
 						 // or if a user deletes their app folder
 						UnifiedCloud::resetFileState($userID, self::$cloudID);
 					}
-					
+
 					foreach ($fileData as $file) {
-						if($file[1]==null){// Then that file has been deleted , so we need 
+						if($file[1]==null){// Then that file has been deleted , so we need
 											// to update our database and delete that file
-							// Dropbox treats its files as case insensitive but preserves the case 
-							// ie is the file ABC.txt then it will be saved as abc.xml in db 
+							// Dropbox treats its files as case insensitive but preserves the case
+							// ie is the file ABC.txt then it will be saved as abc.xml in db
 							// but to the user, it will appear to be ABC.txt
-							// This is why $file[1] is (all letters lowercase) filename of the file 
-							// This will work even if a folder is deleted 
+							// This is why $file[1] is (all letters lowercase) filename of the file
+							// This will work even if a folder is deleted
 							list($path, $fileName)=	Utility::splitPath($file[0]);
 							$file_db = UnifiedCloud::getFileCaseInsensitive($userID, self::$cloudID, $path, $fileName);
 							if($file_db!=null){
 								$file_db->delete();
-							}					
+							}
 						}
 						else{
 
@@ -394,7 +394,7 @@ class Dropbox implements CloudInterface{
 							list($path, $fileName)=	Utility::splitPath($completePath);
 							$file_db = UnifiedCloud::getFile($userID, self::$cloudID, $path, $fileName);
 							if($file_db == null){// Does this file exist?
-								// If no then, create such a file 
+								// If no then, create such a file
 								UnifiedCloud::addFileInfo($fileName, $userID, self::$cloudID,$path,$file[1]['is_dir'],
 								Utility::changeDateFormatToDBFormat($file[1]['modified']),$file[1]['size'],$file[1]['rev']);
 							}
@@ -409,13 +409,13 @@ class Dropbox implements CloudInterface{
 						}
 					}
 
-				$i++;	
+				$i++;
 			}while($hasMore==true && $i<10);
 			//return $data;
 
 		}catch(Exception $e){
 				Log::info("Exception raised in Dropbox::refreshFullFileStructure",array('userID'=>$userID));
-				Log::error($e);				
+				Log::error($e);
 				throw $e;
 		}
 	}
@@ -429,18 +429,18 @@ class Dropbox implements CloudInterface{
 	*/
 	public function getRegistrationPage(){
         // Redirect user to app authentication page of dropbox
-        // uri of authentication is to be obtained using object of WebAuth class 
+        // uri of authentication is to be obtained using object of WebAuth class
         try{
-	        $webauth =$this->getWebAuth(); 
+	        $webauth =$this->getWebAuth();
 	        $authorizeUrl = $webauth->start();
 	        return Redirect::to($authorizeUrl);
 		}catch(Exception $e){
 				Log::info("Exception raised in Dropbox::getRegistrationPage");
-				Log::error($e);				
+				Log::error($e);
 				throw $e;
 		}
     }
-    
+
 /************************************************************************************************/
 	/*
 	*	@params: None
@@ -448,12 +448,13 @@ class Dropbox implements CloudInterface{
 	*	@return value: This function returns an object of Dropbox\WebAuth class
 	* 	@Exceptions:	Exception
 	*/
-  // TODO  Redirect URI 
+  // TODO  Redirect URI
     private function getWebAuth(){
     	try{
 	        session_start();
 	        $path= app_path().'/database/dropbox-app-info.json';
 	        $appInfo = Dropbox\AppInfo::loadFromJsonFile($path);
+
 	        //$clientIdentifier = "Project-Kumo";
 	        $redirectUri = "http://localhost/UnifiedCloud/public/auth/dropbox";// This needs a Https link ..only localhost 
 	                                                                    //is allowed for http
@@ -462,7 +463,7 @@ class Dropbox implements CloudInterface{
     	
     	}catch(Exception $e){
 				Log::info("Exception raised in Dropbox::getWebAuth");
-				Log::error($e);				
+				Log::error($e);
 				throw $e;
 		}
     }
@@ -474,15 +475,15 @@ class Dropbox implements CloudInterface{
 	*	@return value: 	This function returns an object of Dropbox\WebAuth class
 	* 	@Exceptions:	Exception
 	*	@description: 	This function takes in GET parameters returned by dropbox and
-	*					Sets accessToken of the user 				
+	*					Sets accessToken of the user
 	*/
     function getCompletion(){
         try {
-                
+
             // Get access token of the user now he has authenticated our app
 
             //$_GET is an array of variables passed to the current script via the URL parameters.
-                
+
                 list($accessToken, $userId, $urlState) = $this->getWebAuth()->finish($_GET);
                 //Hard coding Dropbox id because this auth belongs to dropbox.
                 UnifiedCloud::setAccessToken(Session::get('email'),self::$cloudID,$accessToken);
@@ -509,7 +510,7 @@ class Dropbox implements CloudInterface{
                Log::info("Dropbox\WebAuthException_NotApproved raised in Dropbox::getCompletion");
                Log::error($ex);
                throw $ex;
-			 }            
+			 }
             catch (Dropbox\WebAuthException_Provider $ex) {
                Log::info("Dropbox\WebAuthException_Provider raised in Dropbox::getCompletion");
                Log::error($ex);
@@ -525,11 +526,11 @@ class Dropbox implements CloudInterface{
 
 	/*
 	*	@params:
-	*	userID = ID of the user 
+	*	userID = ID of the user
 	*	folderPath = Path to the folder to be downloaded
-	*	@return value: 
+	*	@return value:
 	* 	@Exceptions:	Exception
-	*	@description: Path to the zip file created 
+	*	@description: Path to the zip file created
 	*					This function calls downloadFolderOnServer and passes an array by reference
 	*/
 
@@ -537,7 +538,7 @@ class Dropbox implements CloudInterface{
 		 try{
 		 		list($path, $folderName)=	Utility::splitPath($folderPath);
 				$folder = UnifiedCloud::getFile($userID, self::$cloudID, $path, $folderName );
-				$folderID = $folder->fileID;	
+				$folderID = $folder->fileID;
 				$client = self::getClient($userID);
 				$array = array();
 				$this->downloadFolderOnServer($userID,$folderPath,$client,$array);
@@ -554,16 +555,16 @@ class Dropbox implements CloudInterface{
 /************************************************************************************************/
 	/*
 	*	@params:
-	*	userID = ID of the user 
+	*	userID = ID of the user
 	*	folderPath = Path to the folder to be downloaded
 	*	client = client object of class Dropbox/Client.php
-	*	array = Passed by reference because we will make recursive calls to it 
+	*	array = Passed by reference because we will make recursive calls to it
 	*	@return value: None..array has been passed by reference which is what we need
 	* 	@Exceptions:	Exception
-	*	@description: the function downloadFolder calls this function to create an associative array whose 
-	*					elements are of the form folderPath => files 
-	*					This function recursively parses all the folders inside folder and their successors 
-	*					to create an array 
+	*	@description: the function downloadFolder calls this function to create an associative array whose
+	*					elements are of the form folderPath => files
+	*					This function recursively parses all the folders inside folder and their successors
+	*					to create an array
 	*					This array is created recursively.
 	*/
 
@@ -575,7 +576,7 @@ class Dropbox implements CloudInterface{
 				if($files != null){
 					foreach($files as $file){
 						if($file['is_directory']==true){
-							// Recursive call 
+							// Recursive call
 							$this->downloadFolderOnServer($userID, Utility::joinPath($folderPath, $file['file_name']), $client, $array);
 						}
 						else{
@@ -587,7 +588,7 @@ class Dropbox implements CloudInterface{
 								if($fileMetaData['rev']==$file['rev']){ //otherwise download the file
 									continue;// Do nothing for this file, go to next one
 								}
-							}// otherwise download the file 
+							}// otherwise download the file
 							$fileStream = fopen($fileDestination, 'wb');
 							$client->getFile(	Utility::joinPath($folderPath, $file['file_name']  ), $fileStream);
 							UnifiedCloud::addTempEntry($file['fileID']);
@@ -596,11 +597,11 @@ class Dropbox implements CloudInterface{
 				}
 		}catch(Exception $e){
 			Log::info("Exception raised in Dropbox::downloadFolderOnServer",array('userID'=>$userID, 'folderPath'=>$folderPath));
-			Log::error($e);				
+			Log::error($e);
 			throw $e;
 		}
 
 	}
 /************************************************************************************************/
-	
+
 }

@@ -11,6 +11,11 @@
 |
 */
 
+//test routes
+Route::get('mock',function(){
+	return View::make('dashboard.dashboardMock');
+});
+
 // open front page 
 Route::get('/', array( 'as' => 'landing', function()
 {
