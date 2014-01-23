@@ -60,6 +60,8 @@ class UsersController extends BaseController {
         Auth::logout();
         return Redirect::route('landing')->with('message', 'Your are now logged out!');
     }
+    
+
     // userCloudName = Name of the cloud specified by user 
     public function getRegistrationPage($cloudName,$userCloudName){
              try{
