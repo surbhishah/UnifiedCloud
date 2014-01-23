@@ -60,8 +60,8 @@ class UsersController extends BaseController {
         Auth::logout();
         return Redirect::route('landing')->with('message', 'Your are now logged out!');
     }
-    
-    public function getRegistrationPage($cloudName){
+    // userCloudName = Name of the cloud specified by user 
+    public function getRegistrationPage($cloudName,$userCloudName){
              try{
             // Whenever user adds a new cloud, we first need to authenticate 
             // and get access Token from the cloud and then we will fetch full file structure of 
@@ -72,8 +72,7 @@ class UsersController extends BaseController {
             
             $factory = new CloudFactory(); 
             $cloud = $factory->createCloud($cloudName);
-            return $cloud->getRegistrationPage();
-            //return View::make('complete')->with('message',$result);
+            return $cloud->getRegistrationPage($userCloudName);
         
         }catch(UnknownCloudException $e){
             Log::info('UnknownCloudException raised in UsersController::getRegistrationPage',array('cloudName' => $cloudName));
@@ -113,4 +112,5 @@ class UsersController extends BaseController {
     public function getHome(){
         return View::make('home');
     }
+
 }
