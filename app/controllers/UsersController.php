@@ -94,12 +94,11 @@ class UsersController extends BaseController {
             // This function has been made only to check the functionality of getFullFileStructure
             // It may not be required later 
             // At present, I have hard coded the access token in the database 
+                
+            $factory = new CloudFactory(); 
+            $cloud = $factory->createCloud($cloudName);
+            return $cloud->getCompletion();
 
-        $factory = new CloudFactory(); 
-        $cloud = $factory->createCloud($cloudName);
-        return $cloud->getCompletion();
-            //return View::make('complete')->with('message',$result);
-        
         }catch(UnknownCloudException $e){
             Log::info('UnknownCloudException raised in UsersController::getCompletion',array('cloudName' => $cloudName));
             Log::error($e);
@@ -110,4 +109,8 @@ class UsersController extends BaseController {
 
         }
     }        
+// todo this is a development function...to be deleted later 
+    public function getHome(){
+        return View::make('home');
+    }
 }

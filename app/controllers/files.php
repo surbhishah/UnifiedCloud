@@ -19,17 +19,14 @@ class FilesController extends BaseController{
 			try{
 
 				$userID = UnifiedCloud::getUserId(Session::get('email'));
-				$factory = new CloudFactory(); /////ASK Abhishek///////////in constructor ??
-				//$cloudName= Input::get('cloudName');
+				$factory = new CloudFactory(); 
 				$cloud = $factory->createCloud($cloudName);
 				$result =$cloud->upload($userID,
 										Input::file('userfile'),
 										Input::get('cloudDestinationPath'));			
-				// return View::make('complete')
-				// 			->with('message',$result);
-
 				$cloud->refreshFullFileStructure($userID);
 				return $result;
+			
 			}catch(UnknownCloudException $e){
 				Log::info("UnknownCloudException raised in FilesController::postFile");
 				Log::error($e->getMessage());

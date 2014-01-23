@@ -82,7 +82,7 @@ Route::get('auth/{cloudName}',array(
 	'uses'=>'UsersController@getCompletion'
 	));
 
-// home page
+// home page...This is a development route..to be deleted later 
 Route::get('user/home',array(
 	'as'=>'home_route',
 	'uses'=>'UsersController@getHome'
