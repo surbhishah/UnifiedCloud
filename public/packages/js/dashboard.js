@@ -1,6 +1,8 @@
 $(function(){
 
 cloud ="";
+var baseUrl = window.location.pathname;
+//alert(baseUrl);
 
 function testFunction(str) {
 	$(".cloud-controls").click(function(){
@@ -54,13 +56,13 @@ function getClassFromExtension(ext) {
 
 function getFolderContents(cloud,fPath) {
 	$.ajax({
-		type:"GET",
-		url:"folder_content/",
-		data: {cloudName: cloud , folderPath: fPath}
+		type:'GET',
+		url:'folder_content',
+		data: {cloudName: cloud , folderPath: fPath},
+		cache: false
 	})
 	.done(function(jsonData){
 		//console.log(jsonData);
-
 		//server sends json as string
 		//parsing json string to json object
 		jsonData = $.parseJSON(jsonData);
@@ -309,7 +311,8 @@ $('#refresh').tooltip({
 $('#refresh').on('click',function(){
 	$.ajax({
 		type:"GET",
-		url:"refresh/"+cloud
+		url:"refresh/"+cloud,
+		cache: false
 	})
 	.done(function(data){
 		console.log(data);
