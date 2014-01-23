@@ -411,7 +411,6 @@ class Dropbox implements CloudInterface{
 
 				$i++;	
 			}while($hasMore==true && $i<10);
-			//return $data;
 
 		}catch(Exception $e){
 				Log::info("Exception raised in Dropbox::refreshFullFileStructure",array('userID'=>$userID));
@@ -427,12 +426,12 @@ class Dropbox implements CloudInterface{
 	*	@return value: This function redirects the user to the authentication page of dropbox
 	* 	@Exceptions:	Exception
 	*/
-	public function getRegistrationPage(){
+	public function getRegistrationPage($userCloudName='dropbox'){
         // Redirect user to app authentication page of dropbox
         // uri of authentication is to be obtained using object of WebAuth class 
         try{
 	        $webauth =$this->getWebAuth(); 
-	        $authorizeUrl = $webauth->start();
+	        $authorizeUrl = $webauth->start($userCloudName);
 	        return Redirect::to($authorizeUrl);
 		}catch(Exception $e){
 				Log::info("Exception raised in Dropbox::getRegistrationPage");
@@ -454,7 +453,6 @@ class Dropbox implements CloudInterface{
 	        session_start();
 	        $path= app_path().'/database/dropbox-app-info.json';
 	        $appInfo = Dropbox\AppInfo::loadFromJsonFile($path);
-	        //$clientIdentifier = "Project-Kumo";
 	        $redirectUri = "http://localhost/UnifiedCloud/public/auth/dropbox";// This needs a Https link ..only localhost 
 	                                                                    //is allowed for http
 	        $csrfTokenStore = new Dropbox\ArrayEntryStore($_SESSION, 'date(format)ropbox-auth-csrf-token');
@@ -484,9 +482,8 @@ class Dropbox implements CloudInterface{
             //$_GET is an array of variables passed to the current script via the URL parameters.
                 
                 list($accessToken, $userId, $urlState) = $this->getWebAuth()->finish($_GET);
-                //Hard coding Dropbox id because this auth belongs to dropbox.
-                UnifiedCloud::setAccessToken(Session::get('email'),self::$cloudID,$accessToken);
-
+                $userCloudName = $urlState;
+                UnifiedCloud::setAccessToken(Session::get('email'),$userCloudName, self::$cloudID,$accessToken);
                 return Redirect::route('dashboard');
             }
             catch (Dropbox\WebAuthException_BadRequest $ex) {
