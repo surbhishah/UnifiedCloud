@@ -22,7 +22,7 @@ class UsersController extends BaseController {
         $email = Input::get('email');
         if (Auth::attempt(array('email'=> $email,'password' =>Input::get('password')))) {
             $userID = UnifiedCloud::getUserID($email);
-            Session::put('userID',$userID;
+            Session::put('userID',$userID);
             $clouds = UnifiedCloud::getClouds($userID);
             return View::make('dashboard.dashboard')->with('clouds',$clouds);
 

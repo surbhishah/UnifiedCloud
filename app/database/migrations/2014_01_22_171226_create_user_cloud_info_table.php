@@ -22,6 +22,7 @@ class CreateUserCloudInfoTable extends Migration {
 			$table->unique(array('uid','cloudID'));
 			$table->text('access_token');
 			$table->boolean('has_user_files');
+			$table->string('folder_hash');
 			//cursor :A string that encodes the latest information that has been returned. 
 			$table->text('cursor');
 			$table->timestamps();
