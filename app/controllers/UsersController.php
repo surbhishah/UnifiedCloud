@@ -19,13 +19,13 @@ class UsersController extends BaseController {
     }
 
     public function postSignin() {
-        if (Auth::attempt(array('email'=>Input::get('email'),'password' =>Input::get('password')))) {
-           
-           //Session email variable to get user data from tables
-            Session::put('email',Input::get('email'));
-            $clouds = UnifiedCloud::getCloudsByEmail(Session::get('email'));
-
+        $email = Input::get('email');
+        if (Auth::attempt(array('email'=> $email,'password' =>Input::get('password')))) {
+            $userID = UnifiedCloud::getUserID($email);
+            Session::put('userID',$userID;
+            $clouds = UnifiedCloud::getClouds($userID);
             return View::make('dashboard.dashboard')->with('clouds',$clouds);
+
         } else {
            return Redirect::route('sign_in_page')
               ->with('message', 'Incorrect email or password')
@@ -58,6 +58,7 @@ class UsersController extends BaseController {
 
     public function getLogout() {
         Auth::logout();
+        //TODO ABHISHEK 
         return Redirect::route('landing')->with('message', 'Your are now logged out!');
     }
     
@@ -68,7 +69,7 @@ class UsersController extends BaseController {
             // Whenever user adds a new cloud, we first need to authenticate 
             // and get access Token from the cloud and then we will fetch full file structure of 
             // user's cloud 
-                //TODO
+                //TODO ABHISHEK
             $userCloudName = 'surbhi';// COMMENT THIS LATER 
             $factory = new CloudFactory(); 
             $cloud = $factory->createCloud($cloudName);
