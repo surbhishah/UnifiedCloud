@@ -23,7 +23,6 @@ class CreateUserCloudInfoTable extends Migration {
 			$table->text('access_token');
 			$table->string('hash');
 			//cursor :A string that encodes the latest information that has been returned. 
-			$table->text('cursor');
 			$table->timestamps();
 
 		});	

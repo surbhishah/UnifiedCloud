@@ -13,8 +13,7 @@ class UsersController extends BaseController {
     }
 
     public function getDashboard() {
-        
-        $clouds = UnifiedCloud::getCloudsByEmail(Session::get('email'));
+        $clouds = UnifiedCloud::getClouds(Session::get('userID'));
         return View::make('dashboard.dashboard')->with('clouds',$clouds);    
     }
 
@@ -36,7 +35,6 @@ class UsersController extends BaseController {
     public function postCreate()
     {
         $validator = Validator::make(Input::all(), User::$rules);
-
         if ($validator->passes()) {
     
             $user = new User;
@@ -45,7 +43,6 @@ class UsersController extends BaseController {
             $user->email = Input::get('email');
             $user->password = Hash::make(Input::get('password'));
             $user->save();
-
             return Redirect::route('landing')->with('message', 'Thanks for registering!');
         // validation passed, save user in DB
         } else {
@@ -59,6 +56,7 @@ class UsersController extends BaseController {
     public function getLogout() {
         Auth::logout();
         //TODO ABHISHEK 
+        Session::flush();
         return Redirect::route('landing')->with('message', 'Your are now logged out!');
     }
     
@@ -87,14 +85,7 @@ class UsersController extends BaseController {
     }
 
     public function getCompletion($cloudName){
-       try{
-            // Whenever user adds a new cloud, we first need to authenticate 
-            // and get access Token from the cloud and then we will fetch full file structure of 
-            // user's cloud 
-            // This function has been made only to check the functionality of getFullFileStructure
-            // It may not be required later 
-            // At present, I have hard coded the access token in the database 
-                
+        try{
             $factory = new CloudFactory(); 
             $cloud = $factory->createCloud($cloudName);
             return $cloud->getCompletion();

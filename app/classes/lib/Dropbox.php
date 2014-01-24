@@ -154,19 +154,10 @@ class Dropbox implements CloudInterface{
 	 *	@return value: instance of Dropbox/Client class
 	 *	@exceptions: AccessTokenNotFoundException
 	*/
-	private function getClient($userID){
-		// We can save email ID of the user in session or
-		// we can save the user ID directly
-		// This will prevent one query on the database
-		// because ultimately we always need the userID of the user
-		// Security concerns: In case attacker gets hold of userID from the session
-		// For now, I am hard coding the user ID and have also hard coded the access token in db
-			//$userID = '1';													// COMMENT THIS LATER
-			//$user = User::find($userID); 									// UNCOMMENT THIS LATER
+	private function getClient($userCloudID){
 			try{
-				$accessToken = UnifiedCloud::getAccessToken($userID, self::$cloudID );
+				$accessToken = UnifiedCloud::getAccessToken($userCloudID);
 				if($accessToken == null){
-					error_log('Access token is null');
 					throw new AccessTokenNotFoundException();
 					return null;
 				}else{
@@ -189,27 +180,58 @@ class Dropbox implements CloudInterface{
 	*	@return value: Meta data of the folder and its files and folders
 	* 	@Exceptions:	Exception
 	*/
-	public function getFolderContents($userID, $folderPath){
-		// Get client object
+	public function getFolderContents($userCloudID, $folderPath){
 
 		try{
-			// $client = self::getClient($userID);
-			// // Dropbox API requires that there should be no trailing slash except if it is root '/'
-			// // Obtain fileMetaData from Dropbox
-			// $fileMetaData=$client->getMetadataWithChildren($folderPath);
-			// return $fileMetaData;
-
-			//Log::info('getHasUserFiles checked in Dropbox::getFolderContents',array('userID' => $userID,'cloud' => self::$cloudID, 'values' => UnifiedCloud::getHasUserFiles($userID,self::$cloudID)));
-
-			if(UnifiedCloud::getHasUserFiles($userID,self::$cloudID) == false) {
-				//Log::info('running getFullFileStructure');
-				$this->getFullFileStructure($userID);
+			$client = self::getClient($userCloudID);
+			// Dropbox API requires that there should be no trailing slash except if it is root '/'
+			// Obtain fileMetaData from Dropbox
+			$hash = UnifiedCloud::getHash($userCloudID, $folderPath);
+			if($hash == null){
+				$newMetaData = $client->getMetadataWithChildren($folderPath);
+				$receivedData = true;
 			}
-			$fileArrayJson = UnifiedCloud::getFolderContents($userID,self::$cloudID,$folderPath);
-			return $fileArrayJson;
+			else{
+				list($receivedData, $newMetaData) = $client->getMetadataWithChildrenIfChanged($folderPath, $hash);
+			}
+			// if data is received , then update our database and then return the folder contents
+			if($receivedData == true){
+				$folderData = array();// This is the folder for which data has been received
+				if($folderPath=='/'){// Dropbox does not return these attributes for root 
+					$folderData['path']='root';
+					$folderData['fileName']='/';
+					$folderData['lastModifiedTime']= null;
+					$folderData['rev']='rev';// rev of root is not known and rev is not nullable
+				}
+				else{
+					list($path, $folderName)= Utility::splitPath($newMetaData['path']);
+					$folderData['path']=$path;
+					$folderData['fileName']=$folderName;
+					$folderData['lastModifiedTime']=$newMetaData['modified']; 
+					$folderData['rev']=$newMetaData['rev'];
+				}
+				$folderData['hash'] = $newMetaData['hash'];
+				$folderData['isDirectory']=true;
+				$folderData['size']=$newMetaData['size'];
+		
+				UnifiedCloud::addOrUpdateFile($userCloudID, $folderData);
+				$files = $newMetaData['contents'];
+				foreach($files as $file){// Each file may be a folder or a file
+					list($path, $fileName)= Utility::splitPath($file['path']);
+					$newFile['path']=$path;
+					$newFile['fileName']=$fileName;
+					$newFile['lastModifiedTime']=$file['modified'];
+					$newFile['rev']=$file['rev'];
+					$newFile['size']=$file['size'];
+					$newFile['isDirectory']=$file['is_dir'];
+					UnifiedCloud::addOrUpdateFile($userCloudID, $newFile);
+				}
+			}
+			// if no data is received ..means data we have is correct, send it directly
+			return UnifiedCloud::getFolderContents($userCloudID, $folderPath);
 
 		}catch(Exception $e){
-				Log::info("Exception raised in Dropbox::getFolderContents",array('userID'=>$userID));
+				Log::info("Exception raised in Dropbox::getFolderContents",array('userCloudID'=>$userCloudID, 'folderPath'=>$folderPath));
 				Log::error($e);				
 				throw $e;
 		}
@@ -478,12 +500,10 @@ class Dropbox implements CloudInterface{
         try {
 
             // Get access token of the user now he has authenticated our app
-
             //$_GET is an array of variables passed to the current script via the URL parameters.
-
                 list($accessToken, $uid, $urlState) = $this->getWebAuth()->finish($_GET);
                 $userCloudName = $urlState;
-                $userID = UnifiedCloud::getUserId(Session::get('email'));
+                $userID = Session::get('userID');
                 if(UnifiedCloud::userAlreadyExists($uid, self::$cloudID)){
 					return View::make('complete')
 							->with('message','You already have an account with us!');
@@ -493,8 +513,8 @@ class Dropbox implements CloudInterface{
 							->with('message','You already have an account with this name "'.$userCloudName .'" Please choose another fab name!');		
 				}
 				else{
-					UnifiedCloud::setAccessToken(Session::get('email'),$userCloudName, $uid, self::$cloudID, $accessToken);
-         		    return Redirect::route('dashboard');
+					$userCloudID = UnifiedCloud::setAccessToken($userID,$userCloudName, $uid, self::$cloudID, $accessToken);
+					return Redirect::route('dashboard');
 				}
             }
             catch (Dropbox\WebAuthException_BadRequest $ex) {

@@ -84,6 +84,8 @@
 {{ Form::hidden('cloudName','Dropbox')	}}
 {{ Form::label('folder','Folder eg /Projects/Subproject :::')}}
 {{ Form::text('folderPath')	}}<br>
+{{ Form::label('userCloudID','userCloudID:')}}
+{{ Form::text('userCloudID')	}}<br>
 {{ Form::submit('Get folder Contents')	}}
 {{ Form::close()	}}
 

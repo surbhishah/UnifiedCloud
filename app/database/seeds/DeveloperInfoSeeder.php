@@ -1,5 +1,5 @@
 <?php
- 
+  
 class DeveloperInfoSeeder extends Seeder {
  
   public function run(){
@@ -14,7 +14,7 @@ class DeveloperInfoSeeder extends Seeder {
     */
 
 
-     /* DB::table('users')->delete();
+      DB::table('users')->delete();
       DB::table('users')->insert(array(
           'userID'=>'1',
           'email'=> 'surbhishah81@yahoo.in',
@@ -22,7 +22,7 @@ class DeveloperInfoSeeder extends Seeder {
           'last_name'   =>  'shah',
           'password' => Hash::make('password')
       ));
-      ));*/
+    
       
       DB::table('clouds')->delete();    
       DB::table('clouds')->insert(array(
@@ -33,14 +33,17 @@ class DeveloperInfoSeeder extends Seeder {
         "redirect_uri"=>"http://localhost/UnifiedCloud/auth/dropbox"
       ));
   
-      /*DB::table('user_cloud_info')->delete();
+      DB::table('user_cloud_info')->delete();
       DB::table('user_cloud_info')->insert(array(
-              'userID'=>'1',
+          'userID'=>'1',
+          'user_cloudID'=>'1',
+          'user_cloud_name'=>'surbhi_dropbox',
+          'uid'=>'253426315',
           'cloudID'=>'1', 
-          'access_token'=>'PIXXPZ9wS5oAAAAAAAAAAWjrWEud9FspD2Gpz3QRvbb2HSjV_Ga3rF8Okqz8bUfG'
+          'access_token'=>'00fFM63sFIMAAAAAAAAAATvsZL-7Vmlmlijz6Bh6aUOE4FYB75f3W6aXxnxKs_tn'
         
         ));
-*/
+
       
   }
  

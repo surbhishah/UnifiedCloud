@@ -93,19 +93,14 @@ class FilesController extends BaseController{
 		try{
 			$cloudName = Input::get('cloudName');
 			$folderPath = Input::get('folderPath'); 
-			
+			$userCloudID = Input::get('userCloudID');
 			// YOU NEED userID from the session 
-			//$userID = '1';						//COMMENT THIS LATER
-			$userID = UnifiedCloud::getUserId(Session::get('email'));
-			//Log::info('from FilesController::getFolderCOntents sending userID: ',array('userID',$userID));
-
-			$factory = new CloudFactory(); /////ASK Abhishek///////////in constructor ??
+			//$userID = Session::get('userID');		//UNCOMMENT this later
+			$userID = '1';						//COMMENT THIS LATER
+			$factory = new CloudFactory(); 
 			$cloud = $factory->createCloud($cloudName);
-			$result=$cloud->getFolderContents($userID, $folderPath);
-
-
-			return $result;
-			//return View::make('complete')->with('message',$result);
+			$result=$cloud->getFolderContents($userCloudID, $folderPath);
+			return View::make('complete')->with('message',$result);
 			
 
 		}catch(UnknownCloudException $e){
