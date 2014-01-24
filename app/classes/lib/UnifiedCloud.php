@@ -199,11 +199,11 @@ class UnifiedCloud {
 		return DB::table('users')->where('email',$email)->pluck('userID');
 	}
 
-	public static function setAccessToken($email,$emailCloud,$cloudID,$accessToken) {
+	public static function setAccessToken($email,$userCloudName,$cloudID,$accessToken) {
 		$userID = UnifiedCloud::getUserId($email);
 		$userCloudInfo = new UserCloudInfo;
 		$userCloudInfo->userID = $userID;
-		$userCloudInfo->email_cloud = $emailCloud;
+		$userCloudInfo->user_cloud_name=$userCloudName;
 		$userCloudInfo->cloudID = $cloudID;
 		$userCloudInfo->access_token = $accessToken;
 		$userCloudInfo->save();
@@ -291,5 +291,18 @@ class UnifiedCloud {
 				return $zipFileName;
 		}	
 /**********************************************************************************************/
-
+		public static function userAlreadyExists($uid, $cloudID){
+			$user= UserCloudInfo::where('uid','=',$uid)->where('cloudID','=',$cloudID)->get()->first();
+			if($user==null)return false;
+			else return true;
+		}
 }
+
+
+
+
+
+
+
+
+

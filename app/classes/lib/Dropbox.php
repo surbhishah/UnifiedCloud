@@ -209,7 +209,7 @@ class Dropbox implements CloudInterface{
 			return $fileArrayJson;
 
 		}catch(Exception $e){
-				Log::info("Exception raised in Dropbox::getClient",array('userID'=>$userID));
+				Log::info("Exception raised in Dropbox::getFolderContents",array('userID'=>$userID));
 				Log::error($e);				
 				throw $e;
 		}	
@@ -483,8 +483,16 @@ class Dropbox implements CloudInterface{
                 
                 list($accessToken, $userId, $urlState) = $this->getWebAuth()->finish($_GET);
                 $userCloudName = $urlState;
-                UnifiedCloud::setAccessToken(Session::get('email'),$userCloudName, self::$cloudID,$accessToken);
-                return Redirect::route('dashboard');
+                $client = new Dropbox\Client($accessToken,self::$clientIdentifier);
+				$accountInfo = $client->getAccountInfo();
+				if(UnifiedCloud::userAlreadyExists($accountInfo['uid'], self::$cloudID)){
+					return View::make('complete')
+							->with('message','You already have an account with us!');
+				}
+				else{
+					UnifiedCloud::setAccessToken(Session::get('email'),$userCloudName, self::$cloudID, $accessToken);
+         		    return Redirect::route('dashboard');
+				}
             }
             catch (Dropbox\WebAuthException_BadRequest $ex) {
                Log::info("Dropbox\WebAuthException_BadRequest raised in Dropbox::getCompletion");
