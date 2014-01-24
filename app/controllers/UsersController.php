@@ -61,7 +61,7 @@ class UsersController extends BaseController {
         return Redirect::route('landing')->with('message', 'Your are now logged out!');
     }
     
-
+    //cloudName = dropbox (case insensitive)
     // userCloudName = Name of the cloud specified by user 
     public function getRegistrationPage($cloudName,$userCloudName){
              try{
