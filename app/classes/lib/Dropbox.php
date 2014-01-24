@@ -481,16 +481,19 @@ class Dropbox implements CloudInterface{
 
             //$_GET is an array of variables passed to the current script via the URL parameters.
 
-                list($accessToken, $userId, $urlState) = $this->getWebAuth()->finish($_GET);
+                list($accessToken, $uid, $urlState) = $this->getWebAuth()->finish($_GET);
                 $userCloudName = $urlState;
-                $client = new Dropbox\Client($accessToken,self::$clientIdentifier);
-				$accountInfo = $client->getAccountInfo();
-				if(UnifiedCloud::userAlreadyExists($accountInfo['uid'], self::$cloudID)){
+                $userID = UnifiedCloud::getUserId(Session::get('email'));
+                if(UnifiedCloud::userAlreadyExists($uid, self::$cloudID)){
 					return View::make('complete')
 							->with('message','You already have an account with us!');
 				}
+				else if(UnifiedCloud::userCloudNameAlreadyExists($userID,self::$cloudID, $userCloudName)){
+					return View::make('complete')
+							->with('message','You already have an account with this name "'.$userCloudName .'" Please choose another fab name!');		
+				}
 				else{
-					UnifiedCloud::setAccessToken(Session::get('email'),$userCloudName, self::$cloudID, $accessToken);
+					UnifiedCloud::setAccessToken(Session::get('email'),$userCloudName, $uid, self::$cloudID, $accessToken);
          		    return Redirect::route('dashboard');
 				}
             }

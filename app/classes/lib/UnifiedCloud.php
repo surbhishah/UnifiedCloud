@@ -199,11 +199,12 @@ class UnifiedCloud {
 		return DB::table('users')->where('email',$email)->pluck('userID');
 	}
 
-	public static function setAccessToken($email,$userCloudName,$cloudID,$accessToken) {
+	public static function setAccessToken($email,$userCloudName,$uid,$cloudID,$accessToken) {
 		$userID = UnifiedCloud::getUserId($email);
 		$userCloudInfo = new UserCloudInfo;
 		$userCloudInfo->userID = $userID;
 		$userCloudInfo->user_cloud_name=$userCloudName;
+		$userCloudInfo->uid  = $uid;
 		$userCloudInfo->cloudID = $cloudID;
 		$userCloudInfo->access_token = $accessToken;
 		$userCloudInfo->save();
@@ -292,10 +293,17 @@ class UnifiedCloud {
 		}	
 /**********************************************************************************************/
 		public static function userAlreadyExists($uid, $cloudID){
-			$user= UserCloudInfo::where('uid','=',$uid)->where('cloudID','=',$cloudID)->get()->first();
-			if($user==null)return false;
+			$userCloudInfo= UserCloudInfo::where('uid','=',$uid)->where('cloudID','=',$cloudID)->get()->first();
+			if($userCloudInfo==null)return false;
 			else return true;
 		}
+		public static function userCloudNameAlreadyExists($userID,$cloudID, $userCloudName){
+			$userCloudInfo = UserCloudInfo::where('userID','=',$userID)->where('cloudID','=',$cloudID)
+							->where('user_cloud_name','=',$userCloudName)->get()->first();
+			if($userCloudInfo == null)return false;
+			else return true;
+		}
+
 }
 
 
