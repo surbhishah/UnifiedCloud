@@ -5,52 +5,51 @@ class FilesController extends BaseController{
 /************************************************************************************************/
 	/*
 	*	@params : 
-	*	userFile: The file to be uploaded
-	*	cloudName: Name of the cloud to which file is to be uploaded (case insensitive)
-	*	cloudDestinationPath: Path where file is to be uploaded , excluding the name of the file 
-	*	For eg : if cloudDestinationPath =  '/Project/Files' then file will be uploaded at '/Project/Files/[filename]'
-	*
+	*		files: The file(s) to be uploaded, multiple files are also allowed
+	*		cloudName: Name of the cloud to which file is to be uploaded (case insensitive)
+	*		cloudDestinationPath: Path where file is to be uploaded , excluding the name of the file 
+	*		For eg : if cloudDestinationPath =  '/Project/Files' then file will be uploaded at '/Project/Files/[filename]'
+	*	@return value: None
 	*	@Exceptions:UnknownCloudException,	Exception
 	*/
 	// Upload	
 	public function postFile($cloudName){
-
-		if(Input::hasFile('userfile')){
-			try{
-				$cloudName =  Input::get('cloudName');// TO BE COMMENTED LATER ABHISHEK
-				$userCloudID = Input::get('userCloudID');
-				$factory = new CloudFactory(); 
-				$cloud = $factory->createCloud($cloudName);
-				$result =$cloud->upload($userCloudID,
-										Input::file('userfile'),
-										Input::get('cloudDestinationPath'));			
-				return $result;
+		try{
 			
-			}catch(UnknownCloudException $e){
-				Log::info("UnknownCloudException raised in FilesController::postFile");
-				Log::error($e->getMessage());
-				throw $e;
-			}catch(Exception $e){
-				Log::info("Exception raised in FilesController::postFile");
-				Log::error($e->getMessage());
-				throw $e;
-				
+			$cloudName = Input::get('cloudName');
+			$userCloudID = Input::get('userCloudID');		
+			$cloudDestinationPath = Input::get('cloudDestinationPath');
+			$factory = new CloudFactory(); 
+			$cloud = $factory->createCloud($cloudName);
+			$i=0;// TO BE COMMENTED GEtting $result is not necessary ,,,delete it later abhishek
+			$files = Input::file('files');
+			foreach($files as $file){
+				$result[$i]= $cloud->upload($userCloudID, $file, $cloudDestinationPath);	
+				$i++;
 			}
+			return $result;//THIS is required only for testing
+				
+		}catch(UnknownCloudException $e){
+				Log::info("UnknownCloudException raised in FilesController::postUploadMultiple");
+				Log::error($e->getMessage());
+				throw $e;
 
-		}
-		else {
-//TODO			
-			return View::make('complete')
-						->with('message','Error:::Uploaded file not found');
-		}
+		}catch(Exception $e){
+				Log::info("Exception raised in FilesController::postUploadMultiple");
+				Log::error($e->getMessage());
+				throw $e;
+		}	
 			
 	}
 /************************************************************************************************/	
 	/*	@params : 
-	*	fileName : name of the file to be downloaded
-	*	cloudName: Name of the cloud to which file is to be uploaded (case insensitive)
-	*	cloudSourcePath: Path from where file is to be downloaded , excluding the name of the file 
-	*	For eg : if cloudSourcePath =  '/Project/Files/' then file will be downloaded from '/Project/Files/[filename]'
+	*		userCloudID : Id of the user's cloud
+	*		fileName : name of the file to be downloaded
+	*		cloudName: Name of the cloud to which file is to be uploaded (case insensitive)
+	*		cloudSourcePath: Path from where file is to be downloaded , excluding the name of the file 
+	*		For eg : if cloudSourcePath =  '/Project/Files/' then file will be downloaded from '/Project/Files/[filename]'
+	*	@return value:
+	*		file to be downloaded by user
 	*	@Exceptions:UnknownCloudException,	Exception
 	*/
 	// Download
@@ -59,8 +58,8 @@ class FilesController extends BaseController{
 				$userCloudID = Input::get('userCloudID');
 				$cloudSourcePath=Input::get('cloudSourcePath');
 			 	$fileName = Input::get('fileName');
-			 	$cloudName = Input::get('cloudName');// to be COMMENTED later abhishek if cloudName is passed as parameter
-				$factory = new CloudFactory(); 
+			 	$cloudName = Input::get('cloudName');// to be COMMENTED later abhishek if cloudName is passed as parameter 
+				$factory = new CloudFactory(); 			// to controller 
 				$cloud = $factory->createCloud($cloudName);
 				$fileDestination =$cloud->download($userCloudID, $cloudSourcePath, $fileName);			
 				// Return the file with the response so that browser shows an option to user to download a file
@@ -81,10 +80,11 @@ class FilesController extends BaseController{
 /************************************************************************************************/
 	/*
 	*	@params : 
-	*	folderPath : The path to folder whose contents information is required 
-	*	For eg: if folderPath = '/Project/Subproject/' then 
-	*	Contents of Subproject will be returned 
-	*	cloudName: Name of the cloud (case insensitive)
+	*		folderPath : The path to folder whose contents information is required 
+	*		For eg: if folderPath = '/Project/Subproject/' then 
+	*		Contents of Subproject will be returned 
+	*		cloudName: Name of the cloud (case insensitive)
+	*	@return value: The contents of folder after updation of database
 	*	@Exceptions:UnknownCloudException,	Exception
 	*/
 	public function getFolderContents(){
@@ -113,11 +113,11 @@ class FilesController extends BaseController{
 /************************************************************************************************/
 	/*
 	*	@params:
-	*	$cloudName = Name of the cloud (case insensitive)
-	*	$folderPath = complete path to the folder 
-	*	Eg : /Project/Subproject/NewFolder/ will create a folder named NewFolder
+	*		$cloudName = Name of the cloud (case insensitive)
+	*		$folderPath = complete path to the folder 
+	*		Eg : /Project/Subproject/NewFolder/ will create a folder named NewFolder
 	*	@return value : Null when folder could not be created
-	*	Otherwise metadata of the folder 
+	*					Otherwise metadata of the folder 
 	*	@Exceptions: UnknownCloudException, Exception
 	*/
 	public function getCreateFolder(){
@@ -149,10 +149,12 @@ class FilesController extends BaseController{
 /************************************************************************************************/
 	/*
 	*	@params : 
-	*	path : path to the file to be deleted  
-	*	For eg: if path = '/Project/Subproject/file.txt' then 
-	*	file.txt will be deleted
-	*	cloudName: cloud from which file will be deleted (case insensitive)
+	*		path : path to the file to be deleted  
+	*		For eg: if path = '/Project/Subproject/file.txt' then 
+	*		file.txt will be deleted
+	*		cloudName: cloud from which file will be deleted (case insensitive)
+	*	@return value: 
+	*		None, can return metadata of deleted file if required
 	*	@Exceptions:UnknownCloudException,	Exception
 	*/
 	public function delete($cloudName, $path){
@@ -164,10 +166,8 @@ class FilesController extends BaseController{
 			$factory = new CloudFactory(); 
 			$cloud = $factory->createCloud($cloudName);
 			$result = $cloud->delete($userCloudID,$path);
-
-			//if $result == null then folder already exists
-			return View::make('complete')
-						->with('message',$result);
+			return View::make('complete')		
+						->with('message',$result);// Needed only for testing the functioning, May be COMMENTED
 		
 		}catch(UnknownCloudException $e){
 				Log::info("UnknownCloudException raised in FilesController::delete");
@@ -184,12 +184,12 @@ class FilesController extends BaseController{
 /************************************************************************************************/
 	/*
 	*	@params : GET parameters
-	*	cloudName: Name of the cloud to be added 
-	*	userCloudID = ID of the user 's cloud
-	* 	folderPath= Path to the folder to be downloaded as zip 
+	*		cloudName: Name of the cloud to be added 
+	*		userCloudID = ID of the user 's cloud
+	* 		folderPath= Path to the folder to be downloaded as zip 
 	*	@return value: returns zip file to be downloaded by user 
 	*	@description:	This function is called when user wants to download a folder 
-	*					It returns the folder as a zip and deleted the zip file later 
+	*					It returns the folder as a zip and deleted the zip file later from our server
 	*	@Exceptions:UnknownCloudException,	Exception
 	*/
 	public function getDownloadFolder(){
@@ -220,43 +220,5 @@ class FilesController extends BaseController{
 
 	}
 /************************************************************************************************/
-	/*
-	*	@params : GET parameters
-	*	cloudName: Name of the cloud to be added 
-	*	userCloudID = ID of the user's cloud
-	* 	files = array which holds multiple files 
-	*	@return value: returns zip file to be downloaded by user 
-	*	@description:	This function is called when user wants to upload multiple files
-	*	@Exceptions:UnknownCloudException,	Exception
-	*/
-	public function postUploadMultiple(){
-		try{
-			
-			$cloudName = Input::get('cloudName');
-			$userCloudID = Input::get('userCloudID');		
-			$cloudDestinationPath = Input::get('cloudDestinationPath');
-			$factory = new CloudFactory(); 
-			$cloud = $factory->createCloud($cloudName);
-			$i=0;// TO BE COMMENTED GEtting $result is not necessary ,,,delete it later abhishek
-			$files = Input::file('files');
-			foreach($files as $file){
-				$result[$i]= $cloud->upload($userCloudID, $file, $cloudDestinationPath);	
-				$i++;
-			}
-			return $result;
-				
-		}catch(UnknownCloudException $e){
-				Log::info("UnknownCloudException raised in FilesController::postUploadMultiple");
-				Log::error($e->getMessage());
-				throw $e;
-
-		}catch(Exception $e){
-				Log::info("Exception raised in FilesController::postUploadMultiple");
-				Log::error($e->getMessage());
-				throw $e;
-		}
-
-		
-	}	
 
 }

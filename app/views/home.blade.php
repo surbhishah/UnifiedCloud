@@ -2,7 +2,7 @@
 <br>
 <br>
 
-{{ Form::open(array('route'=>'upload_multiple_route', 'files' => true, 'as'=>'upload_multiple','method'=>'post')) }}
+{{ Form::open(array('route'=>'upload_route', 'files' => true, 'as'=>'upload','method'=>'post')) }}
 {{ Form::hidden('cloudName','Dropbox' )	}}
 {{ Form::hidden('userCloudID','1' )	}}
 {{ Form::label('cloudDestination path', 'Cloud destination without trailing slash:')	}}
@@ -16,7 +16,7 @@
 <br>
 <br>
 {{ Form::open(array('route'=>'download_folder_route', 'as'=>'download_folder','method'=>'get')) }}
-{{ Form::hidden('userID','1' )	}}
+{{ Form::hidden('userCloudID','1' )	}}
 {{ Form::hidden('cloudName','Dropbox') }}
 {{ Form::label('Folder Path', 'Folder Path:')	}}
 {{ Form::text('folderPath')	}}<br>
@@ -24,43 +24,6 @@
 {{ Form::close()	}}
 
 <br>
-<br>
-<br>
-<br>
-
-{{ Form::open(array('route'=>'refresh_route', 'as'=>'refresh_cloud','method'=>'get')) }}
-{{ Form::hidden('userID','1' )	}}
-{{ Form::label('Cloud', 'Cloud:')	}}
-{{ Form::text('cloudName')}}			
-{{ Form::submit('Refresh')	}}
-{{ Form::close()	}}
-
-<br>
-<br>
-<br>
-
-{{ Form::open(array('route'=>'add_cloud_route', 'as'=>'add_cloud','method'=>'get')) }}
-{{ Form::hidden('userID','1' )	}}
-{{ Form::label('Cloud', 'Cloud:')	}}
-{{ Form::text('cloudName')}}			
-{{ Form::submit('Add Cloud')	}}
-{{ Form::close()	}}
-
-<br>
-<br>
-<br>
-
-{{ Form::open(array('route'=>'upload_route', 'files' => true, 'as'=>'upload','method'=>'post')) }}
-{{ Form::hidden('cloudName','Dropbox' )	}}
-{{ Form::hidden('userCloudID','1' )	}}
-{{ Form::label('cloudDestination path', 'Cloud destination without trailing slash:')	}}
-{{ Form::text('cloudDestinationPath')}}			
-{{ Form::label('file', 'File:')	}}
-{{ Form::file('userfile')	}}
-{{ Form::submit('Upload')	}}
-{{ Form::close()	}}
-
-
 <br>
 <br>
 <br>

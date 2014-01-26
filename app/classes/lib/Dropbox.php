@@ -198,7 +198,7 @@ class Dropbox implements CloudInterface{
 	*	@return value: Meta data of the folder and its files and folders
 	* 	@Exceptions:	Exception
 	*/
-	public function refreshFolder($userCloudID, $folderPath){
+	private function refreshFolder($userCloudID, $folderPath){
 
 		try{
 			$client = self::getClient($userCloudID);
@@ -388,7 +388,7 @@ class Dropbox implements CloudInterface{
 	*	@description: 	This function takes in GET parameters returned by dropbox and
 	*					Sets accessToken of the user
 	*/
-    function getCompletion(){
+    public function getCompletion(){
         try {
 
             // Get access token of the user now he has authenticated our app

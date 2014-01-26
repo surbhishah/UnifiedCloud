@@ -94,7 +94,7 @@ Route::get('user/download',array(
 	'uses'=>'FilesController@getFile'
 ));
 
-//upload
+//upload any no of files 
 Route::post('user/upload/{cloudName}',array(
 	'as'=>'upload_route',
 	'uses'=>'FilesController@postFile'
@@ -129,15 +129,10 @@ Route::get('user/refresh/{cloudName}',array(
 	'as'=>'refresh_route',
 	'uses'=>'FilesController@getRefresh'
 ));
-												//download folder route 
+//download folder route 
 Route::get('user/download_folder',array(
 	'as'=>'download_folder_route',
 	'uses'=>'FilesController@getDownloadFolder'
-));
-												//upload multiple files 
-Route::post('user/upload_multiple',array(
-	'as'=>'upload_multiple_route',
-	'uses'=>'FilesController@postUploadMultiple'
 ));
 
 

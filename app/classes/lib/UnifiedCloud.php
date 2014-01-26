@@ -32,6 +32,7 @@ class UnifiedCloud {
 		$file->save();
 
 	}
+/**********************************************************************************************/
 	/*
 	*	@params:
 	*		userCloudID : ID of the user 's cloud
@@ -60,6 +61,7 @@ class UnifiedCloud {
 							->where('path','=',$path)->where('file_name','=',$fileName)
 							->get()->first();
 	}
+/**********************************************************************************************/
 	/*
 	*	@params:
 	*		userCloudID : ID of the user 's cloud
@@ -96,9 +98,7 @@ class UnifiedCloud {
 //				->select(array('file_name','last_modified_time','is_directory','size'))->get()->toArray();
 		//toJson() can also be used in place of toArray 
 
-	}
-
-	
+	}	
 /**********************************************************************************************/
 	/*
 	*	@params:
@@ -132,63 +132,39 @@ class UnifiedCloud {
 /**********************************************************************************************/
 	/*
 	*	@params:
-	*		userID : ID of the user 
-	*		cloudID: ID of the cloud
+	*		userID : ID of the user
 	*	@return value:
-	*	 	None
-	*	@decription : Resets the file state 
-	*				  Deletes all file entries of a cloud 
-	*
+	*	 	Boolean : Array of all clouds of the user
 	*/
-	public static function resetFileState($userID, $cloudID){
-		FileModel::where('userID','=',$userID)->where('cloudID','=',$cloudID)->delete();
-	}
-/**********************************************************************************************/
-	/*
-	*	@params:
-	*		userID : ID of the user 
-	*		cloudID: ID of the cloud
-	*	@return value:
-	*	 	string: cursor previously returned by the cloud 
-	*
-	*/
-	public static function getOldCursor($userID, $cloudID){
-		$cursor =  UserCloudInfo::where('userID','=',$userID)->where('cloudID','=',$cloudID)->get()
-																		->first()->pluck('cursor');
-		if(is_null($cursor))return null;
-		else return $cursor;																		
-	}
-/**********************************************************************************************/
-	/*
-	*	@params:
-	*		userID : ID of the user 
-	*		cloudID: ID of the cloud
-	*	@return value:
-	*	 	None
-	*	@decription : Sets the new cursor 
-	*
-	*/	
-	public static function setNewCursor($userID, $cloudID, $cursor){
-
-		$userCloudInfo= UserCloudInfo::where('userID','=',$userID)->where('cloudID','=',$cloudID)
-																				->get()->first();
-		$userCloudInfo->cursor = $cursor;	
-		$userCloudInfo->save();
-
-	}
-/**********************************************************************************************/
-	
-	
+		
 	public static function getClouds($userID) {
 		// user_cloudID is also returned 
 		return UserCloudInfo::where('userID','=',$userID)->get()->toArray();
 	}
+/**********************************************************************************************/
+	/*
+	*	@params:
+	*		email : email of the user ..email is the email with our app
+	*	@return value:
+	*	 	Boolean : userID of the user with this email
+	*/
 
 	public static function getUserID($email) {
 		//user cannot sign in without a valid email id, therefore no checking for
 		//validity of email.
 		return User::where('email','=',$email)->get()->first()->pluck('userID');
 	}
+/**********************************************************************************************/
+	/*
+	*	@params:
+	*		userID : ID of the user 
+	*		userCloudName: name specified by user to name his cloud
+	*		uid: unique id returned by dropbox, it uniquely identifies a user of dropbo
+	*		cloudID: ID of the cloud
+	*		accessToken: accessToken received from the cloud
+	*	@return value:
+	*	 	Boolean : userCloudID of the new cloud 
+	*/
 
 	public static function setAccessToken($userID,$userCloudName,$uid,$cloudID,$accessToken) {
 		$userCloudInfo = new UserCloudInfo;
@@ -200,21 +176,7 @@ class UnifiedCloud {
 		$userCloudInfo->save();
 		return $userCloudInfo->user_cloudID;
 	}
-	public static function setHasUserFiles($userID,$cloudID,$value) {
-		$userCloudInfo = UserCloudInfo::where('userID','=',$userID)->where('cloudID','=',$cloudID)->get()->first();
-		$userCloudInfo->has_user_files = $value;
-		$userCloudInfo->save();
-	}
-
-	public static function getHasUserFiles($userID,$cloudID) {
-		//Log::info('parameter passed: ',array('user' => $userID,'cloud' => $cloudID));
-		//Log::info('Query result: ',array('result' => UserCloudInfo::where('userID','=',$userID)->where('cloudID','=',$cloudID)->get()->first()->pluck('has_user_files')));
-		return UserCloudInfo::where('userID','=',$userID)
-			->where('cloudID','=',$cloudID)
-			->pluck('has_user_files');
-	}
 /**********************************************************************************************/
-
 	/*
 	*	@params:
 	*		jsonFilePath : path to the json file created by downloadFolder function
@@ -267,6 +229,8 @@ class UnifiedCloud {
 			
 				// Add files and folders to zip 
 		        foreach($newFileArray as $folderPath => $files){
+	//TODO Surbhi Issue: this function does not add empty directories				 	
+		        	$zip->addEmptyDir($folderPath);
 				 	foreach ($files as  $file) {
 				 		$fileLocation  = $filesDestination.$file['fileID'];
 				 		if($file['is_directory']==false && file_exists($fileLocation) == false){
@@ -275,7 +239,6 @@ class UnifiedCloud {
 				 		}
 				 		$zip->addFile($fileLocation, $folderPath.'/'.$file['file_name']);
 				 	}
-//TODO 				 	//$zip->addEmptyDir($folderPath);
 				 	//Log::info("Adding to zip ",array('folderPath',$folderPath));
 				 	
 				 }	
@@ -283,17 +246,46 @@ class UnifiedCloud {
 				return $zipFileName;
 		}	
 /**********************************************************************************************/
+	/*
+	*	@params:
+	*		uid: unique id returned by dropbox, it uniquely identifies a user of dropbo
+	*		cloudID: ID of the cloud
+	*	@return value:
+	*	 	Boolean : true if user with same uid and cloudID exists
+	*				  false if user with same uid and cloudID does not exist
+	*/
 		public static function userAlreadyExists($uid, $cloudID){
 			$userCloudInfo= UserCloudInfo::where('uid','=',$uid)->where('cloudID','=',$cloudID)->get()->first();
 			if($userCloudInfo==null)return false;
 			else return true;
 		}
+/**********************************************************************************************/
+	/*
+	*	@params:
+	*		userID: userID of the user
+	*		cloudID: ID of the cloud
+	*		userCloudName: Name assigned by user to his cloud
+	*	@return value:
+	*	 	Boolean : true if user already has cloud with that name and cloudProvider
+	*					For eg: a user may have two clouds named "ABC" with dropbox and google Drive
+	*					This is not a problem but he must not have two clouds named "ABC" on dropbox
+	*				  false otherwise
+	*/
 		public static function userCloudNameAlreadyExists($userID,$cloudID, $userCloudName){
 			$userCloudInfo = UserCloudInfo::where('userID','=',$userID)->where('cloudID','=',$cloudID)
 							->where('user_cloud_name','=',$userCloudName)->get()->first();
 			if($userCloudInfo == null)return false;
 			else return true;
 		}
+/**********************************************************************************************/
+	/*
+	*	@params:
+	*		userCloudID: ID of the user's cloud
+	*		fullPath: The path to the folder or file whose hash is required
+	*					In dropbox, files do not have hash
+	*	@return value:
+	*	 	Boolean : hash of the file/folder 
+	*/
 		public static function getHash($userCloudID, $fullPath){
 			list($path, $fileName)= Utility::splitPath($fullPath);
 			$file= FileModel::where('user_cloudID','=',$userCloudID)->where('path','=',$path)
@@ -301,13 +293,5 @@ class UnifiedCloud {
 			if($file==null)return null;
 			else return $file->hash;
 		}
+/**********************************************************************************************/
 }
-
-
-
-
-
-
-
-
-
