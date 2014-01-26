@@ -4,8 +4,7 @@ class UnifiedCloud {
 	/*
 	*	@params:
 	*		fileName = Name of the file along with extension Eg : file.txt 
-	*		userID : ID of the user 
-	*		cloudID: ID of the cloud
+	*		userCloudID : ID of the user 's cloud
 	*		path = Path to the file For eg: /Project/UniCloud for /Project/UniCloud/file.txt
 	*		isDirectory = true if the file is actually a directory otherwise false
 	*		lastModifiedTime=  Last Modified Time in YYYY-MM-DD HH:MM:SS format ie the database format
@@ -29,13 +28,13 @@ class UnifiedCloud {
 		$file->is_directory= $fileArray['isDirectory'];
 		$file->rev = $fileArray['rev'];
 		$file->size = $fileArray['size'];
+		$file->hash = $fileArray['hash'];
 		$file->save();
 
 	}
 	/*
 	*	@params:
-	*		userID : ID of the user 
-	*		cloudID: ID of the cloud
+	*		userCloudID : ID of the user 's cloud
 	*	@return value:
 	*	 	string: access_token
 	*	@decription : Returns access Token of a user 
@@ -48,8 +47,7 @@ class UnifiedCloud {
 /**********************************************************************************************/	
 	/*
 	*	@params:
-	*		userID : ID of the user 
-	*		cloudID: ID of the cloud
+	*		userCloudID : ID of the user 's cloud
 	*		path : Path to the file For eg /Project/UniCloud for a file at /Project/UniCloud/file.txt
 	*		fileName:	Name of the file For eg file.txt
 	*	@return value:
@@ -62,11 +60,24 @@ class UnifiedCloud {
 							->where('path','=',$path)->where('file_name','=',$fileName)
 							->get()->first();
 	}
+	/*
+	*	@params:
+	*		userCloudID : ID of the user 's cloud
+	*		path : Path to the file For eg /Project/UniCloud for a file at /Project/UniCloud/file.txt
+	*		fileName:	Name of the file For eg file.txt
+	*	@return value:
+	*	 	None
+	*	@decription : Deleted the file at user's cloud 
+	*
+	*/
+	public static function deleteFile($userCloudID, $path, $fileName){
+		FileModel::where('user_cloudID','=',$userCloudID)->where('path','=',$path)
+					->where('file_name','=',$fileName)->delete();
+	}
 /**********************************************************************************************/
 	/*
 	*	@params:
-	*		userID : ID of the user 
-	*		cloudID: ID of the cloud
+	*		userCloudID : ID of the user 
 	*		path : 	Path to the folder 
 	*				For eg if path = '/Project/UniCloud'
 	*				The function shall return the contents of this folder 
@@ -76,29 +87,18 @@ class UnifiedCloud {
 	*
 	*/
 	public static function getFolderContents($userCloudID, $path){
-		return FileModel::where('user_cloudID','=',$userCloudID)->where('path','=',$path)
-				->select(array('file_name','last_modified_time','is_directory','size'))->get()->toJson();
+		return FileModel::where('user_cloudID','=',$userCloudID)->where('path','=',$path)->get()->toArray();
+		// I am making this function generic and not specifically getting particular attributes 
+		// so that when db caches this query , it will be more effective
+		// Also, may functions require FolderContents in different attributes
+		// It is in my view better not to make similar functions , just returning
+		// different attributes
+//				->select(array('file_name','last_modified_time','is_directory','size'))->get()->toArray();
 		//toJson() can also be used in place of toArray 
-	}
-/**********************************************************************************************/
-	/*
-	*	@params:
-	*		userID : ID of the user 
-	*		cloudID: ID of the cloud
-	*		path : 	Path to the folder 
-	*				For eg if path = '/Project/UniCloud'
-	*				The function shall return the contents of this folder 
-	*	@return value:
-	*				an Array of files each containing fileID, file_name, is_directory
-	*	@decription : Returns the file(s) of a user at a particular path on the cloud 
-	*
-	*/
-	public static function getFolderContentsPrecise($userID, $cloudID, $path){
-		return FileModel::where('userID','=',$userID)->where('cloudID','=',$cloudID)->where('path','=',$path)
-
-						->select(array('fileID','file_name','is_directory','rev'))->get()->toArray();
 
 	}
+
+	
 /**********************************************************************************************/
 	/*
 	*	@params:
@@ -267,7 +267,6 @@ class UnifiedCloud {
 			
 				// Add files and folders to zip 
 		        foreach($newFileArray as $folderPath => $files){
-				 	Log::info("Adding to zip ",array('folderPath',$folderPath));
 				 	foreach ($files as  $file) {
 				 		$fileLocation  = $filesDestination.$file['fileID'];
 				 		if($file['is_directory']==false && file_exists($fileLocation) == false){
@@ -276,7 +275,9 @@ class UnifiedCloud {
 				 		}
 				 		$zip->addFile($fileLocation, $folderPath.'/'.$file['file_name']);
 				 	}
-				 	$zip->addEmptyDir($folderPath);
+//TODO 				 	//$zip->addEmptyDir($folderPath);
+				 	//Log::info("Adding to zip ",array('folderPath',$folderPath));
+				 	
 				 }	
 				$zip->close();
 				return $zipFileName;

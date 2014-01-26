@@ -21,7 +21,6 @@ class CreateUserCloudInfoTable extends Migration {
 			$table->unique(array('userID','user_cloud_name','cloudID'));
 			$table->unique(array('uid','cloudID'));
 			$table->text('access_token');
-			$table->string('hash');
 			$table->timestamps();
 
 		});	

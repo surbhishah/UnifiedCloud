@@ -26,7 +26,7 @@ class CreateFilesTable extends Migration {
 									// In dropbox , documentation says that hash of a folder is rev equivalent
 			$table->timestamps();
 			$table->unique(array('user_cloudID','file_name','path'));
-			
+			$table->string('hash')->nullable();	// is nullable because files dont have hashes in dropbox 
 		});		
 	}
 

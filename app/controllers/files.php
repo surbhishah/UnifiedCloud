@@ -17,14 +17,13 @@ class FilesController extends BaseController{
 
 		if(Input::hasFile('userfile')){
 			try{
-
-				$userID = UnifiedCloud::getUserId(Session::get('email'));
+				$cloudName =  Input::get('cloudName');// TO BE COMMENTED LATER ABHISHEK
+				$userCloudID = Input::get('userCloudID');
 				$factory = new CloudFactory(); 
 				$cloud = $factory->createCloud($cloudName);
-				$result =$cloud->upload($userID,
+				$result =$cloud->upload($userCloudID,
 										Input::file('userfile'),
 										Input::get('cloudDestinationPath'));			
-				$cloud->refreshFullFileStructure($userID);
 				return $result;
 			
 			}catch(UnknownCloudException $e){
@@ -57,14 +56,13 @@ class FilesController extends BaseController{
 	// Download
 	public function getFile(){
 			try{
-				$userID = UnifiedCloud::getUserId(Session::get('email'));
+				$userCloudID = Input::get('userCloudID');
 				$cloudSourcePath=Input::get('cloudSourcePath');
 			 	$fileName = Input::get('fileName');
-			 	$cloudName = Input::get('cloudName');
-				//$userID = '1';									// COMMENT THIS , YOU NEED USERID FROM THE SESSION
-				$factory = new CloudFactory(); /////ASK Abhishek///////////in constructor ??
+			 	$cloudName = Input::get('cloudName');// to be COMMENTED later abhishek if cloudName is passed as parameter
+				$factory = new CloudFactory(); 
 				$cloud = $factory->createCloud($cloudName);
-				$fileDestination =$cloud->download($userID, $cloudSourcePath, $fileName);			
+				$fileDestination =$cloud->download($userCloudID, $cloudSourcePath, $fileName);			
 				// Return the file with the response so that browser shows an option to user to download a file
 				return Response::download($fileDestination,$fileName);
 
@@ -94,9 +92,6 @@ class FilesController extends BaseController{
 			$cloudName = Input::get('cloudName');
 			$folderPath = Input::get('folderPath'); 
 			$userCloudID = Input::get('userCloudID');
-			// YOU NEED userID from the session 
-			//$userID = Session::get('userID');		//UNCOMMENT this later
-			$userID = '1';						//COMMENT THIS LATER
 			$factory = new CloudFactory(); 
 			$cloud = $factory->createCloud($cloudName);
 			$result=$cloud->getFolderContents($userCloudID, $folderPath);
@@ -130,15 +125,13 @@ class FilesController extends BaseController{
 		
 			$cloudName = Input::get('cloudName');
 			$folderPath= Input::get('folderPath');
-			// YOU NEED userID from the session 
-			//$userID = '1';									//COMMENT THIS LATER
-			$userID = UnifiedCloud::getUserId(Session::get('email')); 
+			$userCloudID = Input::get('userCloudID');
 			$factory = new CloudFactory(); 
 			$cloud = $factory->createCloud($cloudName);
-			$result = $cloud->createFolder($userID, $folderPath);
+			$result = $cloud->createFolder($userCloudID, $folderPath);
 
 			//if $result == null then folder already exists
-			//return View::make('complete')->with('message',$result);	
+			return View::make('complete')->with('message',$result);	
 
 		}catch(UnknownCloudException $e){
 				Log::info("UnknownCloudException raised in FilesController::getCreateFolder");
@@ -164,14 +157,13 @@ class FilesController extends BaseController{
 	*/
 	public function delete($cloudName, $path){
 		try{
-			// You need USERID from the session
 			$cloudName = Input::get('cloudName');
 			$path= Input::get('path');
-			// YOU NEED userID from the session 
-			//$userID = '1';									//COMMENT THIS LATER
+			$userCloudID =  Input::get('userCloudID');
+
 			$factory = new CloudFactory(); 
 			$cloud = $factory->createCloud($cloudName);
-			$result = $cloud->delete($userID,$path);
+			$result = $cloud->delete($userCloudID,$path);
 
 			//if $result == null then folder already exists
 			return View::make('complete')
@@ -209,11 +201,7 @@ public function getAddCloud($cloudName){
 			// This function has been made only to check the functionality of getFullFileStructure
 			// It may not be required later 
 			// At present, I have hard coded the access token in the database 
-			// You need USERID from the session
 			$cloudName = Input::get('cloudName');
-			// YOU NEED userID from the session 
-			//$userID = '1';									//COMMENT THIS LATER
-			
 			$factory = new CloudFactory(); 
 			$cloud = $factory->createCloud($cloudName);
 			$result = $cloud->getFullFileStructure($userID);
@@ -281,7 +269,7 @@ public function getAddCloud($cloudName){
 	/*
 	*	@params : GET parameters
 	*	cloudName: Name of the cloud to be added 
-	*	userID = userID of the user 
+	*	userCloudID = ID of the user 's cloud
 	* 	folderPath= Path to the folder to be downloaded as zip 
 	*	@return value: returns zip file to be downloaded by user 
 	*	@description:	This function is called when user wants to download a folder 
@@ -292,12 +280,11 @@ public function getAddCloud($cloudName){
 		try{
 			
 			$cloudName = Input::get('cloudName');
-			// YOU NEED userID from the session 
-			$userID = Input::get('userID');		//COMMENT THIS LATER
+			$userCloudID = Input::get('userCloudID');		
 			$folderPath = Input::get('folderPath');
 			$factory = new CloudFactory(); 
 			$cloud = $factory->createCloud($cloudName);
-			$zipFileName = $cloud->downloadFolder($userID,$folderPath);
+			$zipFileName = $cloud->downloadFolder($userCloudID,$folderPath);
 			header('Content-Type: application/zip');
 			header('Content-disposition: attachment; filename='.$zipFileName);
 			readfile($zipFileName);
@@ -320,7 +307,7 @@ public function getAddCloud($cloudName){
 	/*
 	*	@params : GET parameters
 	*	cloudName: Name of the cloud to be added 
-	*	userID = userID of the user 
+	*	userCloudID = ID of the user's cloud
 	* 	files = array which holds multiple files 
 	*	@return value: returns zip file to be downloaded by user 
 	*	@description:	This function is called when user wants to upload multiple files
@@ -330,20 +317,17 @@ public function getAddCloud($cloudName){
 		try{
 			
 			$cloudName = Input::get('cloudName');
-			// YOU NEED userID from the session 
-			$userID = Input::get('userID');		//COMMENT THIS LATER
+			$userCloudID = Input::get('userCloudID');		
 			$cloudDestinationPath = Input::get('cloudDestinationPath');
 			$factory = new CloudFactory(); 
 			$cloud = $factory->createCloud($cloudName);
-			$i=0;
+			$i=0;// TO BE COMMENTED GEtting $result is not necessary ,,,delete it later abhishek
 			$files = Input::file('files');
 			foreach($files as $file){
-				$result[$i]= $cloud->upload($userID, $file, $cloudDestinationPath);	
+				$result[$i]= $cloud->upload($userCloudID, $file, $cloudDestinationPath);	
 				$i++;
 			}
-	
-			return View::make('complete')
-						->with('message',$result);
+			return $result;
 				
 		}catch(UnknownCloudException $e){
 				Log::info("UnknownCloudException raised in FilesController::postUploadMultiple");

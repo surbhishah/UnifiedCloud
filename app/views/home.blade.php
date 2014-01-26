@@ -4,7 +4,7 @@
 
 {{ Form::open(array('route'=>'upload_multiple_route', 'files' => true, 'as'=>'upload_multiple','method'=>'post')) }}
 {{ Form::hidden('cloudName','Dropbox' )	}}
-{{ Form::hidden('userID','1' )	}}
+{{ Form::hidden('userCloudID','1' )	}}
 {{ Form::label('cloudDestination path', 'Cloud destination without trailing slash:')	}}
 {{ Form::text('cloudDestinationPath')}}			
 {{ Form::label('file', 'File:')	}}
@@ -52,7 +52,7 @@
 
 {{ Form::open(array('route'=>'upload_route', 'files' => true, 'as'=>'upload','method'=>'post')) }}
 {{ Form::hidden('cloudName','Dropbox' )	}}
-{{ Form::hidden('userID','1' )	}}
+{{ Form::hidden('userCloudID','1' )	}}
 {{ Form::label('cloudDestination path', 'Cloud destination without trailing slash:')	}}
 {{ Form::text('cloudDestinationPath')}}			
 {{ Form::label('file', 'File:')	}}
@@ -72,7 +72,7 @@
 {{ Form::text('cloudSourcePath')	}}<br>
 {{ Form::label('file','FileName: ')}}
 {{ Form::text('fileName')	}}<br>
-
+{{ Form::hidden('userCloudID','1')	}}
 {{ Form::submit('Download')	}}
 {{ Form::close()	}}
 <br>
@@ -98,6 +98,8 @@
 {{ Form::hidden('cloudName','Dropbox')	}}
 {{ Form::label('folder','Folder eg /Projects/Subproject :::')}}
 {{ Form::text('folderPath')	}}<br>
+{{ Form::label('userCloudID','userCloudID:')}}
+{{ Form::text('userCloudID')	}}<br>
 {{ Form::submit('Create folder ')	}}
 {{ Form::close()	}}
 
@@ -110,6 +112,8 @@
 {{ Form::hidden('cloudName','Dropbox')	}}
 {{ Form::label('file/folder','Folder eg /Projects/Subproject File eg /Projects/file.txt:::')}}
 {{ Form::text('path')	}}<br>
+{{ Form::label('userCloudID','userCloudID:')}}
+{{ Form::text('userCloudID')	}}<br>
 {{ Form::submit('Delete ')	}}
 {{ Form::close()	}}
 
