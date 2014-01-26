@@ -11,6 +11,6 @@ class File extends Eloquent  {
 	 * @var string
 	 */
 		protected $table = 'files';
-
+		protected $nullable = 'hash';
 	
 }

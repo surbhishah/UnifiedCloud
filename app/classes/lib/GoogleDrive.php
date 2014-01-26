@@ -1,13 +1,11 @@
 <?php
 class GoogleDrive implements Cloud{
-	public function upload($userID, $userfile, $cloudDestinationPath){}
-	public function download($userID, $cloudSourcePath,$fileName){}
-	public function getRegistrationPage(){}
-	public function getCompletion(){}
-	public function getFullFileStructure($userID){}
-	public function refreshFullFileStructure($userID){}
-	public function delete($userID,$path){}
-	public function createFolder($userID,$folderPath){}
-	public function getFolderContents($userID, $folderPath){}
-
+		public function upload($userCloudID, $userfile, $cloudDestinationPath){}
+		public function download($userCloudID, $cloudSourcePath, $fileName){}
+		public function getFolderContents($userCloudID, $folderPath){}
+		public function createFolder($userCloudID, $folderPath){}
+		public function delete($userCloudID , $completePath){}
+		public function getRegistrationPage($userCloudName){}
+		public function getCompletion(){}
+		public function downloadFolder($userCloudID, $folderPath){}
 }

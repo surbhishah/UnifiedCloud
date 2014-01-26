@@ -10,13 +10,9 @@ class CreateFilesTable extends Migration {
 			$table->increments('fileID');
 			$table->string('file_name'); // Name of the file or folder 
 
-			// User ID of the user to which a file belongs
-			$table->integer('userID')->unsigned();
-			$table->foreign('userID')->references('userID')->on('users')->onDelete('cascade');
+			$table->integer('user_cloudID')->unsigned();
+			$table->foreign('user_cloudID')->references('user_cloudID')->on('user_cloud_info')->onDelete('cascade');
 			
-			// Cloud ID of the cloud to which a file belongs
-			$table->integer('cloudID')->unsigned();
-			$table->foreign('cloudID')->references('cloudID')->on('clouds')->onDelete('cascade');
 
 			// Path not including the filename
 			// This path is the path of the file in the Cloud 
@@ -29,8 +25,8 @@ class CreateFilesTable extends Migration {
 									// This field is also the HASH of a folder 
 									// In dropbox , documentation says that hash of a folder is rev equivalent
 			$table->timestamps();
-			$table->unique(array('userID','file_name','path','cloudID'));
-			
+			$table->unique(array('user_cloudID','file_name','path'));
+			$table->string('hash')->nullable();	// is nullable because files dont have hashes in dropbox 
 		});		
 	}
 
