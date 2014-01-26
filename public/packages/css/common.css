@@ -80,3 +80,17 @@
           box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(244, 101, 95, 0.6);
 }
 
+.footer {
+    color: #f4655f;
+    position: relative;
+    height: 100px;
+    bottom: 0;
+    width: 100%;
+    background-color: #7e7e7e;
+    margin-top: 50px; 
+}
+
+.main-nav {
+    margin-bottom: 0px;
+    background-image: url(../img/noisy_net.png);
+}

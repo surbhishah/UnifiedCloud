@@ -1,13 +1,10 @@
 /*@import url(http://fonts.googleapis.com/css?family=Lemon);*/
 /*@import url(http://fonts.googleapis.com/css?family=Indie+Flower);*/
-@import url(http://fonts.googleapis.com/css?family=Covered+By+Your+Grace);
 
 html , body {
     height: 100% !important;
 }
-.main-nav {
-    margin-bottom: 0px;
-}
+
 
 .jumbotron {
     background-image: url('../img/pattern.png');

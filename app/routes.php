@@ -19,7 +19,7 @@ Route::get('mock',function(){
 // open front page 
 Route::get('/', array( 'as' => 'landing', function()
 {
-	return View::make('landing.landing');
+	return View::make('landing.landing',array('title' => 'Kumo.'));
 }));
 
 //user login
@@ -42,13 +42,15 @@ Route::get('user/register',array(
 
 
 //user signin 
-Route::get('signin', array( 'as' => 'sign_in_page',function() {
-    return View::make('user.signin');
+Route::get('signin', array( 
+	'as' => 'sign_in_page',function() {
+    return View::make('user.signin',array('title' => 'Sign in.'));
 }));
 
 //user signup
-Route::get('signup', array('as' => 'sign_up_page',function() {
-    return View::make('user.signup');
+Route::get('signup', array(
+	'as' => 'sign_up_page',function() {
+    return View::make('user.signup',array('title' => 'Sign up.'));
 }));
 
 //logout

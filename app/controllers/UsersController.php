@@ -15,7 +15,7 @@ class UsersController extends BaseController {
     public function getDashboard() {
         
         $clouds = UnifiedCloud::getCloudsByEmail(Session::get('email'));
-        return View::make('dashboard.dashboard')->with('clouds',$clouds);    
+        return View::make('dashboard.dashboard',array('title' => 'Dashboard'))->with('clouds',$clouds);    
     }
 
     public function postSignin() {
@@ -23,9 +23,10 @@ class UsersController extends BaseController {
            
            //Session email variable to get user data from tables
             Session::put('email',Input::get('email'));
-            $clouds = UnifiedCloud::getCloudsByEmail(Session::get('email'));
+            //$clouds = UnifiedCloud::getCloudsByEmail(Session::get('email'));
 
-            return View::make('dashboard.dashboard')->with('clouds',$clouds);
+            //return View::make('dashboard.dashboard')->with('clouds',$clouds);
+            return Redirect::route('dashboard');
         } else {
            return Redirect::route('sign_in_page')
               ->with('message', 'Incorrect email or password')

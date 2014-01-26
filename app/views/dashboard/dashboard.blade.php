@@ -6,85 +6,75 @@
 
     @include('dashboard.cloudSelectModal')
     @include('dashboard.fileUploadModal')
-    {{-- print_r($clouds) --}}
-<!-- <div class="row">
-    <div class="col-xs-6 col-md-3">
-        
-    </div>
-    <div class="col-xs-12 col-md-9">
-    </div>
-</div>
- -->
+
 <div class="row">
-    <div class="col-xs-6 col-md-3">
+    <div class="col-md-3">
         <h3 class="dashboard-heading">Dashboard</h3>
     </div>
-    <div class="col-xs-12 col-md-9">
-            @include('dashboard.cloudControls')
+    <!-- col -->
+    <div class="col-md-9">
+        @include('dashboard.cloudControls')
     </div>
+    <!-- col -->
 </div>
+<!-- row -->
 <div class="row">
-    <div class="col-xs-6 col-md-3">
-        <div class="panel panel-default user-panel">
-        <div class="btn-group-vertical btn-block">
-            <button class="btn btn-custom ">
-                <span class="pull-left btn-label-lg">Clouds</span>
-                <span class="glyphicon glyphicon-plus pull-right" data-toggle="modal" data-target="#SelectModal"></span>
-            </button>
-            @include('dashboard.clouds')
-        <button class="btn btn-custom ">
-            <span class="pull-left btn-label-lg">Account Settings</span>
-            <span class="glyphicon glyphicon-cog pull-right"></span>
-        </button>
-        </div><!-- vertical btn group-->
-        </div><!-- control panel-->
-    </div>
-    <div class="col-xs-12 col-md-9">
-        <div class="panel panel-default file-explorer-panel">
-            <div class="panel-heading">
-                @include('dashboard.dashboardPanelHead')
-            </div>
-            <div class="panel-body">
-                <table cellspacing="0" class="table" id="file-explorer">
-                     <thead>
-                        <tr>
-                             <td>
-                                Name
-                            </td>
-                            <td>
-                                Modified On
-                            </td>
-                            <td>
-                                Size
-                            </td>
-                            <td>
-                                Type
-                            </td>
-                        </tr>
-                     </thead>
-                        <tbody>
-                           @include('dashboard.tableBody')
-                        </tbody>
-                </table>
-            </div><!-- panel-body -->
+    <div class="col-md-2" id="side-bar">
+
+        <ul class="nav nav-stacked" >
+            <li id="side-bar-header"></li>
+            <li><span class="glyphicon glyphicon-cloud pull-left" ></span>Clouds</li>
             
-        </div>
+            @include('dashboard.clouds')
+            <li data-toggle="modal" data-target="#SelectModal">
+                <span class="glyphicon glyphicon-plus-sign pull-left" ></span>Clouds
+            </li>
+            <li>
+                <span class="glyphicon glyphicon-cog pull-left"></span>Settings
+            </li>
+        </ul>
+        <!-- ul  -->
     </div>
+    <!-- side-bar col-->
+    <div class="col-md-10" id="file-explorer">
+        <div class="row">
+            @include('dashboard.dashboardPanelHead')
+        </div>
+        <!-- dashboardPanelHead -->
+        <div class="row">
+            <table cellspacing="0" class="table">
+               <thead>
+                    <tr>
+                        <td>Name</td>
+                        <td>Modified On</td>
+                        <td>Size</td>
+                        <td>Type</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @include('dashboard.tableBody')
+                </tbody>
+            </table>
+        </div>
+        <!-- row -->
+    </div>
+
 </div>
+
 <div id="cwd"></div>
 </div>
+<!-- container -->
 @endsection
 
 @section('scripts')
-    @parent
-    {{ HTML::script('packages/js/dashboard.js')}}
-    {{ HTML::script('packages/js/jquery-dateformat.js')}}
-    {{ HTML::script('packages/bootstrap/js/modal.js' )}}
-    {{ HTML::script('packages/js/notify.js' )}}
+@parent
+{{ HTML::script('packages/js/dashboard.js')}}
+{{ HTML::script('packages/js/jquery-dateformat.js')}}
+{{ HTML::script('packages/bootstrap/js/modal.js' )}}
+{{ HTML::script('packages/js/notify.js' )}}
 @stop
 
 @section('links')
-    @parent
-    {{ HTML::style('packages/css/dashboard.css') }}
-    {{ HTML::style('packages/css/common.css') }}
+@parent
+{{ HTML::style('packages/css/stylesheets/dashboard.css') }}
 @stop
