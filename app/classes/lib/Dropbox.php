@@ -53,8 +53,6 @@ class Dropbox implements CloudInterface{
 				// refreshing our database with updates from dropbox
 				$this->refreshFolder($userCloudID, $cloudDestinationPath);
 				// Update UnifiedCloud database that a new file has been uploaded
-//				UnifiedCloud::addFileInfo($fileName, $userID,self::$cloudID, $cloudDestinationPath,
-//					$result['is_dir'],$result['modified'],$result['size'],$result['rev']);
 
 
 				// DO NOT UPDATE THIS may create inconsistencies
@@ -475,6 +473,20 @@ class Dropbox implements CloudInterface{
 			throw $e;
 		}
 	}
+/************************************************************************************************/
+
+	/*
+	*	@params:
+	*	userCloudID = ID of the user's cloud
+	*	folderPath = Path to the folder to be downloaded
+	*	@return value: None
+	* 	@Exceptions:	Exception
+	*	@description: This function calls refreshFolder function on all child folders
+	*					This is necessary since we might not have data about children when
+	*					downloadFolder is called on a folder 
+	*					
+	*/
+
 	private function getFolderWithDescendants($userCloudID, $folderPath){
 		try{
 			$folderContents = $this->getFolderContents($userCloudID, $folderPath);
