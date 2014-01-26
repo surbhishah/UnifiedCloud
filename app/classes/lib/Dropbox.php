@@ -173,16 +173,26 @@ class Dropbox implements CloudInterface{
 	*	@params:
 	*	userCloudID = ID of the user's cloud
 	* 	folderPath = Path of the folder whose contents have been sought
+	*	cached: if cached= true, data will be sent from cache is it is present
+	*			otherwise it will be sent from database
 	*	For eg : if folderPath = /Projects/Unicloud then contents of Unicloud will be returned
 	*	@return value: Meta data of the folder and its files and folders
 	*	@description : This function gets new meta data from dropbox ie refreshes 
 	*					our database and returns new data
 	* 	@Exceptions:	Exception
 	*/
-	public function getFolderContents($userCloudID, $folderPath){
+	public function getFolderContents($userCloudID, $folderPath, $cached){
 		try{
-			 $this->refreshFolder($userCloudID, $folderPath);
-			 return UnifiedCloud::getFolderContents($userCloudID, $folderPath);
+			 $key = $userCloudID.$folderPath;
+			 if(Cache::has($key) && $cached =='true'){ //cached is a string, not boolean
+			 	return Cache::get($key);
+			 }
+			 else{
+			 	$this->refreshFolder($userCloudID, $folderPath);
+			 	$folderContents= UnifiedCloud::getFolderContents($userCloudID, $folderPath);
+			 	Cache::put($key, $folderContents, 10);
+			 	return $folderContents;
+			 }
 		}catch(Exception $e){
 			Log::info("Exception raised in Dropbox::refreshFolder",array('userCloudID'=>$userCloudID, 'folderPath'=>$folderPath));
 			Log::error($e);				

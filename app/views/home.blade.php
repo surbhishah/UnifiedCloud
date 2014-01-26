@@ -49,6 +49,9 @@
 {{ Form::text('folderPath')	}}<br>
 {{ Form::label('userCloudID','userCloudID:')}}
 {{ Form::text('userCloudID')	}}<br>
+{{ Form::label('cached','cached:')}}
+{{ Form::text('cached')	}}<br>
+
 {{ Form::submit('Get folder Contents')	}}
 {{ Form::close()	}}
 
