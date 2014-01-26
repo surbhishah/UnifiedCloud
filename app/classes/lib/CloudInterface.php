@@ -4,7 +4,7 @@ interface CloudInterface{
 	// not called directly
 		public function upload($userCloudID, $userfile, $cloudDestinationPath);
 		public function download($userCloudID, $cloudSourcePath, $fileName);
-		//public function getFolderContents($userCloudID, $folderPath);
+		public function getFolderContents($userCloudID, $folderPath, $cached);
 		public function createFolder($userCloudID, $folderPath);
 		public function delete($userCloudID , $completePath);
 		public function getRegistrationPage($userCloudName);
