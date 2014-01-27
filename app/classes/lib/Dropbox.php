@@ -105,7 +105,7 @@ class Dropbox implements CloudInterface{
 			// Get client object
 			$client = $this->getClient($userCloudID);
 			// Get fileID of this file from the database
-			$file = UnifiedCloud::getFile($userCloudID, $cloudSourcePath, $fileName );
+			$file = UnifiedCloud::getFileAttributes($userCloudID, $cloudSourcePath, $fileName ,array('fileID','rev'));
 			if($file==null){
 				throw new Exception("File does not exist");
 			}
@@ -466,7 +466,7 @@ class Dropbox implements CloudInterface{
 	public function downloadFolder($userCloudID, $folderPath){
 		 try{
 		 		list($path, $folderName)=	Utility::splitPath($folderPath);
-				$folder = UnifiedCloud::getFile($userCloudID, $path, $folderName );
+				$folder = UnifiedCloud::getFileAttributes($userCloudID, $path, $folderName,array('fileID'));
 				$folderID = $folder->fileID;
 				$this->getFolderWithDescendants($userCloudID, $folderPath);
 				

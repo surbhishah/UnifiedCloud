@@ -53,13 +53,28 @@ class UnifiedCloud {
 	*		fileName:	Name of the file For eg file.txt
 	*	@return value:
 	*	 	object of class FileModel
-	*	@decription : Returns the file of a user at a particular path on the cloud 
-	*
 	*/
 	public static function getFile($userCloudID, $path, $fileName){
 			return FileModel::where('user_cloudID','=',$userCloudID)
 							->where('path','=',$path)->where('file_name','=',$fileName)
 							->get()->first();
+	}
+/**********************************************************************************************/	
+	/*
+	*	@params:
+	*		userCloudID : ID of the user 's cloud
+	*		path : Path to the file For eg /Project/UniCloud for a file at /Project/UniCloud/file.txt
+	*		fileName:	Name of the file For eg file.txt
+	*		attributes: array of attributes to be fetched and returned
+	*	@return value:
+	*	 	fileModel object with specified attributes
+	*	@decription : Returns the attributes of file of a user at a particular path on the cloud 
+	*
+	*/
+	public static function getFileAttributes($userCloudID, $path, $fileName, $attributes){
+			return FileModel::where('user_cloudID','=',$userCloudID)
+							->where('path','=',$path)->where('file_name','=',$fileName)
+							->select($attributes)->get()->first();
 	}
 /**********************************************************************************************/
 	/*
@@ -149,10 +164,10 @@ class UnifiedCloud {
 	*	 	Boolean : userID of the user with this email
 	*/
 
-	public static function getUserID($email) {
+	public static function getUser($email) {
 		//user cannot sign in without a valid email id, therefore no checking for
 		//validity of email.
-		return User::where('email','=',$email)->get()->first()->pluck('userID');
+		return User::where('email','=',$email)->get()->first();
 	}
 /**********************************************************************************************/
 	/*
