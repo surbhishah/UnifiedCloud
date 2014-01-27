@@ -181,7 +181,7 @@ class Dropbox implements CloudInterface{
 	*					our database and returns new data
 	* 	@Exceptions:	Exception
 	*/
-	public function getFolderContents($userCloudID, $folderPath, $cached){
+	public function getFolderContents($userCloudID, $folderPath, $cached='false'){
 		try{
 			 $key = $userCloudID.$folderPath;
 			 if(Cache::has($key) && $cached =='true'){ //cached is a string, not boolean
