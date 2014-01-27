@@ -29,7 +29,8 @@
                     @else
                         {{-- */ $first_name = ""; /*--}}
                     @endif
-                    <input type="firtname" name="first_name" class="form-control" placeholder="First Name" value="{{ $first_name }}">
+                    <input type="firstname" name="first_name" class="form-control" 
+                    placeholder="First Name" value="{{ $first_name }}">
                 </div>
                 <div class="form-group">
                     @if(Input::old())
@@ -37,7 +38,8 @@
                             @else
                                 {{-- */ $last_name = ""; /*--}}
                             @endif
-                    <input type="lastname" name="last_name" class="form-control" placeholder="Last Name" value=" {{ $last_name }}">
+                    <input type="lastname" name="last_name" class="form-control" 
+                    placeholder="Last Name" value=" {{ $last_name }}">
                 </div>
                 <div class="form-group">
                     @if(Input::old())

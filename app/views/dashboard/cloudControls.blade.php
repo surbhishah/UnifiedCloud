@@ -1,4 +1,4 @@
- <div class="nav">
+ <div class="nav cloud-control">
     <ul class="list-inline pull-right cloud-control-buttons">        
         <li><span class="glyphicon glyphicon-plus" id="new-folder"></span></li>
         <li><span class="glyphicon glyphicon-cloud-upload" id="upload" data-toggle="modal" data-target="#fileUploadModal"></span></li>

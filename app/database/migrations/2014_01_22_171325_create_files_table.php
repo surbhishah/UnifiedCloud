@@ -18,6 +18,7 @@ class CreateFilesTable extends Migration {
 			// This path is the path of the file in the Cloud 
 			$table->string('path');
 			$table->boolean('is_encrypted');
+			$table->string('encryption_key_hash')->nullable(); //hash of random generated pass key encrypted by user encryption password.
 			$table->boolean('is_directory');// ADDED LATER 
 			$table->timestamp('last_modified_time');
 			$table->integer('size');

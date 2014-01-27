@@ -12,59 +12,19 @@ html , body {
                          center it. Also need to make it float so that is move down along with the 
                          page and also changes to upward arrow as it moves down. TODO*/
     background-color: #f4655f !important;
-    color: #ffffff;
-    height: 90%;
-}
-
-.brand-shadow {
-    text-shadow: 0px -2px 5px rgba(134, 13, 9, 0.4);
+    color: #fff;
+    height: 95%;
 }
 
 
-.btn-custom-common {
-    font-size: 0.8em !important;   
-}
-
-.btn-custom a {
+.features h1 {
+    font-size: 3em;
     color: #f4655f;
-    text-decoration: none;
 }
-
-
-.btn-custom a:hover {
-    color: #ffffff;
-    text-decoration: none;
+.features p {
+    font-size: 1.5em;
+    color: #575757;
 }
-
-.btn-custom {
-    color: #f4655f;
-    border: 1px solid;
-    border-color: #f4655f;
-    background-color: #ffffff;
-}
-
-.btn-custom:hover {
-    color: #ffffff;
-    border-color: #ffffff;
-    background-color: #f4655f;
-}
-
-
-.button-row {
-    margin-top: 21px;
-    margin-bottom: 10.5px;
-}
-
-
-/* downward arrow*/
-.learn-more-row {
-    margin-top: 21px;
-    margin-bottom: 10.5px;
-    position: absolute;
-    right: 30px;
-    bottom: 0px;
-}
-
 /* css for signin modal */
 
 .login {

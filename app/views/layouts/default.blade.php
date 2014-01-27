@@ -16,22 +16,32 @@
         @section('scripts')
             {{ HTML::script('packages/bootstrap/js/jquery-1.10.js')}}
             {{ HTML::script('packages/bootstrap/js/bootstrap.min.js')}}
-            {{ HTML::script('js/main.js')}}
+            {{ HTML::script('packages/js/notify.js' )}}
         @show
         
         
         <div class="footer">
-            <div class="row">
-                <div class="col-md-6">
-                    Kumo.
-                    <p>Written primarily by me.</p>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Kumo.</h4>
+                        <p>A brainchild of Abhishek Nair, Jhalak Jain, Pooja Garg and Surbhi Shah.</p>
+                    </div>
+                    <div class="col-md-6 follow-us">
+                        <h4>Follow us on.</h4>
+                            <div id="fb"></div>
+                            <!-- <span>Facebook.</span> -->
+                        
+                            <div id="twitter"></div>
+                            <!-- <span>Twitter.</span> -->
+                            <div id="github"></div>
+                            <!-- <span>Github.</span> -->
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <p>twitter</p>
-                    <p>facebook</p>
-                </div>
-            </div>
+        </div>
+        <!-- footer container -->
         </div>
         
     </body>
 </html>
+

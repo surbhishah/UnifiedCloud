@@ -6,7 +6,19 @@
         <h4 class="modal-title">Select Clouds</h4>
       </div>
       <div class="modal-body">
-        <a href="{{ route('authenticate_route',array('cloudName' => 'Dropbox')) }}"><img src={{ asset('packages/img/dropbox-icon.png') }}></a>
+        <!-- cloud icons -->
+        <div class="row">
+          <div class="col-md-6">
+            <a href="{{ route('authenticate_route',
+            array('cloudName' => 'Dropbox','userCloudName' => '')) }}"><img src={{ asset('packages/img/dropbox-icon.png') }}></a>
+            Dropbox</div>
+        <!-- dropbox icon -->
+          <div class="col-md-6">
+            <a href="{{ route('authenticate_route',array('cloudName' => 'Drive')) }}"><img src={{ asset('packages/img/google_drive_icon.png') }}></a>
+            Drive
+          </div>
+        </div>
+        <!-- dropbox icon -->
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->

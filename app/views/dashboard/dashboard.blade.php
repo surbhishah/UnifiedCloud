@@ -9,7 +9,7 @@
 
 <div class="row">
     <div class="col-md-3">
-        <h3 class="dashboard-heading">Dashboard</h3>
+        <h3 class="dashboard-heading"></h3>
     </div>
     <!-- col -->
     <div class="col-md-9">
@@ -71,7 +71,6 @@
 {{ HTML::script('packages/js/dashboard.js')}}
 {{ HTML::script('packages/js/jquery-dateformat.js')}}
 {{ HTML::script('packages/bootstrap/js/modal.js' )}}
-{{ HTML::script('packages/js/notify.js' )}}
 @stop
 
 @section('links')
