@@ -92,10 +92,11 @@ class FilesController extends BaseController{
 			$cloudName = Input::get('cloudName');
 			$folderPath = Input::get('folderPath'); 
 			$userCloudID = Input::get('userCloudID');
+			$cached = Input::get('cached');
 			$factory = new CloudFactory(); 
 			$cloud = $factory->createCloud($cloudName);
-			$result=$cloud->getFolderContents($userCloudID, $folderPath);
-			return View::make('complete')->with('message',$result);
+			$result=$cloud->getFolderContents($userCloudID, $folderPath,$cached);
+			return $result;
 			
 
 		}catch(UnknownCloudException $e){
