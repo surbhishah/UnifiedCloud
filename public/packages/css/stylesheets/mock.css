@@ -1,0 +1,39 @@
+/* line 8, ../sass/mock.scss */
+#side-pane {
+  background-color: #4d505b;
+  min-height: 500px;
+  border-radius: 4px 0px 0px 4px;
+  box-shadow: -2px 1px 2px 0px rgba(30, 36, 31, 0.4);
+  padding: 0px !important;
+}
+/* line 15, ../sass/mock.scss */
+#side-pane ul {
+  margin-top: 10px;
+}
+/* line 18, ../sass/mock.scss */
+#side-pane ul li {
+  text-align: left;
+  padding-left: 2em;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  font-size: 1.4em;
+  color: #f1f1f1;
+  text-shadow: rgba(30, 36, 31, 0.4);
+  border-bottom: 1px solid #323337;
+  margin-top: 0px !important;
+}
+/* line 32, ../sass/mock.scss */
+#side-pane ul .selected {
+  color: #4d505b;
+  background-color: #f1f1f1;
+  border-left: 4px solid #00ddd8;
+  text-shadow: 0px 1px rgba(30, 36, 31, 0.4);
+}
+
+/* line 44, ../sass/mock.scss */
+#file-explorer {
+  background-color: #f1f1f1;
+  min-height: 500px;
+  border-radius: 0px 4px 4px 0px;
+  box-shadow: 2px 1px 2px 0px rgba(30, 36, 31, 0.4);
+}

@@ -1,0 +1,644 @@
+/*======== colors ===================*/
+/*====================================*/
+/*========== mixins ==================*/
+/*====================================*/
+/*======= animation for clouds ========*/
+@-webkit-keyframes box-cloud {
+  /* line 68, ../sass/landing.scss */
+  0% {
+    left: 31%;
+    top: 26%;
+  }
+
+  /* line 69, ../sass/landing.scss */
+  100% {
+    left: 36%;
+    top: 26%;
+  }
+}
+
+@-moz-keyframes box-cloud {
+  /* line 68, ../sass/landing.scss */
+  0% {
+    left: 31%;
+    top: 26%;
+  }
+
+  /* line 69, ../sass/landing.scss */
+  100% {
+    left: 36%;
+    top: 26%;
+  }
+}
+
+@-o-keyframes box-cloud {
+  /* line 68, ../sass/landing.scss */
+  0% {
+    left: 31%;
+    top: 26%;
+  }
+
+  /* line 69, ../sass/landing.scss */
+  100% {
+    left: 36%;
+    top: 26%;
+  }
+}
+
+@keyframes box-cloud {
+  /* line 68, ../sass/landing.scss */
+  0% {
+    left: 31%;
+    top: 26%;
+  }
+
+  /* line 69, ../sass/landing.scss */
+  100% {
+    left: 36%;
+    top: 26%;
+  }
+}
+
+@-webkit-keyframes box2-cloud {
+  /* line 73, ../sass/landing.scss */
+  0% {
+    left: 61%;
+    top: 26%;
+  }
+
+  /* line 74, ../sass/landing.scss */
+  100% {
+    left: 56%;
+    top: 26%;
+  }
+}
+
+@-moz-keyframes box2-cloud {
+  /* line 73, ../sass/landing.scss */
+  0% {
+    left: 61%;
+    top: 26%;
+  }
+
+  /* line 74, ../sass/landing.scss */
+  100% {
+    left: 56%;
+    top: 26%;
+  }
+}
+
+@-o-keyframes box2-cloud {
+  /* line 73, ../sass/landing.scss */
+  0% {
+    left: 61%;
+    top: 26%;
+  }
+
+  /* line 74, ../sass/landing.scss */
+  100% {
+    left: 56%;
+    top: 26%;
+  }
+}
+
+@keyframes box2-cloud {
+  /* line 73, ../sass/landing.scss */
+  0% {
+    left: 61%;
+    top: 26%;
+  }
+
+  /* line 74, ../sass/landing.scss */
+  100% {
+    left: 56%;
+    top: 26%;
+  }
+}
+
+@-webkit-keyframes box3-cloud {
+  /* line 78, ../sass/landing.scss */
+  0% {
+    left: 0%;
+    top: 73%;
+  }
+
+  /* line 79, ../sass/landing.scss */
+  25% {
+    left: 25%;
+    top: 73%;
+  }
+
+  /* line 80, ../sass/landing.scss */
+  50% {
+    left: 50%;
+    top: 73%;
+  }
+
+  /* line 81, ../sass/landing.scss */
+  75% {
+    left: 75%;
+    top: 73%;
+  }
+
+  /* line 82, ../sass/landing.scss */
+  100% {
+    left: 100%;
+    top: 73%;
+  }
+}
+
+@-moz-keyframes box3-cloud {
+  /* line 78, ../sass/landing.scss */
+  0% {
+    left: 0%;
+    top: 73%;
+  }
+
+  /* line 79, ../sass/landing.scss */
+  25% {
+    left: 25%;
+    top: 73%;
+  }
+
+  /* line 80, ../sass/landing.scss */
+  50% {
+    left: 50%;
+    top: 73%;
+  }
+
+  /* line 81, ../sass/landing.scss */
+  75% {
+    left: 75%;
+    top: 73%;
+  }
+
+  /* line 82, ../sass/landing.scss */
+  100% {
+    left: 100%;
+    top: 73%;
+  }
+}
+
+@-o-keyframes box3-cloud {
+  /* line 78, ../sass/landing.scss */
+  0% {
+    left: 0%;
+    top: 73%;
+  }
+
+  /* line 79, ../sass/landing.scss */
+  25% {
+    left: 25%;
+    top: 73%;
+  }
+
+  /* line 80, ../sass/landing.scss */
+  50% {
+    left: 50%;
+    top: 73%;
+  }
+
+  /* line 81, ../sass/landing.scss */
+  75% {
+    left: 75%;
+    top: 73%;
+  }
+
+  /* line 82, ../sass/landing.scss */
+  100% {
+    left: 100%;
+    top: 73%;
+  }
+}
+
+@keyframes box3-cloud {
+  /* line 78, ../sass/landing.scss */
+  0% {
+    left: 0%;
+    top: 73%;
+  }
+
+  /* line 79, ../sass/landing.scss */
+  25% {
+    left: 25%;
+    top: 73%;
+  }
+
+  /* line 80, ../sass/landing.scss */
+  50% {
+    left: 50%;
+    top: 73%;
+  }
+
+  /* line 81, ../sass/landing.scss */
+  75% {
+    left: 75%;
+    top: 73%;
+  }
+
+  /* line 82, ../sass/landing.scss */
+  100% {
+    left: 100%;
+    top: 73%;
+  }
+}
+
+@-webkit-keyframes box4-cloud {
+  /* line 86, ../sass/landing.scss */
+  0% {
+    left: 0% -50;
+    top: 84%;
+  }
+
+  /* line 87, ../sass/landing.scss */
+  25% {
+    left: 25% -50;
+    top: 84%;
+  }
+
+  /* line 88, ../sass/landing.scss */
+  50% {
+    left: 50% -50;
+    top: 84%;
+  }
+
+  /* line 89, ../sass/landing.scss */
+  75% {
+    left: 75% -50;
+    top: 84%;
+  }
+
+  /* line 90, ../sass/landing.scss */
+  100% {
+    left: 100%;
+    top: 84%;
+  }
+}
+
+@-moz-keyframes box4-cloud {
+  /* line 86, ../sass/landing.scss */
+  0% {
+    left: 0% -50;
+    top: 84%;
+  }
+
+  /* line 87, ../sass/landing.scss */
+  25% {
+    left: 25% -50;
+    top: 84%;
+  }
+
+  /* line 88, ../sass/landing.scss */
+  50% {
+    left: 50% -50;
+    top: 84%;
+  }
+
+  /* line 89, ../sass/landing.scss */
+  75% {
+    left: 75% -50;
+    top: 84%;
+  }
+
+  /* line 90, ../sass/landing.scss */
+  100% {
+    left: 100%;
+    top: 84%;
+  }
+}
+
+@-o-keyframes box4-cloud {
+  /* line 86, ../sass/landing.scss */
+  0% {
+    left: 0% -50;
+    top: 84%;
+  }
+
+  /* line 87, ../sass/landing.scss */
+  25% {
+    left: 25% -50;
+    top: 84%;
+  }
+
+  /* line 88, ../sass/landing.scss */
+  50% {
+    left: 50% -50;
+    top: 84%;
+  }
+
+  /* line 89, ../sass/landing.scss */
+  75% {
+    left: 75% -50;
+    top: 84%;
+  }
+
+  /* line 90, ../sass/landing.scss */
+  100% {
+    left: 100%;
+    top: 84%;
+  }
+}
+
+@keyframes box4-cloud {
+  /* line 86, ../sass/landing.scss */
+  0% {
+    left: 0% -50;
+    top: 84%;
+  }
+
+  /* line 87, ../sass/landing.scss */
+  25% {
+    left: 25% -50;
+    top: 84%;
+  }
+
+  /* line 88, ../sass/landing.scss */
+  50% {
+    left: 50% -50;
+    top: 84%;
+  }
+
+  /* line 89, ../sass/landing.scss */
+  75% {
+    left: 75% -50;
+    top: 84%;
+  }
+
+  /* line 90, ../sass/landing.scss */
+  100% {
+    left: 100%;
+    top: 84%;
+  }
+}
+
+/* line 93, ../sass/landing.scss */
+#box {
+  z-index: 100;
+  top: 26%;
+  left: 36%;
+  width: 84px;
+  height: 84px;
+  position: absolute;
+  background-color: none;
+  -webkit-animation-delay: 0;
+  -webkit-animation-duration: 2s;
+  -webkit-animation-name: box-cloud;
+  -webkit-animation-timing-function: linear;
+  -webkit-animation-iteration-count: 1;
+  -moz-animation-delay: 0;
+  -moz-animation-duration: 2s;
+  -moz-animation-name: box-cloud;
+  -moz-animation-timing-function: linear;
+  -moz-animation-iteration-count: 1;
+  -o-animation-delay: 0;
+  -o-animation-duration: 2s;
+  -o-animation-name: box-cloud;
+  -o-animation-timing-function: linear;
+  -o-animation-iteration-count: 1;
+  animation-delay: 0;
+  animation-duration: 2s;
+  animation-name: box-cloud;
+  animation-timing-function: linear;
+  animation-iteration-count: 1;
+}
+
+/* line 100, ../sass/landing.scss */
+#box2 {
+  z-index: 100;
+  top: 26%;
+  left: 56%;
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  background-color: none;
+  -webkit-animation-delay: 0;
+  -webkit-animation-duration: 2s;
+  -webkit-animation-name: box2-cloud;
+  -webkit-animation-timing-function: linear;
+  -webkit-animation-iteration-count: 1;
+  -moz-animation-delay: 0;
+  -moz-animation-duration: 2s;
+  -moz-animation-name: box2-cloud;
+  -moz-animation-timing-function: linear;
+  -moz-animation-iteration-count: 1;
+  -o-animation-delay: 0;
+  -o-animation-duration: 2s;
+  -o-animation-name: box2-cloud;
+  -o-animation-timing-function: linear;
+  -o-animation-iteration-count: 1;
+  animation-delay: 0;
+  animation-duration: 2s;
+  animation-name: box2-cloud;
+  animation-timing-function: linear;
+  animation-iteration-count: 1;
+}
+
+/* line 107, ../sass/landing.scss */
+#box3 {
+  z-index: 100;
+  top: 73%;
+  left: -256px;
+  width: 60px;
+  height: 60px;
+  position: absolute;
+  background-color: none;
+  -webkit-animation-delay: 0;
+  -webkit-animation-duration: 30s;
+  -webkit-animation-name: box3-cloud;
+  -webkit-animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+  -moz-animation-delay: 0;
+  -moz-animation-duration: 30s;
+  -moz-animation-name: box3-cloud;
+  -moz-animation-timing-function: linear;
+  -moz-animation-iteration-count: infinite;
+  -o-animation-delay: 0;
+  -o-animation-duration: 30s;
+  -o-animation-name: box3-cloud;
+  -o-animation-timing-function: linear;
+  -o-animation-iteration-count: infinite;
+  animation-delay: 0;
+  animation-duration: 30s;
+  animation-name: box3-cloud;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+/* line 113, ../sass/landing.scss */
+#box4 {
+  z-index: 100;
+  top: 84%;
+  left: -256px;
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  background-color: none;
+  -webkit-animation-delay: 0;
+  -webkit-animation-duration: 36s;
+  -webkit-animation-name: box4-cloud;
+  -webkit-animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+  -moz-animation-delay: 0;
+  -moz-animation-duration: 36s;
+  -moz-animation-name: box4-cloud;
+  -moz-animation-timing-function: linear;
+  -moz-animation-iteration-count: infinite;
+  -o-animation-delay: 0;
+  -o-animation-duration: 36s;
+  -o-animation-name: box4-cloud;
+  -o-animation-timing-function: linear;
+  -o-animation-iteration-count: infinite;
+  animation-delay: 0;
+  animation-duration: 36s;
+  animation-name: box4-cloud;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+/*===================================*/
+/* line 121, ../sass/landing.scss */
+html {
+  height: 100% !important;
+}
+/* line 124, ../sass/landing.scss */
+html body {
+  height: 100% !important;
+}
+/* line 127, ../sass/landing.scss */
+html body .jumbotron {
+  background-image: url("../../img/pattern.png");
+  position: relative;
+  /* for the bottom alignment of the downward arrow, I could not find a method to 
+   center it. Also need to make it float so that is move down along with the 
+   page and also changes to upward arrow as it moves down. TODO*/
+  background-color: #f4655f !important;
+  color: white;
+  height: 95%;
+  box-shadow: 0px 1px 4px rgba(12, 12, 12, 0.4);
+}
+/* line 136, ../sass/landing.scss */
+html body .jumbotron .container {
+  z-index: 105;
+  position: relative;
+  /* downward arrow*/
+}
+/* line 141, ../sass/landing.scss */
+html body .jumbotron .container .learn-more {
+  z-index: 105;
+  position: relative;
+}
+/* line 147, ../sass/landing.scss */
+html body .jumbotron .container .learn-more-row {
+  margin-top: 21px;
+  margin-bottom: 10.5px;
+  position: absolute;
+  right: 30px;
+  bottom: 0px;
+}
+/* line 156, ../sass/landing.scss */
+html body .jumbotron .container .learn-more .glyphicon {
+  font-size: 1.4em;
+  cursor: pointer;
+}
+/* line 164, ../sass/landing.scss */
+html body .features h1 {
+  font-size: 3em;
+  color: #f4655f;
+}
+/* line 168, ../sass/landing.scss */
+html body .features p {
+  font-size: 1.5em;
+  color: #575757;
+}
+
+/* line 177, ../sass/landing.scss */
+.brand {
+  /*font-family: 'Indie Flower';*/
+  font-family: 'Covered By Your Grace';
+  font-size: 5em !important;
+  color: white;
+}
+
+/* line 184, ../sass/landing.scss */
+.brand-shadow {
+  text-shadow: 0px -2px 5px rgba(134, 13, 9, 0.4);
+}
+
+/* line 189, ../sass/landing.scss */
+.btn-custom-common {
+  font-size: 0.8em !important;
+}
+
+/* line 193, ../sass/landing.scss */
+.btn-custom a {
+  color: #f4655f;
+  text-decoration: none;
+}
+
+/* line 199, ../sass/landing.scss */
+.btn-custom a:hover {
+  color: white;
+  text-decoration: none;
+}
+
+/* line 204, ../sass/landing.scss */
+.btn-custom {
+  color: #f4655f;
+  border: 1px solid;
+  border-color: #f4655f;
+  background-color: white;
+}
+
+/* line 211, ../sass/landing.scss */
+.btn-custom:hover {
+  color: white;
+  border-color: white;
+  background-color: #f4655f;
+}
+
+/* line 218, ../sass/landing.scss */
+.button-row {
+  margin-top: 21px;
+  margin-bottom: 10.5px;
+}
+
+/* line 225, ../sass/landing.scss */
+.learn-more-divider {
+  margin: 40px 0px;
+}
+
+/* line 229, ../sass/landing.scss */
+.notification {
+  display: none;
+}
+
+/* css for signin modal */
+/* line 235, ../sass/landing.scss */
+.login {
+  padding-top: 5em !important;
+}
+/* line 237, ../sass/landing.scss */
+.login .modal-header {
+  color: #f4655f;
+}
+/* line 241, ../sass/landing.scss */
+.login .modal-dialog {
+  width: 400px !important;
+}
+/* line 245, ../sass/landing.scss */
+.login .form-control:focus {
+  border-color: #f4655f;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(244, 101, 95, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(244, 101, 95, 0.6);
+}
+/* line 252, ../sass/landing.scss */
+.login .btn-custom {
+  padding: 7px 14px !important;
+}
+
+/* ====== css for signup and signin pages ===== */
+/* line 260, ../sass/landing.scss */
+.hide {
+  display: none;
+}

@@ -1,0 +1,162 @@
+@import url(http://fonts.googleapis.com/css?family=Covered+By+Your+Grace);
+/* ========== Colors for common ============== */
+/* ======================================== */
+/* line 20, ../sass/common.scss */
+body {
+  background-image: url(../../img/light_toast.png);
+}
+
+/* line 24, ../sass/common.scss */
+.brand {
+  /*font-family: 'Indie Flower';*/
+  font-family: 'Covered By Your Grace';
+  font-size: 5em !important;
+  color: #cf4858;
+}
+
+/* line 31, ../sass/common.scss */
+.brand-small {
+  font-family: 'Covered By Your Grace';
+  color: #cf4858 !important;
+  font-size: 3em !important;
+  text-shadow: 0px 1px 1px rgba(12, 12, 12, 0.4);
+}
+
+/* line 38, ../sass/common.scss */
+.btn-default-new {
+  background-color: #fff;
+  color: #595959;
+}
+
+/* line 43, ../sass/common.scss */
+.btn-default-new:hover {
+  background-color: #ddd;
+  color: #595959;
+}
+
+/* ========== for login page ============== */
+/* line 49, ../sass/common.scss */
+.card {
+  background-color: #fff;
+  color: #f4655f;
+  padding: 15px;
+}
+
+/* line 55, ../sass/common.scss */
+.btn-custom-small:hover {
+  color: #ffffff;
+  border-color: #ffffff;
+  background-color: #f4655f;
+}
+
+/* line 61, ../sass/common.scss */
+.btn-custom-small a:hover {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+/* line 66, ../sass/common.scss */
+.btn-custom-small {
+  color: #f4655f;
+  border: 1px solid;
+  border-color: #f4655f;
+  background-color: #ffffff;
+  padding: 7px 14px;
+}
+
+/* line 74, ../sass/common.scss */
+.btn-custom-small a {
+  color: #f4655f;
+  text-decoration: none;
+}
+
+/* line 79, ../sass/common.scss */
+.card .form-control:focus {
+  border-color: #f4655f;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(244, 101, 95, 0.6);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(244, 101, 95, 0.6);
+}
+
+/* line 86, ../sass/common.scss */
+.footer {
+  /*         text-decoration: none;
+          color: $white; 
+          span {
+              width: 48px;
+              height: 48px;
+          }
+   */
+  color: white;
+  font-weight: normal;
+  background-image: url(../../img/noisy_net.png);
+  position: relative;
+  height: auto;
+  bottom: 0;
+  width: 100%;
+  background-color: #7e7e7e;
+  margin-top: 50px;
+  box-shadow: 0px -1px 10px rgba(12, 12, 12, 0.4);
+  padding-top: 21px;
+  padding-bottom: 21px;
+}
+/* line 88, ../sass/common.scss */
+.footer h4 {
+  color: #f4655f;
+  font-weight: bolder;
+}
+/* line 93, ../sass/common.scss */
+.footer img {
+  width: 48px;
+  height: 48px;
+}
+/* line 106, ../sass/common.scss */
+.footer .follow-us div {
+  width: 36px;
+  height: 36px;
+  float: left;
+  margin-right: 10px;
+}
+/* line 112, ../sass/common.scss */
+.footer #fb {
+  background-image: url("../../img/fb_nohover.png");
+  background-size: 36px 36px;
+  background-repeat: no-repeat;
+}
+/* line 115, ../sass/common.scss */
+.footer #twitter {
+  background-image: url("../../img/twitter_nohover.png");
+  background-size: 36px 36px;
+  background-repeat: no-repeat;
+}
+/* line 118, ../sass/common.scss */
+.footer #github {
+  background-image: url("../../img/github_nohover.png");
+  background-size: 36px 36px;
+  background-repeat: no-repeat;
+}
+/* line 122, ../sass/common.scss */
+.footer #fb:hover {
+  background-image: url("../../img/fb_hover.png");
+  background-size: 34px 34px;
+  background-repeat: no-repeat;
+}
+/* line 125, ../sass/common.scss */
+.footer #twitter:hover {
+  background-image: url("../../img/twitter_hover.png");
+  background-size: 34px 34px;
+  background-repeat: no-repeat;
+}
+/* line 128, ../sass/common.scss */
+.footer #github:hover {
+  background-image: url("../../img/github_hover.png");
+  background-size: 34px 34px;
+  background-repeat: no-repeat;
+}
+
+/* line 148, ../sass/common.scss */
+.main-nav {
+  margin-bottom: 0px;
+  background-image: url(../../img/noisy_net.png);
+  box-shadow: 0px 1px 5px rgba(12, 12, 12, 0.4);
+}
