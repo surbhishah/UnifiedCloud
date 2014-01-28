@@ -69,7 +69,7 @@ class Dropbox implements CloudInterface{
 				
 				//ABHISHEK:: code commented because refresh is no more needed after an upload.
 				//but won't folder data be changed because folder data. 
-				$this->refreshFolder($userCloudID, $cloudDestinationPath);
+				//$this->refreshFolder($userCloudID, $cloudDestinationPath);
 				
 				// Update app database that a new file has been uploaded
 

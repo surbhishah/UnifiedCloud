@@ -83,3 +83,17 @@
 {{ Form::submit('Delete ')	}}
 {{ Form::close()	}}
 
+<br>
+<br>
+<br>
+<br>
+{{ Form::open(array('route'=>'upload_with_encryption', 'files' => true, 'as'=>'upload','method'=>'post'))}}
+{{ Form::hidden('cloudName','Dropbox' )	}}
+{{ Form::hidden('userCloudID','1' )	}}
+{{ Form::label('cloudDestination path', 'Cloud destination without trailing slash:')	}}
+{{ Form::text('cloudDestinationPath')}}			
+{{ Form::text('passKey','User Pass Key')}}			
+{{ Form::label('file', 'File:')	}}
+{{ Form::file('files[]',array('multiple'=>true))	}}
+{{ Form::submit('Upload Files ')	}}
+{{ Form::close()	}}

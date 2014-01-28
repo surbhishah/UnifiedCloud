@@ -16,6 +16,11 @@ Route::get('mock',function(){
 	return View::make('dashboard.dashboardMock');
 });
 
+Route::post('user/test',array(
+	'as' => 'upload_with_encryption_test',
+	'uses' => 'EncryptionController@postTestGet'
+));
+
 // open front page 
 Route::get('/', array( 'as' => 'landing', function()
 {
@@ -101,6 +106,12 @@ Route::post('user/upload/{cloudName}',array(
 	'as'=>'upload_route',
 	'uses'=>'FilesController@postFile'
 ));
+
+//upload any no of files and encrypt them
+Route::post('user/uploadWithEncryption/{cloudName}',array(
+	'as' => 'upload_with_encryption',
+	'uses' => 'EncryptionController@postEncryptFiles'
+	));
 
 // get folder content
 Route::get('user/folder_content',array(
