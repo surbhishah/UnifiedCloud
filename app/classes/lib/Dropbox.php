@@ -50,8 +50,27 @@ class Dropbox implements CloudInterface{
 
 				}
 				$result = $client->uploadFile($cloudDestinationFullPath, Dropbox\WriteMode::add(), $fileStream);
+				
+				/* ===============Code added by Abhishek ============== */
+				$newFile = array();
+				$newFile['path']=$cloudDestinationPath;
+				$newFile['fileName']=$fileName;
+				$newFile['lastModifiedTime']=$result['modified'];
+				$newFile['rev']=$result['rev'];
+				$newFile['size']=$result['size'];
+				$newFile['isDirectory']=$result['is_dir'];
+				$newFile['hash']=null;// Passing null because we dont have hash values for these 
+				// but we might get them in the future if $file is actually a folder 
+				FileModel::addOrUpdateFile($userCloudID, $newFile);
+
+				/* ======================================================= */
+
 				// refreshing our database with updates from dropbox
+				
+				//ABHISHEK:: code commented because refresh is no more needed after an upload.
+				//but won't folder data be changed because folder data. 
 				$this->refreshFolder($userCloudID, $cloudDestinationPath);
+				
 				// Update app database that a new file has been uploaded
 
 
