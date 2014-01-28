@@ -96,7 +96,10 @@ class FilesController extends BaseController{
 			$factory = new CloudFactory(); 
 			$cloud = $factory->createCloud($cloudName);
 			$result=$cloud->getFolderContents($userCloudID, $folderPath,$cached);
-			return $result;
+			
+			$jsonResult = Utility::array_json_encode($result);
+			return $jsonResult;
+
 			
 
 		}catch(UnknownCloudException $e){
