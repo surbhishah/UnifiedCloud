@@ -13,7 +13,7 @@ class UsersController extends BaseController {
     }
 
     public function getDashboard() {
-        $clouds = UnifiedCloud::getClouds(Session::get('userID'));
+        $clouds = UserCloudInfo::getClouds(Session::get('userID'));
         return View::make('dashboard.dashboard',array('title' => 'Dashboard'))->with('clouds',$clouds);    
     }
 
@@ -21,7 +21,7 @@ class UsersController extends BaseController {
         if (Auth::attempt(array('email'=>Input::get('email'),'password' =>Input::get('password')))) {
            
            //Session email variable to get user data from tables
-            $user = UnifiedCloud::getUser(Input::get('email'));
+            $user = User::getUser(Input::get('email'));
             if($user!=null)
                 Session::put('userID',$user->userID);
             else 

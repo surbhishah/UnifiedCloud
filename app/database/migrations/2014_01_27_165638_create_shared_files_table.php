@@ -21,7 +21,7 @@ class CreateSharedFilesTable extends Migration {
 
 	public function down()
 	{
-		Schema::drop('SharedFiles');
+		Schema::drop('shared_files');
 	}
 
 }

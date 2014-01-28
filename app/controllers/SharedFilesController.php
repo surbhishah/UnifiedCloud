@@ -1,21 +1,22 @@
 <?php
 
 class SharedFilesController extends BaseController {
-
+//TODO
     public $restful = true;
     
     public function getShareFile(){
         try{
             $sharerEmail = Input::get('sharerEmail');// email of the person with whom file is to be shared
-            $sharer = UnifiedCloud::getUser('sharerEmail');
+            $sharer = User::getUser('sharerEmail');
             if($sharer == null){// No person with this email id is registered with our app
-                return View::make('complete')->with('message','No user with this email ID exists');// TODO ABHISHEK
+                return View::make('complete')->with('message','No user with the email ID :'.$sharerEmail.'is registered with our app');// TODO ABHISHEK
             }
-            else{
+            else{// Person with this email exists
                 $sharerID = $sharer->userID;
                 $accessRights = Input::get('accessRights');
                 $path = Input::get('path');
                 $fileName = Input::get('fileName');
+
                 
             }
         }catch(Exception $e){
@@ -33,6 +34,10 @@ class SharedFilesController extends BaseController {
             throw $e;
 
         }
+
+    }
+
+    public function getCreateGroup(){
 
     }
     
