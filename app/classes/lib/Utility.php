@@ -153,7 +153,7 @@ class Utility {
 	*
 	*/
 
-	public static function array_json_encode($val)
+	public static function arrayJsonEncode($val)
 	{
 	    if (is_string($val)) return '"'.addslashes($val).'"';
 	    if (is_numeric($val)) return $val;
@@ -171,7 +171,7 @@ class Utility {
 	    }
 	    $res = array();
 	    foreach ($val as $k=>$v){
-	        $v = self::array_json_encode($v);
+	        $v = self::arrayJsonEncode($v);
 	        if ($assoc){
 	            $k = '"'.addslashes($k).'"';
 	            $v = $k.':'.$v;

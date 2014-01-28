@@ -51,7 +51,14 @@ class UserCloudInfo extends Eloquent  {
 		
 	public static function getClouds($userID) {
 		// user_cloudID is also returned 
-		return UserCloudInfo::where('userID','=',$userID)->get()->toArray();
+		$clouds = DB::table('user_cloud_info')
++						->join('clouds',function($join) use ($userID){
++							$join->on('user_cloud_info.cloudID','=','clouds.cloudID')
++								->where('user_cloud_info.userID','=',$userID);
++						})->select('clouds.name','user_cloud_info.user_cloudID','user_cloud_info.user_cloud_name')
++						->orderBy('clouds.name')
++						->get();
++		return $clouds;
 	}
 /**********************************************************************************************/
 	/*
