@@ -97,7 +97,7 @@ class FilesController extends BaseController{
 			$cloud = $factory->createCloud($cloudName);
 			$result=$cloud->getFolderContents($userCloudID, $folderPath,$cached);
 			
-			$jsonResult = Utility::array_json_encode($result);
+			$jsonResult = Utility::arrayJsonEncode($result);
 			return $jsonResult;
 
 			
