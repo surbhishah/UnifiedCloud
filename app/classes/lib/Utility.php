@@ -72,6 +72,76 @@ class Utility {
 		$date = new DateTime($dateString);
 		return $date->format('Y-m-d H:i:s');
 	}
+/**********************************************************************************************/
+
+	/*
+	*		jsonFilePath : path to the json file created by downloadFolder function
+	*						This json must be of the form folder=>files 
+
+	*					
+	*		cloudName : Name of the cloud ..but note that this name will be used to access that folder
+	*					under public/temp so the name is not case insensitive 
+	*					Make a static private constant in the respective cloud class and pass it
+	*	@return value:
+	*	 	Returns the name of the new zip file created . This file should be sent to user and then deleted
+	*	@decription : Creates a zip file with all subfolders and files and returns it 
+	*
+	*/	
+	// Pass static constant of cloud class as cloudName ONLY
+		public static function createZip($jsonFilePath, $cloudName){
+				if(!file_exists($jsonFilePath)){
+					throw new Exception("Json file not found in createZip function ");
+				}	
+				// Path where temp files have been stored
+				$filesDestination = public_path().'/temp/'.$cloudName.'/downloads/';
+				
+				//Get file from json
+				$fileJson= File::get($jsonFilePath);
+				
+				// Map json to array
+				$fileArray=json_decode($fileJson, true);// True for associative array 
+				
+				// We assume that first element is the main folder to be zipped 
+				list($folderPath, $files )= each($fileArray);
+				list($path, $folderName)= Utility::splitPath($folderPath);
+				
+				// Zip directory
+				$zipFileName = uniqid().'___'.$folderName.'.zip';
+			
+
+				// Removing extraneous path . Keep path starting from the folder to be downloaded 
+				$pathLength = strlen($path);
+				foreach ($fileArray as $folderPath => $files) {
+					$newFolderPath = substr($folderPath, $pathLength);			
+					$newFileArray[$newFolderPath]= $files;
+				}
+			
+				// Create a zip			
+				$zip = new ZipArchive;
+				if(!$zip->open($zipFileName, ZipArchive::CREATE)){
+						Log::error("Zipped file could not be opened ");
+						throw new Exception('Zipped file could not be opened in Utility::createZip');
+				}
+			
+				// Add files and folders to zip 
+		        foreach($newFileArray as $folderPath => $files){
+	//TODO Surbhi Issue: this function does not add empty directories				 	
+		        	//$zip->addEmptyDir($folderPath);
+				 	foreach ($files as  $file) {
+				 		$fileLocation  = $filesDestination.$file['fileID'];
+				 		if($file['is_directory']==false && file_exists($fileLocation) == false){
+				 			Log::info("File does not exist in Utility::createZip",array('file/folder'=>$file['file_name'] , 'fileLocation'=>$fileLocation));
+				 			throw new Exception('File does not exist');		
+				 		}
+				 		$zip->addFile($fileLocation, $folderPath.'/'.$file['file_name']);
+				 	}
+				 	//Log::info("Adding to zip ",array('folderPath',$folderPath));
+				 	
+				 }	
+				$zip->close();
+				return $zipFileName;
+		}	
+
 /***********************************************************************************************/	
 	/*
 	*	@params:
@@ -82,6 +152,7 @@ class Utility {
 	*					UTF-* encoded string to convert array to json.	 	
 	*
 	*/
+
 	public static function array_json_encode($val)
 	{
 	    if (is_string($val)) return '"'.addslashes($val).'"';
@@ -110,7 +181,7 @@ class Utility {
 	    $res = implode(',', $res);
 	    return ($assoc)? '{'.$res.'}' : '['.$res.']';
 	}
+/**********************************************************************************************/
 }
-/***********************************************************************************************/	
 
 

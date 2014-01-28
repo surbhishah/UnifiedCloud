@@ -4,10 +4,6 @@ use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
 
 class User extends Eloquent implements UserInterface, RemindableInterface {
-
-	
-
-
 	/**
 	 * These rules are used by Validator.
 	 *
@@ -64,5 +60,31 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	{
 		return $this->email;
 	}
+	/*
+	*	@params:
+	*		email : email of the user ..email is the email with our app
+	*	@return value:
+	*	 	Boolean : userID of the user with this email
+	*/
+
+	public static function getUser($email) {
+		//user cannot sign in without a valid email id, therefore no checking for
+		//validity of email.
+		return User::where('email','=',$email)->get()->first();
+	}
+	/*
+	*	@params:
+	*		uid: unique id returned by dropbox, it uniquely identifies a user of dropbo
+	*		cloudID: ID of the cloud
+	*	@return value:
+	*	 	Boolean : true if user with same uid and cloudID exists
+	*				  false if user with same uid and cloudID does not exist
+	*/
+		public static function userAlreadyExists($uid, $cloudID){
+			$userCloudInfo= UserCloudInfo::where('uid','=',$uid)->where('cloudID','=',$cloudID)->get()->first();
+			if($userCloudInfo==null)return false;
+			else return true;
+		}
+
 
 }
