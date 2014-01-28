@@ -30,6 +30,8 @@ class FileModel extends Eloquent  {
 		}
 		$file->user_cloudID = $userCloudID;
 		$file->path = $fileArray['path'];
+		$file->is_encrypted = false;
+		$file->encyption_key_hash = null;
 		$file->file_name = $fileArray['fileName'];
 		$file->last_modified_time= Utility::changeDateFormatToDBFormat($fileArray['lastModifiedTime']);
 		$file->is_directory= $fileArray['isDirectory'];
@@ -125,6 +127,11 @@ class FileModel extends Eloquent  {
 
 	}	
 /**********************************************************************************************/
-
+	public static function setEncryptionKeyHash($encryptionKeyHash,$fileID) {
+		$file =  FileModel::find($fileID);
+		$file->is_encrypted = true;
+		$file->encryption_key_hash = $encryptionKeyHash;
+		$file->save();
+	}
 	
 }
