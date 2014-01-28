@@ -10,7 +10,7 @@
         <div class="row">
           <div class="col-md-6">
             <a href="{{ route('authenticate_route',
-            array('cloudName' => 'Dropbox','userCloudName' => '')) }}"><img src={{ asset('packages/img/dropbox-icon.png') }}></a>
+            array('cloudName' => 'Dropbox','userCloudName' => 'mycloud')) }}"><img src={{ asset('packages/img/dropbox-icon.png') }}></a>
             Dropbox</div>
         <!-- dropbox icon -->
           <div class="col-md-6">

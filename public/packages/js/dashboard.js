@@ -1,6 +1,7 @@
 $(function(){
 
 cloud ="";
+userCloudID=0;
 var baseUrl = window.location.pathname;
 //alert(baseUrl);
 
@@ -58,7 +59,7 @@ function getFolderContents(cloud,fPath) {
 	$.ajax({
 		type:'GET',
 		url:'folder_content',
-		data: {cloudName: cloud , folderPath: fPath},
+		data: {cloudName: cloud , folderPath: fPath , userCloudID: userCloudID , cached : true},
 		cache: false
 	})
 	.done(function(jsonData){
@@ -121,66 +122,14 @@ function getFolderContents(cloud,fPath) {
 $('.cloud').click(function(){
 
 	cloud = this.id;
+	userCloudID = $(this).find('span').attr('id');
+	//console.log(userCloudID);
 	var fPath = '/';
 
 	//populate breadcrumb
 	$('.breadcrumb').html('<li>'+cloud+'</li>');
 	$('#cwd').html(fPath);
-	/*$.ajax({
-		type:"GET",
-		url:"user/folder_content/",
-		data: {cloudName: cloud , folderPath: fPath}
-	})
-	.done(function(jsonData){
-		//console.log(jsonData);
-
-		//server sends json as string
-		//parsing json string to json object
-		jsonData = $.parseJSON(jsonData);
-		//alert(jsonData[3].file_name);
-
-		var table = $('#file-explorer');
-		var tbody = table.find('tbody');
-
-		//we need the cloud name to make further ajax calls
-		//therefore appending cloud name as class name to tbody
-		//tbody.addClass(cloud);
-		tbody.empty();
-		$.each(jsonData,function(i,file){
-			if(file.is_directory == '1') {
-				var tr=$("<tr class='folder'></tr>");
-				tbody.append(tr);
-				var td = $("<td class='directory'>" + file.file_name +"</td>" );
-				tr.append(td);
-			} else {
-				var tr=$("<tr></tr>");
-				tbody.append(tr);
-				var td = $("<td>" + file.file_name +"</td>" );
-				tr.append(td);
-			}
-
-			//getting extension of file
-			var ext = file.file_name.split('.').pop();
-
-			//using jqery-dateformat plugin to get more readable date data.
-			var td = $("<td>" + $.format.prettyDate(file.last_modified_time) +"</td>" );
-			tr.append(td);
-			
-			if(file.is_directory == '1') {
-				var td = $("<td>-</td>" );
-				tr.append(td);
-				var td = $("<td>Folder</td>" );
-				tr.append(td);
-			} else {
-				var td = $("<td>" + file.size +"</td>" );
-				tr.append(td);
-				var td = $("<td>" + ext +"</td>" );
-				tr.append(td);
-
-			}
-		});
-	});*/ 
-
+	
 	getFolderContents(cloud,fPath);
 });
 

@@ -1,9 +1,10 @@
-{{--  $clouds = array('Drive','Dropbox','Skydrive');  --}}
+<!-- {{ Log::info('clouds',array('clouds'=>$clouds)) }}
+ -->
 
 @foreach($clouds as $cloud)
-	{{-- */ $cloudName = $cloud->name /* --}}
-        <li class="cloud selected" id="{{ $cloudName }}">
-        	{{ $cloudName }}
+	{{--  $userCloudName = $cloud->user_cloud_name  --}}
+        <li class="cloud selected" id="{{ $cloud->name }}">
+        	<span id="{{ $cloud->user_cloudID }}">{{ $cloud->user_cloud_name }}</span>
         </li>
 
 @endforeach
