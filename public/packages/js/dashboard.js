@@ -116,7 +116,6 @@ function getFolderContents(cloud,fPath) {
 			}
 		});
 	}); 
-
 }
 
 $('.cloud').click(function(){

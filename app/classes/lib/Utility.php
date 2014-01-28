@@ -73,6 +73,15 @@ class Utility {
 		return $date->format('Y-m-d H:i:s');
 	}
 /***********************************************************************************************/	
+	/*
+	*	@params:
+	*		Array : array of values from DB
+	*	@return value:
+	*	 	string : json string
+	*	@decription : Converts php array to json string, because built in json encode needs
+	*					UTF-* encoded string to convert array to json.	 	
+	*
+	*/
 	public static function array_json_encode($val)
 	{
 	    if (is_string($val)) return '"'.addslashes($val).'"';
@@ -102,5 +111,6 @@ class Utility {
 	    return ($assoc)? '{'.$res.'}' : '['.$res.']';
 	}
 }
+/***********************************************************************************************/	
 
 
