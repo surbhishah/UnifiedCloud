@@ -104,4 +104,54 @@ class EncryptionController extends BaseController {
 
 	}
 
+	public function postDownloadEncryptedFile(){
+			try{
+				$userCloudID = Input::get('userCloudID');
+				$cloudSourcePath=Input::get('cloudSourcePath');
+			 	$fileName = Input::get('fileName');
+			 	$cloudName = Input::get('cloudName');// to be COMMENTED later abhishek if cloudName is passed as parameter 
+				$userPassKey = Input::get('passKey');
+
+				$factory = new CloudFactory(); 			// to controller 
+				$cloud = $factory->createCloud($cloudName);
+				$fileDestination =$cloud->download($userCloudID, $cloudSourcePath, $fileName);			
+				// Return the file with the response so that browser shows an option to user to download a file
+				
+				//decrpyting file 
+				//get encryptionKeyHash
+				$encryptionKeyHash = FileModel::getEncryptionKeyHash($userCloudID,$fileName,$cloudSourcePath);
+				//Log::info('encryptionKey',array('encKey'=>$encryptionKeyHash));
+				//decrypt encryption key
+				$encryptionKey = Encryption::decrypt($encryptionKeyHash,$userPassKey);
+
+				//decrypt file
+				//get file contents
+				$fileContents = file_get_contents($fileDestination);
+
+				//decrypting file contents
+				$decryptedFileContents = Encryption::decrypt($fileContents,$encryptionKey);
+
+				//ASK Surbhi should I use SplFileInfo to create descriptor as it is OOP.
+				//write original file contents to file
+				$fileDescriptor = fopen($fileDestination,'wb');
+				fwrite($fileDescriptor, $decryptedFileContents);
+				fclose($fileDescriptor);
+
+				//return Response::download($fileDestination,$fileName);
+				return $encryptionKey;
+
+				//change genRandomKey to 32 length.
+			}catch(UnknownCloudException $e){
+				Log::info("UnknownCloudException raised in FilesController::getFile");
+				Log::error($e->getMessage());
+				throw $e;
+
+			}catch(Exception $e){
+				Log::info("Exception raised in FilesController::getFile");
+				Log::error($e->getMessage());
+				throw $e;
+			
+			}		
+	}
+
 }

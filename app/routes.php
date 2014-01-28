@@ -101,6 +101,11 @@ Route::get('user/download',array(
 	'uses'=>'FilesController@getFile'
 ));
 
+Route::post('user/downloadEncryptedFile',array(
+	'as' => 'download_encrypted_file',
+	'uses' => 'EncryptionController@postDownloadEncryptedFile'
+));
+
 //upload any no of files 
 Route::post('user/upload/{cloudName}',array(
 	'as'=>'upload_route',

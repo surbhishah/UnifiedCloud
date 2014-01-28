@@ -136,5 +136,14 @@ class FileModel extends Eloquent  {
 		$file->encryption_key_hash = $encryptionKeyHash;
 		$file->save();
 	}
+
+	public static function getEncryptionKeyHash($userCloudID,$fileName,$path) {
+		$encryptionKeyHash = FileModel::where('user_cloudID','=',$userCloudID)
+							->where('file_name','=',$fileName)
+							->where('path','=',$path)
+							->select('encryption_key_hash')
+							->get()->first();
+		return $encryptionKeyHash->encryption_key_hash;
+	}
 	
 }
