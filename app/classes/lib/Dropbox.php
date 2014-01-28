@@ -105,7 +105,7 @@ class Dropbox implements CloudInterface{
 			// Get client object
 			$client = $this->getClient($userCloudID);
 			// Get fileID of this file from the database
-			$file = FileModel::getFilechangedAttributes($userCloudID, $cloudSourcePath, $fileName ,array('fileID','rev'));
+			$file = FileModel::getFileAttributes($userCloudID, $cloudSourcePath, $fileName ,array('fileID','rev'));
 			if($file==null){
 				throw new Exception("File does not exist");
 			}

@@ -4,10 +4,6 @@ use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableInterface;
 
 class User extends Eloquent implements UserInterface, RemindableInterface {
-
-	
-
-
 	/**
 	 * These rules are used by Validator.
 	 *
