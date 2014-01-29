@@ -1,3 +1,22 @@
+<br>
+<br>
+<br>
+
+{{ Form::open(array('route'=>'files_shared_with_user_route', 'as'=>'sharedby','method'=>'get')) }}
+{{ Form::label('SharerID','SharerID')}}
+{{ Form::text('sharerID')	}}
+{{ Form::submit('Get files shared with this Sharer')	}}
+{{ Form::close()	}}
+
+<br>
+<br>
+<br>
+
+{{ Form::open(array('route'=>'files_shared_by_user_route', 'as'=>'sharedby','method'=>'get')) }}
+{{ Form::label('ownerID','OwnerID')}}
+{{ Form::text('ownerID')	}}
+{{ Form::submit('Get files shared by this owner')	}}
+{{ Form::close()	}}
 
 <br>
 <br>

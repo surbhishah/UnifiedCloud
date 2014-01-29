@@ -35,7 +35,8 @@ class SharedFilesController extends BaseController {
         //$ownerID = Session::get('userID'); // UNCOMMENT THIS
         try{
             $ownerID = '1';//TO BE COMMENTED GET USERID FROM SESSION
-            return SharedFile::getFilesSharedByUser($ownerID);
+            return User::getFilesSharedByUser($ownerID);
+            
         }catch(Exception $e){
             Log::info("Exception raised in SharedFilesController::getFilesSharedByUser");
             Log::error($e->getMessage());
