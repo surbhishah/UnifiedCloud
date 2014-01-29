@@ -92,12 +92,12 @@ class EncryptionController extends BaseController {
 		    return $result;
 
 		} catch(UnknownCloudException $e){
-				Log::info("UnknownCloudException raised in FilesController::postUploadMultiple");
+				Log::info("UnknownCloudException raised in EncryptionController::encryptFile");
 				Log::error($e->getMessage());
 				throw $e;
 
 		}catch(Exception $e){
-				Log::info("Exception raised in FilesController::postUploadMultiple");
+				Log::info("Exception raised in EncryptionController::encryptFile");
 				Log::error($e->getMessage());
 				throw $e;
 		}
@@ -127,7 +127,7 @@ class EncryptionController extends BaseController {
 				//decrypt file
 				//get file contents
 				$fileContents = file_get_contents($fileDestination);
-				return View::make('complete')->with('message',$fileContents);
+				//return View::make('complete')->with('message',$fileContents);
 				//decrypting file contents
 				$decryptedFileContents = Encryption::decrypt($fileContents,$encryptionKey);
 
@@ -142,12 +142,12 @@ class EncryptionController extends BaseController {
 
 				//change genRandomKey to 32 length.
 			}catch(UnknownCloudException $e){
-				Log::info("UnknownCloudException raised in FilesController::getFile");
+				Log::info("UnknownCloudException raised in EncryptionController::postDownloadEncryptedFile");
 				Log::error($e->getMessage());
 				throw $e;
 
 			}catch(Exception $e){
-				Log::info("Exception raised in FilesController::getFile");
+				Log::info("Exception raised in EncryptionController::postDownloadEncryptedFile");
 				Log::error($e->getMessage());
 				throw $e;
 			

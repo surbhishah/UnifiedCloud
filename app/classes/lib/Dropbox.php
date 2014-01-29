@@ -117,7 +117,8 @@ class Dropbox implements CloudInterface{
 			// file object 
 			$file = FileModel::getFileAttributes($userCloudID, $cloudSourcePath, $fileName, array('fileID','rev'));
 			if($file == null){// no such file exists in our database
-				throw new Exception('File not found in Dropbox::download');
+				throw new Exception('File not found in Dropbox::download',array('userCloudID'=>$userCloudID, 
+						'cloudSourcePath'=>$cloudSourcePath, 'fileName'=>$fileName));
 			}
 			$fileID = $file->fileID;
 			$client = $this->getClient($userCloudID);
@@ -140,7 +141,7 @@ class Dropbox implements CloudInterface{
 			return $serverDestinationPath.$fileID;
 		}catch(Exception $e){
 			Log::info("Exception raised in Dropbox::download",array('userCloudID'=>$userCloudID, 
-						'cloudDestinationPath'=>$cloudDestinationPath, 'fileName'=>$fileName));
+						'cloudDestinationPath'=>$cloudSourcePath, 'fileName'=>$fileName));
 			Log::error($e);
 			throw $e;
 		}	
