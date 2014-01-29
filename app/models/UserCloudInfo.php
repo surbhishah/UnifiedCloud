@@ -31,18 +31,18 @@ class UserCloudInfo extends Eloquent  {
 /**********************************************************************************************/
 	/*
 	*	@params:
-	*		userCloudID : ID of the user 's cloud
+	*		userCloudID : ID of the user's cloud
 	*	@return value:
 	*	 	string: access_token
 	*	@decription : Returns access Token of a user 
 	*
 	*/
 	public static function getAccessToken($userCloudID){
-		//return UserCloudInfo::where('user_cloudID','=',$userCloudID)->get()
-		//							->first()->pluck('access_token');	
-		$userCloudInfo = UserCloudInfo::find($userCloudID);    
-     	$accessToken =  $userCloudInfo->access_token;
-     	return $accessToken;	
+
+		$userCloudInfo = UserCloudInfo::find($userCloudID);		
+		$accessToken =  $userCloudInfo->access_token;
+		return $accessToken;
+
 	}
 /**********************************************************************************************/	
 	/*
@@ -75,12 +75,22 @@ class UserCloudInfo extends Eloquent  {
 	*					This is not a problem but he must not have two clouds named "ABC" on dropbox
 	*				  false otherwise
 	*/
-		public static function userCloudNameAlreadyExists($userID,$cloudID, $userCloudName){
-			$userCloudInfo = UserCloudInfo::where('userID','=',$userID)->where('cloudID','=',$cloudID)
-							->where('user_cloud_name','=',$userCloudName)->get()->first();
-			if($userCloudInfo == null)return false;
-			else return true;
-		}
+	public static function userCloudNameAlreadyExists($userID,$cloudID, $userCloudName){
+		$userCloudInfo = UserCloudInfo::where('userID','=',$userID)->where('cloudID','=',$cloudID)
+						->where('user_cloud_name','=',$userCloudName)->get()->first();
+		if($userCloudInfo == null)return false;
+		else return true;
+	}
+/**********************************************************************************************/
+	/*
+	*	@params:
+	*		userCloudID: userCloudID of user's cloud
+	*	@return value:
+	*		userID: userID of the user	
+	*/
+	public static function getUserID($userCloudID){
+		return UserCloudInfo::where('user_cloudID','=',$userCloudID)->get()->first()->pluck('userID');
+	}
 }
 /**********************************************************************************************/
 	

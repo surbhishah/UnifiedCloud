@@ -154,4 +154,13 @@ Route::get('user/download_folder',array(
 	'uses'=>'FilesController@getDownloadFolder'
 ));
 
-
+//share file route
+Route::get('user/share',array(
+	'as'=>'share_file_route',
+	'uses'=>'SharedFilesController@getShareFile'
+));
+//share folder route
+Route::get('user/share_folder',array(
+	'as'=>'share_folder_route',
+	'uses'=>'SharedFilesController@getShareFolder'
+));

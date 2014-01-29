@@ -98,7 +98,6 @@ class Dropbox implements CloudInterface{
 
 		}
 /************************************************************************************************/
-
 	/*
 	 *	@params : must contain 'userCloudID', 'fileName' and 'cloudSourcePath'
 	 *	'userCLoudID'			: ID of the user's cloud
@@ -110,60 +109,42 @@ class Dropbox implements CloudInterface{
 	 *	@exceptions: Exception
 	*/
 	public function download($userCloudID, $cloudSourcePath, $fileName){
-
-		Log::info('Dropbox::download',array('userCloudID' => $userCloudID,'cloudSourcePath' => $cloudSourcePath ,'fileName' => $fileName));
-		$serverDestinationPath = public_path().'/temp/dropbox/downloads/';
-
-		 try{
-			if($cloudSourcePath=='/'){
-				$cloudFullSourcePath = $cloudSourcePath.$fileName;
+		try{
+			//server temp location where file will be temporarily stored
+			$serverDestinationPath = public_path().'/temp/dropbox/downloads/';
+			// Full path of the file on the cloud
+			$cloudFullSourcePath = Utility::joinPath($cloudSourcePath, $fileName);
+			// file object 
+			$file = FileModel::getFileAttributes($userCloudID, $cloudSourcePath, $fileName, array('fileID','rev'));
+			if($file == null){// no such file exists in our database
+				throw new Exception('File not found in Dropbox::download');
 			}
-			else{
-				$cloudFullSourcePath = $cloudSourcePath.'/'.$fileName;
-
-			}
-			// Get client object
+			$fileID = $file->fileID;
 			$client = $this->getClient($userCloudID);
-			// Get fileID of this file from the database
-			$file = FileModel::getFileAttributes($userCloudID, $cloudSourcePath, $fileName ,array('fileID','rev'));
-			if($file==null){
-				throw new Exception("File does not exist");
-			}
-			$fileID = $file->fileID;									
-			// Check if file with this fileID is already present on the server, if yes DO NOT download
-			// However, we also need to check if the file is up-to-date
-			// fileDestination = destination of file on our server
-			$fileDestination= $serverDestinationPath.$fileID;
-			if(Temp::TempFileExists($fileID)	){
-				// Check if the file is up to date , so get the metadata from dropbox
-				$fileMetaData = $client->getMetaData($cloudFullSourcePath);
-				// Check if the rev values are same , if they are then send this file , DO NOT download
-				if($fileMetaData['rev']==$file->rev){ //otherwise download the file
-						return $fileDestination;
+			if(Temp::TempFileExists($fileID)){//check if file exists in temp folder 
+				$metadata = $client->getMetaData($cloudFullSourcePath);
+				if($file->rev == $metadata['rev']){//file is up to date send it
+					$fileDestination = $serverDestinationPath.$fileID;
+					return $fileDestination;
 				}
-			}// otherwise download the file
-
-
-			// Open the "stream" of the file so that file coming from dropbox can be saved to it
-			$fileStream=fopen($fileDestination, "wb");
-
-			// Download file from Dropbox
-			$result=$client->getFile($cloudFullSourcePath.'/'.$fileName, $fileStream);
-
-			// Update the database table temp that we have stored this file on server
+			}
+			//open an outstream
+			$fd = fopen($serverDestinationPath.$fileID, 'wb');
+			$receivedMetaData = $client->getFile($cloudFullSourcePath,$fd);
+			Log::info('In download ',array('receivedMetaData'=>$receivedMetaData));
+			//close the outstream
+			fclose($fd);
+			// add temp info to temp table in db 
 			Temp::addTempEntry($fileID);
-			// return the destination on the server where the file is saved
-			return $fileDestination;
-
+			//return the destination of the file on app server 
+			return $serverDestinationPath.$fileID;
 		}catch(Exception $e){
-				Log::info("Exception raised in Dropbox::download",
-					array('userCloudID'=>$userCloudID, 'cloudSourcePath'=>$cloudSourcePath, 'fileName'=>$fileName));
-				Log::error($e);
-				throw $e;
-		}
-
-
-	}
+			Log::info("Exception raised in Dropbox::download",array('userCloudID'=>$userCloudID, 
+						'cloudDestinationPath'=>$cloudDestinationPath, 'fileName'=>$fileName));
+			Log::error($e);
+			throw $e;
+		}	
+}
 /************************************************************************************************/
 	/*
 	 *	@params :
@@ -203,19 +184,16 @@ class Dropbox implements CloudInterface{
 	*/
 	public function getFolderContents($userCloudID, $folderPath, $cached='false'){
 		try{
-			 Log::info('Dropbox::getFolderContents: ',array('message',$userCloudID));
 			 $key = $userCloudID.$folderPath;
-			 Log::info('Dropbox::getFolderContents: ',array('cache key',$key));
-/*
 			 if(Cache::has($key) && $cached =='true'){ //cached is a string, not boolean
 			 	return Cache::get($key);
 			 }
-			 else{*/
+			 else{
 			 	$this->refreshFolder($userCloudID, $folderPath);
 			 	$folderContents= FileModel::getFolderContents($userCloudID, $folderPath);
 			 	//Cache::put($key, $folderContents, 10);
 			 	return $folderContents;
-			 //}
+			 }
 		}catch(Exception $e){
 			Log::info("Exception raised in Dropbox::refreshFolder",array('userCloudID'=>$userCloudID, 'folderPath'=>$folderPath));
 			Log::error($e);				

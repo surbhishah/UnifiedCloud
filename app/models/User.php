@@ -63,14 +63,15 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	/*
 	*	@params:
 	*		email : email of the user ..email is the email with our app
+	*		attributes: array of attributes to be returned
 	*	@return value:
 	*	 	Boolean : userID of the user with this email
 	*/
 
-	public static function getUser($email) {
+	public static function getUserAttributes($email,$attributes) {
 		//user cannot sign in without a valid email id, therefore no checking for
 		//validity of email.
-		return User::where('email','=',$email)->get()->first();
+		return User::where('email','=',$email)->select($attributes)->get()->first();
 	}
 	/*
 	*	@params:

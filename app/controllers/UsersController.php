@@ -22,7 +22,7 @@ class UsersController extends BaseController {
         if (Auth::attempt(array('email'=>Input::get('email'),'password' =>Input::get('password')))) {
            
            //Session email variable to get user data from tables
-            $user = User::getUser(Input::get('email'));
+            $user = User::getUserAttributes(Input::get('email'), array('userID'));
             //redundant because Auth::attempt will check this.
             if($user!=null) {
                 Session::put('userID',$user->userID);
@@ -31,7 +31,7 @@ class UsersController extends BaseController {
             else { 
                 throw new Exception('Invalid Email passed to UsersController::postSignin');
                 return Redirect::route('sign_in_page')
-              ->with('message', 'Incorrect email or password');
+                          ->with('message', 'Incorrect email or password');
             }
         } else {
            return Redirect::route('sign_in_page')
@@ -63,7 +63,7 @@ class UsersController extends BaseController {
 
     public function getLogout() {
         Auth::logout();
-        //TODO ABHISHEK 
+        //TODO ABHISHEK //TODO Cache clear SUrbhi
         Session::flush();
         return Redirect::route('landing')->with('message', 'Your are now logged out!');
     }
