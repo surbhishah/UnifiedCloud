@@ -5,6 +5,7 @@ class SharedFile extends Eloquent  {
 	protected $table = 'shared_files';
 	protected $primaryKey = 'shared_fileID';
 /**********************************************************************************************/	
+
 	public function owner()
     {
     	//User:	Model name 
@@ -12,9 +13,13 @@ class SharedFile extends Eloquent  {
     	//ownerID : local key
         return $this->belongsTo('User','ownerID','userID');
     }
+
     public function sharer(){
     	return $this->belongsTo('User','sharerID','userID');
     }
+
+
+
 	public function file(){
 		return $this->belongsTo('FileModel','fileID','fileID');
 	}    
@@ -30,21 +35,36 @@ class SharedFile extends Eloquent  {
 	}
 /**********************************************************************************************/	
 	public static function getFilesSharedByUser($ownerID){//TODO SURBHI
-		DB::table('shared_files')
-			->join('files','shared_files.fileID','=','files.fileID')
-			->join('users','users.userID','=','shared_files.sharerID')
-			->select('shared_files.shared_fileID','files.file_name','users.first_name',
-				'users.last_name','shared_files.sharerID', 'shared_files.access_rights');
+		return DB::table('shared_files')
+			->where('ownerID','=', $ownerID)
+			->join(	'files' , 	'shared_files.fileID'	, '=' , 'files.fileID' )
+			->join(	'users',	'shared_files.sharerID',	'='	,	'users.userID')
 
-		return SharedFile::where('ownerID','=',$ownerID);
+			->select(	'shared_fileID'	,	'file_name'	,	'first_name',
+				'last_name', 'access_rights')
+			->get();
 	}	
 /**********************************************************************************************/	
 	public static function getFilesSharedWithUser($sharerID){
-		return SharedFile::where('sharerID','=',$sharerID);
+		return DB::table('shared_files')
+			->where('sharerID','=', $sharerID)
+			->join(	'files' , 	'shared_files.fileID'	, '=' , 'files.fileID' )
+			->join(	'users',	'shared_files.ownerID',	'='	,	'users.userID')
+
+			->select(	'shared_fileID'	,	'file_name'	,	'first_name',
+				'last_name'	, 'access_rights')
+			->get();	
 	}
 /**********************************************************************************************/	
 	public static function removeSharing($sharedFileID){
 		SharedFile::destroy($sharedFileID);
 	}
 /**********************************************************************************************/	
+	public static function setAccessRights($sharedFileID,$accessRights){
+		$sharedFile = SharedFile::find($sharedFileID);
+		$sharedFile->access_rights = $accessRights;
+		$sharedFile->save();
+	}
+/**********************************************************************************************/	
+
 }
