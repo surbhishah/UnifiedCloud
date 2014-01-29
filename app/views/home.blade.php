@@ -16,7 +16,7 @@
 <br>
 <br>
 {{ Form::open(array('route'=>'download_folder_route', 'as'=>'download_folder','method'=>'get')) }}
-{{ Form::hidden('userCloudID','1' )	}}
+{{ Form::hidden('userCloudID','2' )	}}
 {{ Form::hidden('cloudName','Dropbox') }}
 {{ Form::label('Folder Path', 'Folder Path:')	}}
 {{ Form::text('folderPath')	}}<br>

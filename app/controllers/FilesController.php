@@ -161,7 +161,7 @@ class FilesController extends BaseController{
 	*		None, can return metadata of deleted file if required
 	*	@Exceptions:UnknownCloudException,	Exception
 	*/
-	public function delete($cloudName, $path){
+	public function delete(){
 		try{
 			$cloudName = Input::get('cloudName');
 			$path= Input::get('path');

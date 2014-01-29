@@ -220,7 +220,9 @@ $('#download').on('click',function(){
 	}
 	else {
 	//alert(cwd + " : "+ file);
-		window.location.href = "http://localhost/UnifiedCloud/public/index.php/user/download/?cloudName=" + cloud + "&cloudSourcePath=" + cwd + "&fileName=" + file; 
+		url = "http://localhost/UnifiedCloud/public/user/download/?userCloudID="+ userCloudID +"&cloudName=" + cloud + "&cloudSourcePath=" + cwd + "&fileName=" + file; 
+		console.log(url);
+		window.location = url;
 	}
 });
 
@@ -337,7 +339,7 @@ function createNewFolder(folderName,jObj) {
 		$.ajax({
 			 type: 'GET',
             url: 'new_folder',
-            data: {cloudName: cloud, folderPath : fPath},
+            data: {cloudName: cloud, folderPath : fPath, userCloudID: userCloudID},
             cache: false 
 		}).done(function() {
 
@@ -357,4 +359,64 @@ function createNewFolder(folderName,jObj) {
 
 }
 
+//delete file or folder 
+$('#delete').tooltip({
+	'trigger' : 'hover',
+	'title' : 'Delete'
+});
+
+$('#delete').on('click',function(){
+
+	var fileOrFolder = $('#file-explorer tbody tr.clicked-row').find('a.file').html(); 
+	var fPath = $('#cwd').html();
+
+	if(fPath != '/') {
+		fPath = fPath + '/';
+	} 
+
+	if(typeof(fileOrFolder) == 'undefined') {
+		fileOrFolder = $('#file-explorer tbody tr.clicked-row').find('a.directory').html();
+		
+		
+		if(typeof(fileOrFolder) == 'undefined') {
+			//notify to select file/folder
+
+			$('.container').notify('Select a file/folder first',{
+				'arrowShow' : false,
+				'elementPosition' : 'top center',
+				'globalPosition' : 'top center',
+				'className' : 'error',
+				'autoHideDelay' : '2000',
+				'showAnimation' : 'fadeIn',
+				'hideAnimation' : 'fadeOut'
+ 			});
+		}
+	} else {
+
+		console.log('folder: '+fileOrFolder);
+
+		fPath = fPath + fileOrFolder;
+
+		$.ajax({
+			type: 'GET',
+            url: 'delete',
+            data: {cloudName: cloud, path : fPath, userCloudID: userCloudID},
+            cache: false 
+		}).done(function() {
+
+			$('.container').notify('deleted!',{
+				'arrowShow' : false,
+				'elementPosition' : 'top center',
+				'globalPosition' : 'top center',
+				'className' : 'success',
+				'autoHideDelay' : '2000',
+				'showAnimation' : 'fadeIn',
+				'hideAnimation' : 'fadeOut'
+	 		});	
+	
+		});
+
+	}
+	
+});
 });//end of document

@@ -101,6 +101,7 @@ Route::get('user/download',array(
 	'uses'=>'FilesController@getFile'
 ));
 
+//download encrypted file after decryption
 Route::post('user/downloadEncryptedFile',array(
 	'as' => 'download_encrypted_file',
 	'uses' => 'EncryptionController@postDownloadEncryptedFile'
@@ -131,7 +132,7 @@ Route::get('user/new_folder',array(
 ));
 
 // delete a file or folder 
-Route::delete('user/delete/{cloudName}/{folderPath}',array(
+Route::delete('user/delete',array(
 	'as'=>'delete_route',
 	'uses'=>'FilesController@delete'
 ));
