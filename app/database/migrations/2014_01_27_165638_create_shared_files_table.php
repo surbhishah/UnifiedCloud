@@ -7,7 +7,7 @@ class CreateSharedFilesTable extends Migration {
 	public function up()
 	{
 			Schema::create('shared_files',function($table) {
-			$table->increments('shared_filesID');
+			$table->increments('shared_fileID');
 			$table->integer('fileID')->unsigned();
 			$table->foreign('fileID')->references('fileID')->on('files')->onDelete('cascade');
 			$table->integer('ownerID')->references('userID')->on('users')->onDelete('cascade');

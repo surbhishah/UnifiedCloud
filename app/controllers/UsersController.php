@@ -21,7 +21,7 @@ class UsersController extends BaseController {
         if (Auth::attempt(array('email'=>Input::get('email'),'password' =>Input::get('password')))) {
            
            //Session email variable to get user data from tables
-            $user = User::getUser(Input::get('email'));
+            $user = User::getUserAttributes(Input::get('email'), array('userID'));
             if($user!=null)
                 Session::put('userID',$user->userID);
             else 
@@ -57,7 +57,7 @@ class UsersController extends BaseController {
 
     public function getLogout() {
         Auth::logout();
-        //TODO ABHISHEK 
+        //TODO ABHISHEK //TODO Cache clear SUrbhi
         Session::flush();
         return Redirect::route('landing')->with('message', 'Your are now logged out!');
     }

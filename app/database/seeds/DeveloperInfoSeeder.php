@@ -22,6 +22,13 @@ class DeveloperInfoSeeder extends Seeder {
           'last_name'   =>  'shah',
           'password' => Hash::make('password')
       ));
+    DB::table('users')->insert(array(
+          'userID'=>'2',
+          'email'=> 'abhishek.alchemist@gmail.com',
+          'first_name'  =>  'abhishek',
+          'last_name'   =>  'nair',
+          'password' => Hash::make('password')
+      ));
     
       
       DB::table('clouds')->delete();    

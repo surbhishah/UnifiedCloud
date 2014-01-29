@@ -1,3 +1,20 @@
+
+<br>
+<br>
+<br>
+
+{{ Form::open(array('route'=>'share_file_route', 'as'=>'share','method'=>'get')) }}
+{{ Form::hidden('userCloudID','1' )	}}
+{{ Form::label('Path', 'Path:')	}}
+{{ Form::text('path')}}			
+{{ Form::label('file name', 'File Name:')	}}
+{{ Form::text('fileName')}}			
+{{ Form::label('Share', 'Share with? Email ID ')	}}
+{{ Form::text('sharerEmail')}}			
+{{ Form::label('Access', 'Access Rights: ')	}}
+{{ Form::text('accessRights')}}			
+{{ Form::submit('Share')	}}
+{{ Form::close()	}}
 <br>
 <br>
 <br>
