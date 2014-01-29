@@ -3,7 +3,7 @@
 class SharedFilesController extends BaseController {
 
     public $restful = true;
-
+/**********************************************************************************************/    
     public function getShareFile(){
         try{
             $sharerEmail = Input::get('sharerEmail');// email of the person with whom file is to be shared
@@ -30,22 +30,24 @@ class SharedFilesController extends BaseController {
             throw $e;
         }
     }
-
+/**********************************************************************************************/    
     public function getFilesSharedByUser(){
         //$ownerID = Session::get('userID'); // UNCOMMENT THIS
         try{
-            $ownerID = '1';//TO BE COMMENTED GET USERID FROM SESSION
+            $ownerID = Input::get('ownerID');//TO BE COMMENTED GET USERID FROM SESSION
             return SharedFile::getFilesSharedByUser($ownerID);
+            
         }catch(Exception $e){
             Log::info("Exception raised in SharedFilesController::getFilesSharedByUser");
             Log::error($e->getMessage());
             throw $e;   
         }
     }
+/**********************************************************************************************/    
     public function getFilesSharedWithUser(){
     //$sharerID = Session::get('userID'); // UNCOMMENT This
         try{
-            $sharerID = '1';//TO BE COMMENTED GET USERID FROM SESSION
+            $sharerID = Input::get('sharerID');//TO BE COMMENTED GET USERID FROM SESSION
             return SharedFile::getFilesSharedWithUser($sharerID);
         }catch(Exception $e){
             Log::info("Exception raised in SharedFilesController::getFilesSharedWithUser");
@@ -53,10 +55,12 @@ class SharedFilesController extends BaseController {
             throw $e;   
         }
     }
+/**********************************************************************************************/    
     public function getUnshareFile(){
         try{
             $sharedFileID = Input::get('sharedFileID');
             SharedFile::removeSharedFile($sharedFileID);
+
         }catch(Exception $e){
             Log::info("Exception raised in SharedFilesController::getUnshareFile");
             Log::error($e->getMessage());
@@ -64,11 +68,12 @@ class SharedFilesController extends BaseController {
         }
 
     }
+/**********************************************************************************************/    
     public function getChangeAccessRights(){
         try{
             $sharedFileID = Input::get('sharedFileID');
-            $sharerID =  Input::get('sharerID');
-            
+            $accessRights = Input::get('accessRights');
+            SharedFile::setAccessRights($sharedFileID, $accessRights);
 
         }catch(Exception $e){
             Log::info("Exception raised in SharedFilesController::getChangeAccessRights");
@@ -76,8 +81,23 @@ class SharedFilesController extends BaseController {
             throw $e;
         }
     }
+/**********************************************************************************************/    
+    public function getSharedFile(){// download a shared file 
+        //TODO
+     try{
+            $sharedFileID = Input::get('sharedFileID');
+            SharedFile::setAccessRights($sharedFileID, $accessRights);
+
+        }catch(Exception $e){
+            Log::info("Exception raised in SharedFilesController::getSharedFile");
+            Log::error($e->getMessage());
+            throw $e;
+        }   
+    }
+/**********************************************************************************************/    
     public function getCreateGroup(){
         //TODO Surbhi
     }
+/**********************************************************************************************/    
     
 }

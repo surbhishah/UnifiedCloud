@@ -3,6 +3,38 @@
 <br>
 <br>
 
+{{ Form::open(array('route'=>'change_access_rights', 'as'=>'change_access_rights','method'=>'get')) }}
+{{ Form::label('sharedFileID','sharedfileID')}}
+{{ Form::text('sharedFileID')	}}
+{{ Form::label('Access_rights','accessRights')}}
+{{ Form::text('accessRights')	}}
+
+{{ Form::submit('Get files shared with this Sharer')	}}
+{{ Form::close()	}}
+<br>
+<br>
+<br>
+
+{{ Form::open(array('route'=>'files_shared_with_user_route', 'as'=>'sharedby','method'=>'get')) }}
+{{ Form::label('SharerID','SharerID')}}
+{{ Form::text('sharerID')	}}
+{{ Form::submit('Get files shared with this Sharer')	}}
+{{ Form::close()	}}
+
+<br>
+<br>
+<br>
+
+{{ Form::open(array('route'=>'files_shared_by_user_route', 'as'=>'sharedby','method'=>'get')) }}
+{{ Form::label('ownerID','OwnerID')}}
+{{ Form::text('ownerID')	}}
+{{ Form::submit('Get files shared by this owner')	}}
+{{ Form::close()	}}
+
+<br>
+<br>
+<br>
+
 {{ Form::open(array('route'=>'share_file_route', 'as'=>'share','method'=>'get')) }}
 {{ Form::label('userCloudID','userCloudID:')}}
 {{ Form::text('userCloudID')	}}<br>
@@ -35,7 +67,6 @@
 <br>
 <br>
 {{ Form::open(array('route'=>'download_folder_route', 'as'=>'download_folder','method'=>'get')) }}
-
 {{ Form::label('userCloudID','userCloudID:')}}
 {{ Form::text('userCloudID')	}}<br>
 {{ Form::hidden('cloudName','Dropbox') }}

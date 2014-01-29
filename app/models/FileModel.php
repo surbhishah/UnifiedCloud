@@ -6,6 +6,10 @@ class FileModel extends Eloquent  {
 	protected $table = 'files';
 	protected $nullable = 'hash';
 	protected $primaryKey = 'fileID';
+	public function sharedFile(){
+        return $this->hasMany('SharedFile', 'fileID' , 'fileID');
+    }
+	
 
 /**********************************************************************************************/	
 	/*

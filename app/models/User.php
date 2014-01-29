@@ -31,7 +31,13 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	protected $hidden = array('password');
 	protected $primaryKey = 'userID';
 
-	/**
+	public function filesSharedByUser(){// NOT used for now 
+        return $this->hasMany('SharedFile', 'ownerID' , 'userID');
+    }
+	public function filesSharedWithUser(){// NOT used for now
+		return $this->hasMany('SharedFile', 'sharerID', 'userID');
+	}
+/**
 	 * Get the unique identifier for the user.
 	 *
 	 * @return mixed
@@ -81,11 +87,14 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	*	 	Boolean : true if user with same uid and cloudID exists
 	*				  false if user with same uid and cloudID does not exist
 	*/
-		public static function userAlreadyExists($uid, $cloudID){
-			$userCloudInfo= UserCloudInfo::where('uid','=',$uid)->where('cloudID','=',$cloudID)->get()->first();
-			if($userCloudInfo==null)return false;
-			else return true;
-		}
-
-
+	public static function userAlreadyExists($uid, $cloudID){
+		$userCloudInfo= UserCloudInfo::where('uid','=',$uid)->where('cloudID','=',$cloudID)->get()->first();
+		if($userCloudInfo==null)return false;
+		else return true;
+	}
+	//TODO
+	public static function getFilesSharedByUser($ownerID){
+		return User::find($ownerID)->filesSharedByUser->file;
+	}
+	
 }

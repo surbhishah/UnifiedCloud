@@ -50,6 +50,15 @@ class DeveloperInfoSeeder extends Seeder {
           'access_token'=>'00fFM63sFIMAAAAAAAAAATvsZL-7Vmlmlijz6Bh6aUOE4FYB75f3W6aXxnxKs_tn'
         
         ));
+      DB::table('user_cloud_info')->insert(array(
+          'userID'=>'2',
+          'user_cloudID'=>'2',
+          'user_cloud_name'=>'abhishek_dropbox',
+          'uid'=>'14162018',
+          'cloudID'=>'1', 
+          'access_token'=>'NiqYVYXZR9UAAAAAAAAAAcY5Qb6j0LO9IOowLnU13o6q-uNsTPMqjKb85B5N1LXQ'
+        
+        ));
 
       
   }

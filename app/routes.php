@@ -159,8 +159,16 @@ Route::get('user/share',array(
 	'as'=>'share_file_route',
 	'uses'=>'SharedFilesController@getShareFile'
 ));
-//share folder route
-Route::get('user/share_folder',array(
-	'as'=>'share_folder_route',
-	'uses'=>'SharedFilesController@getShareFolder'
+
+// get files shared by user
+Route::get('user/get_shared_by_user',array(
+	'as'=>'files_shared_by_user_route',
+	'uses'=>'SharedFilesController@getFilesSharedByUser'
 ));
+
+// get files shared with user
+Route::get('user/get_shared_with_user',array(
+	'as'=>'files_shared_with_user_route',
+	'uses'=>'SharedFilesController@getFilesSharedWithUser'
+));
+
