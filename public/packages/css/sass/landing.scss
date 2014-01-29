@@ -1,0 +1,264 @@
+/*======== colors ===================*/
+$light-blue: #6ec1c2;
+$blue: #2eafb0;
+$laravel-red: #f4655f;
+$white: #ffffff;
+$features-text: #575757;
+/*====================================*/
+
+/*========== mixins ==================*/
+@mixin animation ( $animation, $delay, $duration, $timeFunction,$iteration) {
+    -webkit-animation-delay: $delay;
+    -webkit-animation-duration: $duration;
+    -webkit-animation-name: $animation;
+    -webkit-animation-timing-function: $timeFunction;
+    -webkit-animation-iteration-count: $iteration;
+    
+    -moz-animation-delay: $delay;
+    -moz-animation-duration: $duration;
+    -moz-animation-name: $animation;
+    -moz-animation-timing-function: $timeFunction;
+    -moz-animation-iteration-count: $iteration;
+    
+    -o-animation-delay: $delay;
+    -o-animation-duration: $duration;
+    -o-animation-name: $animation;
+    -o-animation-timing-function: $timeFunction;
+    -o-animation-iteration-count: $iteration;
+    
+    animation-delay: $delay;
+    animation-duration: $duration;
+    animation-name: $animation;
+    animation-timing-function: $timeFunction;
+    animation-iteration-count: $iteration;
+   
+   }
+
+@mixin keyframe ($animation_name) {
+    @-webkit-keyframes $animation_name {
+        @content;
+    }
+ 
+    @-moz-keyframes $animation_name {
+        @content;
+    }
+ 
+    @-o-keyframes $animation_name {
+        @content;
+    }
+ 
+    @keyframes $animation_name {
+        @content;
+    }
+}
+
+@mixin clouds($top,$left,$width,$height,$color) {
+    top: $top;
+    left: $left;
+    width: $width;
+    height: $height;
+    position: absolute;
+    background-color: $color;
+}
+/*====================================*/
+
+
+/*======= animation for clouds ========*/
+@include keyframe(box-cloud) {
+0%   { left:31%; top:26%;}
+100% { left:36%; top:26%;}    
+}
+
+@include keyframe(box2-cloud) {
+0%   { left:61%; top:26%;}
+100% { left:56%; top:26%;}    
+}
+
+@include keyframe(box3-cloud) {
+0%   { left:0%; top:73%;}
+25%   { left:25%; top:73%;}
+50%   { left:50%; top:73%;}
+75%   { left:75%; top:73%;}
+100% { left:100%; top:73%;}    
+}
+
+@include keyframe(box4-cloud) {
+0%   { left:0%-50; top:84%;}
+25%   { left:25%-50; top:84%;}
+50%   { left:50%-50; top:84%;}
+75%   { left:75%-50; top:84%;}
+100% { left:100%; top:84%;}    
+}
+
+#box {
+    z-index: 100;
+	@include clouds(26%,36%,84px,84px,none);
+    @include animation(box-cloud,0,2s,linear,1);
+    
+}
+
+#box2 {
+    z-index: 100;
+	@include clouds(26%,56%,100px,100px,none);
+    @include animation(box2-cloud,0,2s,linear,1);
+}
+
+
+#box3 {
+    z-index: 100;
+    @include clouds(73%,-256px,60px,60px,none);
+    @include animation(box3-cloud,0,30s,linear,infinite);
+}
+
+#box4 {
+    z-index: 100;
+    @include clouds(84%,-256px,100px,100px,none);
+    @include animation(box4-cloud,0,36s,linear,infinite);
+}
+
+/*===================================*/
+
+html {
+    height: 100% !important;
+    
+    body {
+        height: 100% !important;
+
+        .jumbotron {
+            background-image: url('../../img/pattern.png');
+            position: relative; /* for the bottom alignment of the downward arrow, I could not find a method to 
+                                 center it. Also need to make it float so that is move down along with the 
+                                 page and also changes to upward arrow as it moves down. TODO*/
+            background-color: $laravel-red !important;
+            color: $white;
+            height: 95%;
+            box-shadow: 0px 1px 4px rgba(12,12,12,0.4);
+            .container {
+                z-index: 105;
+                position: relative;
+
+                
+                .learn-more {
+                    z-index: 105;
+                    position: relative;
+                }
+
+                /* downward arrow*/
+                .learn-more-row {
+                    margin-top: 21px;
+                    margin-bottom: 10.5px;
+                    position: absolute;
+                    right: 30px;
+                    bottom: 0px;
+                }
+
+                
+                .learn-more .glyphicon {
+                    font-size: 1.4em;
+                    cursor: pointer;
+                }
+            }
+        } //jumbtron ends here
+        
+        .features {
+            h1 {
+                font-size: 3em;
+                color: $laravel-red;
+            }
+            p {
+                font-size: 1.5em;
+                color: $features-text;
+            }
+        }
+    }    
+
+}
+
+.brand {
+    /*font-family: 'Indie Flower';*/
+    font-family: 'Covered By Your Grace';
+    font-size: 5em !important;
+    color: $white;
+}
+
+.brand-shadow {
+    text-shadow: 0px -2px 5px rgba(134, 13, 9, 0.4);
+}
+
+
+.btn-custom-common {
+    font-size: 0.8em !important;   
+}
+
+.btn-custom a {
+    color: $laravel-red;
+    text-decoration: none;
+}
+
+
+.btn-custom a:hover {
+    color: $white;
+    text-decoration: none;
+}
+
+.btn-custom {
+    color: $laravel-red;
+    border: 1px solid;
+    border-color: $laravel-red;
+    background-color: $white;
+}
+
+.btn-custom:hover {
+    color: $white;
+    border-color: $white;
+    background-color: $laravel-red;
+}
+
+
+.button-row {
+    margin-top: 21px;
+    margin-bottom: 10.5px;
+}
+
+
+
+.learn-more-divider {
+    margin: 40px 0px;
+}
+
+.notification {
+    display: none;
+}
+
+/* css for signin modal */
+
+.login {
+    padding-top: 5em !important;
+    .modal-header {
+        color: $laravel-red;
+    }
+
+    .modal-dialog {
+        width: 400px !important;
+    }
+
+    .form-control:focus {
+      border-color: $laravel-red;
+      outline: 0;
+      -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(244, 101, 95, 0.6);
+              box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(244, 101, 95, 0.6);
+    }
+
+    .btn-custom {
+        padding: 7px 14px !important;
+    }
+
+}
+
+
+/* ====== css for signup and signin pages ===== */
+.hide {
+    display: none;
+}
+
+
