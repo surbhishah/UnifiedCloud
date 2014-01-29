@@ -9,7 +9,8 @@ class SharedFilesController extends BaseController {
             $sharerEmail = Input::get('sharerEmail');// email of the person with whom file is to be shared
             $sharer = User::getUserAttributes($sharerEmail,array('userID'));
             if($sharer == null){// No person with this email id is registered with our app
-                return View::make('complete')->with('message','No user with the email ID :'.$sharerEmail.' is registered with our app');// TODO ABHISHEK
+                return View::make('complete')->with('message','No user with the email ID :'.$sharerEmail.' 
+                        is registered with our app');// TODO ABHISHEK
             }
             else{// Person with this email exists
                 $sharerID = $sharer->userID;
@@ -32,10 +33,10 @@ class SharedFilesController extends BaseController {
     }
 /**********************************************************************************************/    
     public function getFilesSharedByUser(){
-        //$ownerID = Session::get('userID'); // UNCOMMENT THIS
         try{
-            $ownerID = Input::get('ownerID');//TO BE COMMENTED GET USERID FROM SESSION
-            return SharedFile::getFilesSharedByUser($ownerID);
+        //    $ownerID = Input::get('ownerID');//UNCOMMEnt if testing from home.blade.php
+          $ownerID = Session::get('userID'); 
+          return SharedFile::getFilesSharedByUser($ownerID);
             
         }catch(Exception $e){
             Log::info("Exception raised in SharedFilesController::getFilesSharedByUser");
@@ -45,9 +46,9 @@ class SharedFilesController extends BaseController {
     }
 /**********************************************************************************************/    
     public function getFilesSharedWithUser(){
-    //$sharerID = Session::get('userID'); // UNCOMMENT This
         try{
-            $sharerID = Input::get('sharerID');//TO BE COMMENTED GET USERID FROM SESSION
+    //        $sharerID = Input::get('sharerID'); //UNCOMMEnt if testing from home.blade.php
+            $sharerID = Session::get('userID'); 
             return SharedFile::getFilesSharedWithUser($sharerID);
         }catch(Exception $e){
             Log::info("Exception raised in SharedFilesController::getFilesSharedWithUser");
@@ -83,10 +84,15 @@ class SharedFilesController extends BaseController {
     }
 /**********************************************************************************************/    
     public function getSharedFile(){// download a shared file 
-        //TODO
      try{
             $sharedFileID = Input::get('sharedFileID');
-            SharedFile::setAccessRights($sharedFileID, $accessRights);
+            $file = SharedFile::getFile($sharedFileID);
+            $cloudID = UserCloudInfo::find($file->user_cloudID)->pluck('cloudID');
+            $cloudName = Cloud::getCloudName($cloudID);
+            $factory = new CloudFactory(); 
+            $cloud = $factory->createCloud($cloudName);
+            $fileDestination=$cloud->download($file->user_cloudID, $file->path, $file->file_name);
+            return Response::download($fileDestination,$file->file_name);
 
         }catch(Exception $e){
             Log::info("Exception raised in SharedFilesController::getSharedFile");
@@ -99,5 +105,9 @@ class SharedFilesController extends BaseController {
         //TODO Surbhi
     }
 /**********************************************************************************************/    
-    
+    public function postSharedFile(){
+        //$userID = Session::get('userID');
+        //TODO SURBHI
+    }
+/**********************************************************************************************/    
 }

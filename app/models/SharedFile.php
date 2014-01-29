@@ -66,5 +66,16 @@ class SharedFile extends Eloquent  {
 		$sharedFile->save();
 	}
 /**********************************************************************************************/	
+	public static function getFile($sharedFileID){
+		$file = SharedFile::find($sharedFileID)->file;
+		return $file;
+	}
+/**********************************************************************************************/	
 
 }
+
+
+
+
+
+

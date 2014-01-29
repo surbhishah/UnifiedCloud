@@ -161,14 +161,24 @@ Route::get('user/share',array(
 ));
 
 // get files shared by user
-Route::get('user/get_shared_by_user',array(
+Route::get('user/get_files_shared_by_user',array(
 	'as'=>'files_shared_by_user_route',
 	'uses'=>'SharedFilesController@getFilesSharedByUser'
 ));
 
 // get files shared with user
-Route::get('user/get_shared_with_user',array(
+Route::get('user/get_files_shared_with_user',array(
 	'as'=>'files_shared_with_user_route',
 	'uses'=>'SharedFilesController@getFilesSharedWithUser'
 ));
 
+//download shared file route 
+Route::get('user/download_shared_file',array(
+	'as'=>'download_shared_file_route',
+	'uses'=>'SharedFilesController@getSharedFile'
+));
+// Change access RIghts
+Route::get('user/change_access_rights',array(
+	'as'=>'change_access_rights_route',
+	'uses'=>'SharedFilesController@getChangeAccessRights'
+));
