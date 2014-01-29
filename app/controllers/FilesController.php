@@ -61,8 +61,9 @@ class FilesController extends BaseController{
 			 	$cloudName = Input::get('cloudName');// to be COMMENTED later abhishek if cloudName is passed as parameter 
 				$factory = new CloudFactory(); 			// to controller 
 				$cloud = $factory->createCloud($cloudName);
-				$fileDestination =$cloud->download($userCloudID, $cloudSourcePath, $fileName);			
+				$fileDestination= $cloud->download($userCloudID, $cloudSourcePath, $fileName);			
 				// Return the file with the response so that browser shows an option to user to download a file
+				//return $fileDestination;
 				return Response::download($fileDestination,$fileName);
 
 			}catch(UnknownCloudException $e){
@@ -208,7 +209,7 @@ class FilesController extends BaseController{
 			header('Content-Type: application/zip');
 			header('Content-disposition: attachment; filename='.$zipFileName);
 			readfile($zipFileName);
-			unlink($zipFileName);
+			//unlink($zipFileName);
 		
 		}catch(UnknownCloudException $e){
 				Log::info("UnknownCloudException raised in FilesController::getDownloadFolder");

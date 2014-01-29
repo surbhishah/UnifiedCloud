@@ -1,10 +1,11 @@
-
+{{	Form::label('Welcome')	}}
 <br>
 <br>
 <br>
 
 {{ Form::open(array('route'=>'share_file_route', 'as'=>'share','method'=>'get')) }}
-{{ Form::hidden('userCloudID','1' )	}}
+{{ Form::label('userCloudID','userCloudID:')}}
+{{ Form::text('userCloudID')	}}<br>
 {{ Form::label('Path', 'Path:')	}}
 {{ Form::text('path')}}			
 {{ Form::label('file name', 'File Name:')	}}
@@ -21,7 +22,8 @@
 
 {{ Form::open(array('route'=>'upload_route', 'files' => true, 'as'=>'upload','method'=>'post')) }}
 {{ Form::hidden('cloudName','Dropbox' )	}}
-{{ Form::hidden('userCloudID','1' )	}}
+{{ Form::label('userCloudID','userCloudID:')}}
+{{ Form::text('userCloudID')	}}<br>
 {{ Form::label('cloudDestination path', 'Cloud destination without trailing slash:')	}}
 {{ Form::text('cloudDestinationPath')}}			
 {{ Form::label('file', 'File:')	}}
@@ -33,7 +35,8 @@
 <br>
 <br>
 {{ Form::open(array('route'=>'download_folder_route', 'as'=>'download_folder','method'=>'get')) }}
-{{ Form::hidden('userCloudID','1' )	}}
+{{ Form::label('userCloudID','userCloudID:')}}
+{{ Form::text('userCloudID')	}}<br>
 {{ Form::hidden('cloudName','Dropbox') }}
 {{ Form::label('Folder Path', 'Folder Path:')	}}
 {{ Form::text('folderPath')	}}<br>
@@ -52,7 +55,8 @@
 {{ Form::text('cloudSourcePath')	}}<br>
 {{ Form::label('file','FileName: ')}}
 {{ Form::text('fileName')	}}<br>
-{{ Form::hidden('userCloudID','2')	}}
+{{ Form::label('userCloudID','userCloudID:')}}
+{{ Form::text('userCloudID')	}}<br>
 {{ Form::submit('Download')	}}
 {{ Form::close()	}}
 <br>
@@ -106,7 +110,8 @@
 <br>
 {{ Form::open(array('route'=>'upload_with_encryption', 'files' => true, 'as'=>'upload','method'=>'post'))}}
 {{ Form::hidden('cloudName','Dropbox' )	}}
-{{ Form::hidden('userCloudID','2' )	}}
+{{ Form::label('userCloudID','userCloudID:')}}
+{{ Form::text('userCloudID')	}}<br>
 {{ Form::label('cloudDestination path', 'Cloud destination without trailing slash:')	}}
 {{ Form::text('cloudDestinationPath')}}			
 {{ Form::text('passKey','User Pass Key')}}			
@@ -128,7 +133,8 @@
 {{ Form::label('file','FileName: ')}}
 {{ Form::text('fileName')	}}<br>
 {{ Form::text('passKey','User Pass Key')}}	
-{{ Form::hidden('userCloudID','2')	}}
+{{ Form::label('userCloudID','userCloudID:')}}
+{{ Form::text('userCloudID')	}}<br>
 {{ Form::submit('Download')	}}
 {{ Form::close()	}}
 <br>

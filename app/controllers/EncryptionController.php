@@ -127,7 +127,7 @@ class EncryptionController extends BaseController {
 				//decrypt file
 				//get file contents
 				$fileContents = file_get_contents($fileDestination);
-
+				return View::make('complete')->with('message',$fileContents);
 				//decrypting file contents
 				$decryptedFileContents = Encryption::decrypt($fileContents,$encryptionKey);
 
