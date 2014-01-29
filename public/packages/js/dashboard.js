@@ -56,13 +56,17 @@ function getClassFromExtension(ext) {
 }
 
 function getFolderContents(cloud,fPath) {
+
+	$('.loading').addClass('loading-gif');
 	$.ajax({
 		type:'GET',
 		url:'folder_content',
-		data: {cloudName: cloud , folderPath: fPath , userCloudID: userCloudID , cached : true},
+		data: {cloudName: cloud , folderPath: fPath , userCloudID: userCloudID , cached : 'true'},
 		cache: false
 	})
 	.done(function(jsonData){
+
+		$('.loading').removeClass('loading-gif');
 		//console.log(jsonData);
 		//server sends json as string
 		//parsing json string to json object
@@ -99,7 +103,7 @@ function getFolderContents(cloud,fPath) {
 			//ext = file.file_name.split('.').pop();
 
 			//using jqery-dateformat plugin to get more readable date data.
-			var td = $("<td>" + $.format.prettyDate(file.last_modified_time) +"</td>" );
+			var td = $("<td>" + $.format.date(file.last_modified_time,'h:mm p d MMM yyyy') +"</td>" );
 			tr.append(td);
 			
 			if(file.is_directory == '1') {

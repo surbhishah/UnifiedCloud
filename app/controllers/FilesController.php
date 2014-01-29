@@ -202,7 +202,7 @@ class FilesController extends BaseController{
 			$cloudName = Input::get('cloudName');
 			$userCloudID = Input::get('userCloudID');		
 			$folderPath = Input::get('folderPath');
-			$factory = new CloudFactory(); 
+			$factory = new CloudFactory();
 			$cloud = $factory->createCloud($cloudName);
 			$zipFileName = $cloud->downloadFolder($userCloudID,$folderPath);
 			header('Content-Type: application/zip');
@@ -224,5 +224,5 @@ class FilesController extends BaseController{
 
 	}
 /************************************************************************************************/
-
+	
 }

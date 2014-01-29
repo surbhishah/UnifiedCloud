@@ -50,8 +50,27 @@ class Dropbox implements CloudInterface{
 
 				}
 				$result = $client->uploadFile($cloudDestinationFullPath, Dropbox\WriteMode::add(), $fileStream);
+				
+				/* ===============Code added by Abhishek ============== */
+				$newFile = array();
+				$newFile['path']=$cloudDestinationPath;
+				$newFile['fileName']=$fileName;
+				$newFile['lastModifiedTime']=$result['modified'];
+				$newFile['rev']=$result['rev'];
+				$newFile['size']=$result['size'];
+				$newFile['isDirectory']=$result['is_dir'];
+				$newFile['hash']=null;// Passing null because we dont have hash values for these 
+				// but we might get them in the future if $file is actually a folder 
+				FileModel::addOrUpdateFile($userCloudID, $newFile);
+
+				/* ======================================================= */
+
 				// refreshing our database with updates from dropbox
-				$this->refreshFolder($userCloudID, $cloudDestinationPath);
+				
+				//ABHISHEK:: code commented because refresh is no more needed after an upload.
+				//but won't folder data be changed because folder data. 
+				//$this->refreshFolder($userCloudID, $cloudDestinationPath);
+				
 				// Update app database that a new file has been uploaded
 
 
@@ -92,6 +111,7 @@ class Dropbox implements CloudInterface{
 	*/
 	public function download($userCloudID, $cloudSourcePath, $fileName){
 
+		Log::info('Dropbox::download',array('userCloudID' => $userCloudID,'cloudSourcePath' => $cloudSourcePath ,'fileName' => $fileName));
 		$serverDestinationPath = public_path().'/temp/dropbox/downloads/';
 
 		 try{
@@ -183,16 +203,19 @@ class Dropbox implements CloudInterface{
 	*/
 	public function getFolderContents($userCloudID, $folderPath, $cached='false'){
 		try{
+			 Log::info('Dropbox::getFolderContents: ',array('message',$userCloudID));
 			 $key = $userCloudID.$folderPath;
+			 Log::info('Dropbox::getFolderContents: ',array('cache key',$key));
+/*
 			 if(Cache::has($key) && $cached =='true'){ //cached is a string, not boolean
 			 	return Cache::get($key);
 			 }
-			 else{
+			 else{*/
 			 	$this->refreshFolder($userCloudID, $folderPath);
 			 	$folderContents= FileModel::getFolderContents($userCloudID, $folderPath);
-			 	Cache::put($key, $folderContents, 10);
+			 	//Cache::put($key, $folderContents, 10);
 			 	return $folderContents;
-			 }
+			 //}
 		}catch(Exception $e){
 			Log::info("Exception raised in Dropbox::refreshFolder",array('userCloudID'=>$userCloudID, 'folderPath'=>$folderPath));
 			Log::error($e);				
@@ -406,6 +429,7 @@ class Dropbox implements CloudInterface{
                 list($accessToken, $uid, $urlState) = $this->getWebAuth()->finish($_GET);
                 $userCloudName = $urlState;
                 $userID = Session::get('userID');
+
                 if(User::userAlreadyExists($uid, self::$cloudID)){
 					return View::make('complete')
 							->with('message','You already have an account with us!');

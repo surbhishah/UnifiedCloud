@@ -1,5 +1,5 @@
-<!-- {{ Log::info('clouds',array('clouds'=>$clouds)) }}
- -->
+ {{-- var_dump($clouds) --}}
+ 
 
 @foreach($clouds as $cloud)
 	{{--  $userCloudName = $cloud->user_cloud_name  --}}
