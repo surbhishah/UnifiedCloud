@@ -7,6 +7,8 @@
     @include('dashboard.cloudSelectModal')
     @include('dashboard.fileUploadModal')
 
+    <div class="loading"></div>
+
 <div class="row">
     <div class="col-md-3">
         <h3 class="dashboard-heading"></h3>
