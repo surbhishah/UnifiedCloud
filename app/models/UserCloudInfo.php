@@ -38,8 +38,11 @@ class UserCloudInfo extends Eloquent  {
 	*
 	*/
 	public static function getAccessToken($userCloudID){
-		return UserCloudInfo::where('user_cloudID','=',$userCloudID)->get()
-									->first()->pluck('access_token');		
+		//return UserCloudInfo::where('user_cloudID','=',$userCloudID)->get()
+		//							->first()->pluck('access_token');	
+		$userCloudInfo = UserCloudInfo::find($userCloudID);    
+     	$accessToken =  $userCloudInfo->access_token;
+     	return $accessToken;	
 	}
 /**********************************************************************************************/	
 	/*

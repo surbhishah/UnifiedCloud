@@ -14,7 +14,8 @@ class UsersController extends BaseController {
 
     public function getDashboard() {
         $clouds = UserCloudInfo::getClouds(Session::get('userID'));
-        return View::make('dashboard.dashboard',array('title' => 'Dashboard'))->with('clouds',$clouds);    
+            //return View::make('complete')->with('message',$clouds);
+        return View::make('dashboard.dashboard',array('title' => 'Dashboard','clouds' => $clouds));    
     }
 
     public function postSignin() {
@@ -22,11 +23,16 @@ class UsersController extends BaseController {
            
            //Session email variable to get user data from tables
             $user = User::getUser(Input::get('email'));
-            if($user!=null)
+            //redundant because Auth::attempt will check this.
+            if($user!=null) {
                 Session::put('userID',$user->userID);
-            else 
+                return Redirect::route('dashboard');
+            }
+            else { 
                 throw new Exception('Invalid Email passed to UsersController::postSignin');
-            return Redirect::route('dashboard');
+                return Redirect::route('sign_in_page')
+              ->with('message', 'Incorrect email or password');
+            }
         } else {
            return Redirect::route('sign_in_page')
               ->with('message', 'Incorrect email or password')

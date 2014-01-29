@@ -111,6 +111,7 @@ class Dropbox implements CloudInterface{
 	*/
 	public function download($userCloudID, $cloudSourcePath, $fileName){
 
+		Log::info('Dropbox::download',array('userCloudID' => $userCloudID,'cloudSourcePath' => $cloudSourcePath ,'fileName' => $fileName));
 		$serverDestinationPath = public_path().'/temp/dropbox/downloads/';
 
 		 try{
@@ -202,16 +203,19 @@ class Dropbox implements CloudInterface{
 	*/
 	public function getFolderContents($userCloudID, $folderPath, $cached='false'){
 		try{
+			 Log::info('Dropbox::getFolderContents: ',array('message',$userCloudID));
 			 $key = $userCloudID.$folderPath;
+			 Log::info('Dropbox::getFolderContents: ',array('cache key',$key));
+/*
 			 if(Cache::has($key) && $cached =='true'){ //cached is a string, not boolean
 			 	return Cache::get($key);
 			 }
-			 else{
+			 else{*/
 			 	$this->refreshFolder($userCloudID, $folderPath);
 			 	$folderContents= FileModel::getFolderContents($userCloudID, $folderPath);
-			 	Cache::put($key, $folderContents, 10);
+			 	//Cache::put($key, $folderContents, 10);
 			 	return $folderContents;
-			 }
+			 //}
 		}catch(Exception $e){
 			Log::info("Exception raised in Dropbox::refreshFolder",array('userCloudID'=>$userCloudID, 'folderPath'=>$folderPath));
 			Log::error($e);				
@@ -425,6 +429,7 @@ class Dropbox implements CloudInterface{
                 list($accessToken, $uid, $urlState) = $this->getWebAuth()->finish($_GET);
                 $userCloudName = $urlState;
                 $userID = Session::get('userID');
+
                 if(User::userAlreadyExists($uid, self::$cloudID)){
 					return View::make('complete')
 							->with('message','You already have an account with us!');

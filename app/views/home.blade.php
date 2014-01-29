@@ -35,7 +35,7 @@
 {{ Form::text('cloudSourcePath')	}}<br>
 {{ Form::label('file','FileName: ')}}
 {{ Form::text('fileName')	}}<br>
-{{ Form::hidden('userCloudID','1')	}}
+{{ Form::hidden('userCloudID','2')	}}
 {{ Form::submit('Download')	}}
 {{ Form::close()	}}
 <br>
@@ -89,7 +89,7 @@
 <br>
 {{ Form::open(array('route'=>'upload_with_encryption', 'files' => true, 'as'=>'upload','method'=>'post'))}}
 {{ Form::hidden('cloudName','Dropbox' )	}}
-{{ Form::hidden('userCloudID','1' )	}}
+{{ Form::hidden('userCloudID','2' )	}}
 {{ Form::label('cloudDestination path', 'Cloud destination without trailing slash:')	}}
 {{ Form::text('cloudDestinationPath')}}			
 {{ Form::text('passKey','User Pass Key')}}			
@@ -111,7 +111,7 @@
 {{ Form::label('file','FileName: ')}}
 {{ Form::text('fileName')	}}<br>
 {{ Form::text('passKey','User Pass Key')}}	
-{{ Form::hidden('userCloudID','1')	}}
+{{ Form::hidden('userCloudID','2')	}}
 {{ Form::submit('Download')	}}
 {{ Form::close()	}}
 <br>

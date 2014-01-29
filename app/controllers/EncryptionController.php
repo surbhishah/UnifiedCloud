@@ -137,8 +137,8 @@ class EncryptionController extends BaseController {
 				fwrite($fileDescriptor, $decryptedFileContents);
 				fclose($fileDescriptor);
 
-				//return Response::download($fileDestination,$fileName);
-				return $encryptionKey;
+				return Response::download($fileDestination,$fileName);
+				//return $encryptionKey;
 
 				//change genRandomKey to 32 length.
 			}catch(UnknownCloudException $e){
