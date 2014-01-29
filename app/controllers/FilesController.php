@@ -209,7 +209,7 @@ class FilesController extends BaseController{
 			header('Content-Type: application/zip');
 			header('Content-disposition: attachment; filename='.$zipFileName);
 			readfile($zipFileName);
-			//unlink($zipFileName);
+			unlink($zipFileName);
 		
 		}catch(UnknownCloudException $e){
 				Log::info("UnknownCloudException raised in FilesController::getDownloadFolder");

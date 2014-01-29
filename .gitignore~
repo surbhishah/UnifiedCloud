@@ -8,4 +8,6 @@ Thumbs.db
 /public/temp/googledrive/downloads/*
 /public/temp/dropbox/uploads/*
 /public/temp/googledrive/uploads/*
+
+
 /app/config/database.php
