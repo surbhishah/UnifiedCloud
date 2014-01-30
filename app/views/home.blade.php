@@ -18,8 +18,7 @@
 {{ Form::text('sharedFileID')	}}
 {{ Form::label('Access_rights','accessRights')}}
 {{ Form::text('accessRights')	}}
-
-{{ Form::submit('Get files shared with this Sharer')	}}
+{{ Form::submit('Change Access Rights')	}}
 {{ Form::close()	}}
 <br>
 <br>
