@@ -76,7 +76,7 @@ class UsersController extends BaseController {
             // and get access Token from the cloud and then we will fetch full file structure of 
             // user's cloud 
                 //TODO ABHISHEK
-            $userCloudName = 'surbhi';// COMMENT THIS LATER 
+            //$userCloudName = 'surbhi';// COMMENT THIS LATER 
             $factory = new CloudFactory(); 
             $cloud = $factory->createCloud($cloudName);
             return $cloud->getRegistrationPage($userCloudName);

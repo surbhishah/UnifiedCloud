@@ -96,13 +96,13 @@ function createNewFolder(folderName,jObj) {
 
 }
 
-function getFolderContents(cloud,fPath) {
+function getFolderContents(cloud,fPath,cache) {
 
 	$('.loading').addClass('loading-gif');
 	$.ajax({
 		type:'GET',
 		url:'folder_content',
-		data: {cloudName: cloud , folderPath: fPath , userCloudID: userCloudID , cached : 'true'},
+		data: {cloudName: cloud , folderPath: fPath , userCloudID: userCloudID , cached : cache},
 		cache: false
 	})
 	.done(function(jsonData){
@@ -215,7 +215,7 @@ $('.cloud').click(function(){
 	$('.breadcrumb').html('<li>'+cloud+'</li>');
 	$('#cwd').html(fPath);
 	
-	getFolderContents(cloud,fPath);
+	getFolderContents(cloud,fPath,'true');
 });
 
 $("#file-explorer tbody").on("click","a.directory",function(){
@@ -233,7 +233,7 @@ $("#file-explorer tbody").on("click","a.directory",function(){
 	breadcrumb.append('<li>'+nextPath+'</li>');
 	$('#cwd').html(fPath);
 
-	getFolderContents(cloud,fPath);
+	getFolderContents(cloud,fPath,'true');
 });
 
 //register click on table row.
@@ -272,7 +272,7 @@ $('.breadcrumb').on('click','li',function(){
 	if(fPath == '')
 		fPath = '/';
 	$('#cwd').html(fPath);
-	getFolderContents(cloud,fPath);
+	getFolderContents(cloud,fPath,'true');
 	//alert(fPath);
 });
 
@@ -359,7 +359,7 @@ $('#fileUploadForm').submit(function(e) {
 	 		});
 
 	 		//update folder contents
-			getFolderContents(cloud,$('#cwd').html());
+			getFolderContents(cloud,$('#cwd').html(),'false');
 
 
         }).fail(function(jqXHR,status, errorThrown) {
@@ -377,16 +377,8 @@ $('#refresh').tooltip({
 });
 
 $('#refresh').on('click',function(){
-	$.ajax({
-		type:"GET",
-		url:"refresh/"+cloud,
-		cache: false
-	})
-	.done(function(data){
-		console.log(data);
-	});
-
-	getFolderContents(cloud,$('#cwd').html());
+	
+	getFolderContents(cloud,$('#cwd').html(),'false');
 });
 
 //settings
@@ -484,7 +476,7 @@ $('#delete').on('click',function(){
 		}).done(function() {
 
 			$('.loading').removeClass('loading-gif');
-			getFolderContents(cloud,currentDir);
+			getFolderContents(cloud,currentDir,'false');
 
 			$('.container').notify('deleted!',{
 				'arrowShow' : false,
