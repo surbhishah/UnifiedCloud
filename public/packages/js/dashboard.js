@@ -206,6 +206,8 @@ $('th').on('click',function(){
 
 $('.cloud').click(function(){
 
+	$('.cloud').removeClass('selected');
+	$(this).addClass('selected');
 	cloud = this.id;
 	userCloudID = $(this).find('span').attr('id');
 	//console.log(userCloudID);

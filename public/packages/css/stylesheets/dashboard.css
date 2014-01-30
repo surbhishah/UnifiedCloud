@@ -2,35 +2,35 @@
 /*===========================================*/
 /*============mixins=========================*/
 /*===========================================*/
-/* line 69, ../sass/dashboard.scss */
+/* line 70, ../sass/dashboard.scss */
 #dropboxAuthModal input {
   width: 50%;
 }
-/* line 73, ../sass/dashboard.scss */
+/* line 74, ../sass/dashboard.scss */
 #dropboxAuthModal .col-md-12 {
   margin-bottom: 10px;
 }
 
-/* line 79, ../sass/dashboard.scss */
+/* line 80, ../sass/dashboard.scss */
 .loading-gif {
   background-image: url(../../img/loading.gif);
   background-repeat: no-repeat;
 }
 
-/* line 84, ../sass/dashboard.scss */
+/* line 85, ../sass/dashboard.scss */
 .clicked-row {
   background-color: #D0D0D0 !important;
 }
 
-/* line 88, ../sass/dashboard.scss */
+/* line 89, ../sass/dashboard.scss */
 body {
   background-image: url(../../img/light_toast.png);
 }
-/* line 91, ../sass/dashboard.scss */
+/* line 92, ../sass/dashboard.scss */
 body .container {
   position: relative;
 }
-/* line 94, ../sass/dashboard.scss */
+/* line 95, ../sass/dashboard.scss */
 body .loading {
   position: absolute;
   width: 32px;
@@ -39,29 +39,29 @@ body .loading {
   left: 50%;
   z-index: 120;
 }
-/* line 105, ../sass/dashboard.scss */
+/* line 106, ../sass/dashboard.scss */
 body .dashboard-heading {
   color: #00ddd8;
 }
-/* line 109, ../sass/dashboard.scss */
+/* line 110, ../sass/dashboard.scss */
 body .cloud-control {
   margin-top: 42px;
 }
-/* line 112, ../sass/dashboard.scss */
+/* line 113, ../sass/dashboard.scss */
 body .cloud-control .cloud-control-buttons {
   font-size: 1.3em;
   cursor: pointer;
 }
-/* line 117, ../sass/dashboard.scss */
+/* line 118, ../sass/dashboard.scss */
 body .select-cloud {
   color: #393939;
 }
-/* line 119, ../sass/dashboard.scss */
+/* line 120, ../sass/dashboard.scss */
 body .select-cloud img {
   width: 100px;
   height: 100px;
 }
-/* line 125, ../sass/dashboard.scss */
+/* line 126, ../sass/dashboard.scss */
 body #side-bar {
   background-image: url(../../img/noisy_net.png);
   background-color: #262c3a;
@@ -72,7 +72,7 @@ body #side-bar {
   color: #cf4858;
   text-shadow: 0px 1px 1px rgba(31, 31, 31, 0.4);
 }
-/* line 137, ../sass/dashboard.scss */
+/* line 138, ../sass/dashboard.scss */
 body #side-bar ul li {
   text-align: left;
   padding: 6px 0px 4px 10px;
@@ -80,75 +80,75 @@ body #side-bar ul li {
   margin-top: 0px !important;
   cursor: pointer;
 }
-/* line 145, ../sass/dashboard.scss */
+/* line 146, ../sass/dashboard.scss */
 body #side-bar ul li:hover {
   color: #c1c4cf;
 }
-/* line 149, ../sass/dashboard.scss */
+/* line 150, ../sass/dashboard.scss */
 body #side-bar ul .glyphicon {
   margin-top: 4px;
   margin-right: 10px;
 }
-/* line 154, ../sass/dashboard.scss */
+/* line 155, ../sass/dashboard.scss */
 body #side-bar ul .selected {
-  color: #12161b !important;
-  background-color: whitesmoke;
-  border-left: 5px solid #00ddd8;
+  color: white !important;
+  box-shadow: inset 0 0 10px #101010;
 }
-/* line 162, ../sass/dashboard.scss */
+/* line 164, ../sass/dashboard.scss */
 body #side-bar ul .cloud {
-  color: #81848f;
+  padding-left: 40px;
+  color: #cf4858;
 }
-/* line 167, ../sass/dashboard.scss */
+/* line 170, ../sass/dashboard.scss */
 body #side-bar #side-bar-header {
   min-height: 32px;
   color: #cf4858;
   cursor: default !important;
 }
-/* line 176, ../sass/dashboard.scss */
+/* line 179, ../sass/dashboard.scss */
 body #file-explorer {
   background-color: whitesmoke;
   min-height: 500px;
   border-radius: 0px 8px 8px 0px;
   box-shadow: 2px 1px 2px 0px rgba(31, 31, 31, 0.4);
 }
-/* line 183, ../sass/dashboard.scss */
+/* line 186, ../sass/dashboard.scss */
 body #file-explorer table {
   margin-bottom: 0px !important;
 }
-/* line 187, ../sass/dashboard.scss */
+/* line 190, ../sass/dashboard.scss */
 body #file-explorer table thead {
   display: table;
   width: 100%;
   color: #393939;
   font-weight: bolder;
 }
-/* line 192, ../sass/dashboard.scss */
+/* line 195, ../sass/dashboard.scss */
 body #file-explorer table thead tr {
   font-size: 1.2em;
   color: #12161b;
 }
-/* line 47, ../sass/dashboard.scss */
+/* line 48, ../sass/dashboard.scss */
 body #file-explorer table thead tr th:nth-child(1) {
   width: 37%;
 }
-/* line 52, ../sass/dashboard.scss */
+/* line 53, ../sass/dashboard.scss */
 body #file-explorer table thead tr th:nth-child(2) {
   width: 27%;
 }
-/* line 56, ../sass/dashboard.scss */
+/* line 57, ../sass/dashboard.scss */
 body #file-explorer table thead tr th:nth-child(3) {
   width: 18%;
 }
-/* line 60, ../sass/dashboard.scss */
+/* line 61, ../sass/dashboard.scss */
 body #file-explorer table thead tr th:nth-child(4) {
   width: 18%;
 }
-/* line 198, ../sass/dashboard.scss */
+/* line 201, ../sass/dashboard.scss */
 body #file-explorer table thead tr th {
   cursor: pointer;
 }
-/* line 204, ../sass/dashboard.scss */
+/* line 207, ../sass/dashboard.scss */
 body #file-explorer table tbody {
   color: #393939;
   font-weight: normal;
@@ -156,62 +156,62 @@ body #file-explorer table tbody {
   display: block;
   overflow: auto;
 }
-/* line 211, ../sass/dashboard.scss */
+/* line 214, ../sass/dashboard.scss */
 body #file-explorer table tbody a {
   color: #393939;
 }
-/* line 215, ../sass/dashboard.scss */
+/* line 218, ../sass/dashboard.scss */
 body #file-explorer table tbody a:hover {
   color: #7e7e7e;
 }
-/* line 221, ../sass/dashboard.scss */
+/* line 224, ../sass/dashboard.scss */
 body #file-explorer table tbody tr {
   font-size: 14px;
   line-height: 32px;
   display: table;
   width: 100%;
 }
-/* line 227, ../sass/dashboard.scss */
+/* line 230, ../sass/dashboard.scss */
 body #file-explorer table tbody tr td:first-child {
   cursor: pointer;
 }
-/* line 232, ../sass/dashboard.scss */
+/* line 235, ../sass/dashboard.scss */
 body #file-explorer table tbody tr td .glyphicon {
   margin-right: 5px;
 }
-/* line 244, ../sass/dashboard.scss */
+/* line 247, ../sass/dashboard.scss */
 body #file-explorer table tr {
   padding: 15px;
 }
-/* line 248, ../sass/dashboard.scss */
+/* line 251, ../sass/dashboard.scss */
 body #file-explorer table td {
   text-align: left;
 }
-/* line 28, ../sass/dashboard.scss */
+/* line 29, ../sass/dashboard.scss */
 body #file-explorer table td:nth-child(1) {
   width: 37%;
 }
-/* line 33, ../sass/dashboard.scss */
+/* line 34, ../sass/dashboard.scss */
 body #file-explorer table td:nth-child(2) {
   width: 27%;
 }
-/* line 37, ../sass/dashboard.scss */
+/* line 38, ../sass/dashboard.scss */
 body #file-explorer table td:nth-child(3) {
   width: 18%;
 }
-/* line 41, ../sass/dashboard.scss */
+/* line 42, ../sass/dashboard.scss */
 body #file-explorer table td:nth-child(4) {
   width: 18%;
 }
-/* line 255, ../sass/dashboard.scss */
+/* line 258, ../sass/dashboard.scss */
 body #file-explorer #new-folder-input {
   width: 50%;
 }
-/* line 259, ../sass/dashboard.scss */
+/* line 262, ../sass/dashboard.scss */
 body #file-explorer #new-folder-input:focus {
   border-color: #cf4858;
 }
-/* line 263, ../sass/dashboard.scss */
+/* line 266, ../sass/dashboard.scss */
 body #file-explorer .breadcrumb {
   margin-bottom: 0px !important;
   background-color: whitesmoke;
@@ -220,7 +220,7 @@ body #file-explorer .breadcrumb {
   border-radius: 0px 4px 0px 0px;
   min-height: 32px;
 }
-/* line 272, ../sass/dashboard.scss */
+/* line 275, ../sass/dashboard.scss */
 body #file-explorer .breadcrumb li {
   cursor: pointer;
   font-size: 1.2em;
