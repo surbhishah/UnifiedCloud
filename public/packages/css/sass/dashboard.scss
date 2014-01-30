@@ -65,6 +65,7 @@ $white: #ffffff;
 
 /*===========================================*/
 
+/*=========== Modal styling ====================*/
 #dropboxAuthModal {
 	
 	input {
@@ -77,6 +78,19 @@ $white: #ffffff;
 
 }
 
+#fileUploadModal {
+
+	.modal-header {
+		color: $main-text;
+	}
+
+	.modal-dialog {
+		width: 400px;
+		
+	}
+}
+
+/*===============================================*/
 .loading-gif {
 		background-image: url(../../img/loading.gif);
 		background-repeat: no-repeat;		

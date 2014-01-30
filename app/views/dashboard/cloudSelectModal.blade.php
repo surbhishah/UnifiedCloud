@@ -45,7 +45,7 @@ array('cloudName' => 'Dropbox','userCloudName' => 'mycloud')) }}"><img src={{ as
             <input type="text" name="userCloudName" class="form-control" placeholder="Name your cloud" value="">            
           </div>
           <div class="col-md-12 col-md-offset-5">
-            <button type="submit" id="Dropbox-auth" class="btn btn-custom">Go!</button>       
+            <button type="submit" id="Dropbox-auth" class="btn btn-custom-small">Go!</button>       
           </div>
 
         </div>

@@ -159,7 +159,7 @@
 {{ Form::text('passKey','User Pass Key')}}			
 {{ Form::label('file', 'File:')	}}
 {{ Form::file('files[]',array('multiple'=>true))	}}
-{{ Form::submit('Upload Files ')	}}
+{{ Form::submit('Upload Encrypted Files ')	}}
 {{ Form::close()	}}
 
 <br>
@@ -177,7 +177,7 @@
 {{ Form::text('passKey','User Pass Key')}}	
 {{ Form::label('userCloudID','userCloudID:')}}
 {{ Form::text('userCloudID')	}}<br>
-{{ Form::submit('Download')	}}
+{{ Form::submit('Download Encrypted File')	}}
 {{ Form::close()	}}
 <br>
 <br>
