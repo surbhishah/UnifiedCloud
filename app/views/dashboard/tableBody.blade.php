@@ -10,9 +10,9 @@
        </tr>
     @endforeach
  -->
- <tr>
- 	<td>Click on prefered cloud to view files.</td>
- 	<td></td>
- 	<td></td>
- 	<td></td>
- </tr>
+<!--  <tr>
+	<td>Click on prefered cloud to view files.</td>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr> -->

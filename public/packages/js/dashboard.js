@@ -55,6 +55,47 @@ function getClassFromExtension(ext) {
 	}
 }
 
+function createNewFolder(folderName,jObj) {
+		if(folderName == '') {
+		
+		//remove tr when not folder name specified
+		jObj.parent().parent().remove();
+		$('.container').notify('folder name required',{
+			'arrowShow' : false,
+			'elementPosition' : 'top center',
+			'globalPosition' : 'top center',
+			'className' : 'error',
+			'autoHideDelay' : '2000',
+			'showAnimation' : 'fadeIn',
+			'hideAnimation' : 'fadeOut'
+ 		});
+
+	} else {
+
+		var fPath = $('#cwd').html() + '/' + folderName;
+		$.ajax({
+			 type: 'GET',
+            url: 'new_folder',
+            data: {cloudName: cloud, folderPath : fPath, userCloudID: userCloudID},
+            cache: false 
+		}).done(function() {
+
+			$('.container').notify('Folder created',{
+				'arrowShow' : false,
+				'elementPosition' : 'top center',
+				'globalPosition' : 'top center',
+				'className' : 'success',
+				'autoHideDelay' : '2000',
+				'showAnimation' : 'fadeIn',
+				'hideAnimation' : 'fadeOut'
+	 		});	
+		});
+
+		jObj.parent().parent().remove();
+	}
+
+}
+
 function getFolderContents(cloud,fPath) {
 
 	$('.loading').addClass('loading-gif');
@@ -79,7 +120,7 @@ function getFolderContents(cloud,fPath) {
 		//we need the cloud name to make further ajax calls
 		//therefore appending cloud name as class name to tbody
 		//tbody.addClass(cloud);
-		tbody.empty();
+		tbody.html('');
 		$.each(jsonData,function(i,file){
 			var ext, extClass;
 
@@ -119,8 +160,49 @@ function getFolderContents(cloud,fPath) {
 
 			}
 		});
-	}); 
+
+		$("table").trigger("update");
+		
+	});
+	
+
 }
+
+
+// Intializing tablesorter plugin
+    $("table").tablesorter({ 
+        // define a custom text extraction function 
+        textExtraction: function(node) { 
+            // extract data from markup and return it  
+             var aTag = node.childNodes[1];
+             console.log(aTag);
+             //return aTag.innerHTML;
+             if(typeof(aTag) == 'undefined') {
+             	return "";
+             } else {
+             	console.log(aTag.innerHTML);
+             	return aTag.innerHTML;
+             }
+        },
+        headers: { 1: {sorter : false },2: {sorter : false}, 3: {sorter : false}} 
+    }); 
+
+
+
+//sorting on thead click 
+var direction = 1;
+$('th').on('click',function(){
+	if(direction == 0)
+		direction = 1;
+	else
+		direction = 0;
+
+	var index = $(this).index();
+	console.log('index: '+index+' direction: '+ direction);
+	
+	var sorting = [[0,direction]];
+		$("table").trigger("sorton",[sorting]);
+});
 
 $('.cloud').click(function(){
 
@@ -208,21 +290,36 @@ $('#download').on('click',function(){
 	var file = $('#file-explorer tbody tr.clicked-row').find('a.file').html(); 
 	
 	if(typeof(file) == 'undefined') {
-		$('.container').notify('Select a file first',{
-			'arrowShow' : false,
-			'elementPosition' : 'top center',
-			'globalPosition' : 'top center',
-			'className' : 'error',
-			'autoHideDelay' : '2000',
-			'showAnimation' : 'fadeIn',
-			'hideAnimation' : 'fadeOut'
- 		});
+		
+		var folder = $('#file-explorer tbody tr.clicked-row').find('a.directory').html(); 
+		var folderPath='';
+		if(cwd == '/') 
+			folderPath = cwd+folder;
+		else 
+			folderPath = cwd + '/' + folder;
+
+		console.log(folderPath);
+		if(typeof(folder) == 'undefined') {
+			$('.container').notify('Select a file/folder first',{
+				'arrowShow' : false,
+				'elementPosition' : 'top center',
+				'globalPosition' : 'top center',
+				'className' : 'error',
+				'autoHideDelay' : '2000',
+				'showAnimation' : 'fadeIn',
+				'hideAnimation' : 'fadeOut'
+	 		});
+		} else {
+			url = "download_folder?userCloudID="+ userCloudID +"&cloudName=" + cloud + "&folderPath=" + folderPath; 	
+			window.location.href = url;
+
+		}
 	}
 	else {
 	//alert(cwd + " : "+ file);
-		url = "http://localhost/UnifiedCloud/public/user/download/?userCloudID="+ userCloudID +"&cloudName=" + cloud + "&cloudSourcePath=" + cwd + "&fileName=" + file; 
+		url = "download?userCloudID="+ userCloudID +"&cloudName=" + cloud + "&cloudSourcePath=" + cwd + "&fileName=" + file; 
 		console.log(url);
-		window.location = url;
+		window.location.href = url;
 	}
 });
 
@@ -237,6 +334,7 @@ $('#fileUploadForm').submit(function(e) {
        	e.preventDefault();
 
        	$('[name="cloudDestinationPath"]').attr('value',$('#cwd').html());
+       	$('[name="userCloudID"]').attr('value',userCloudID);
         data = new FormData($('#fileUploadForm')[0]);
         console.log('Submitting');
         $.ajax({
@@ -248,6 +346,22 @@ $('#fileUploadForm').submit(function(e) {
             processData: false
         }).done(function(data) {
             console.log(data);
+
+            //notify user on success
+            $('.container').notify('File uploaded',{
+				'arrowShow' : false,
+				'elementPosition' : 'top center',
+				'globalPosition' : 'top center',
+				'className' : 'success',
+				'autoHideDelay' : '2000',
+				'showAnimation' : 'fadeIn',
+				'hideAnimation' : 'fadeOut'
+	 		});
+
+	 		//update folder contents
+			getFolderContents(cloud,$('#cwd').html());
+
+
         }).fail(function(jqXHR,status, errorThrown) {
             console.log(errorThrown);
             console.log(jqXHR.responseText);
@@ -318,46 +432,6 @@ $('tbody').on('keypress','#new-folder-input',function(e){
 	}
 });
 
-function createNewFolder(folderName,jObj) {
-		if(folderName == '') {
-		
-		//remove tr when not folder name specified
-		jObj.parent().parent().remove();
-		$('.container').notify('folder name required',{
-			'arrowShow' : false,
-			'elementPosition' : 'top center',
-			'globalPosition' : 'top center',
-			'className' : 'error',
-			'autoHideDelay' : '2000',
-			'showAnimation' : 'fadeIn',
-			'hideAnimation' : 'fadeOut'
- 		});
-
-	} else {
-
-		var fPath = $('#cwd').html() + '/' + folderName;
-		$.ajax({
-			 type: 'GET',
-            url: 'new_folder',
-            data: {cloudName: cloud, folderPath : fPath, userCloudID: userCloudID},
-            cache: false 
-		}).done(function() {
-
-			$('.container').notify('Folder created',{
-				'arrowShow' : false,
-				'elementPosition' : 'top center',
-				'globalPosition' : 'top center',
-				'className' : 'success',
-				'autoHideDelay' : '2000',
-				'showAnimation' : 'fadeIn',
-				'hideAnimation' : 'fadeOut'
-	 		});	
-		});
-
-		jObj.parent().parent().remove();
-	}
-
-}
 
 //delete file or folder 
 $('#delete').tooltip({
@@ -368,11 +442,14 @@ $('#delete').tooltip({
 $('#delete').on('click',function(){
 
 	var fileOrFolder = $('#file-explorer tbody tr.clicked-row').find('a.file').html(); 
-	var fPath = $('#cwd').html();
-
-	if(fPath != '/') {
-		fPath = fPath + '/';
-	} 
+	var currentDir = $('#cwd').html();
+	var pathToCurrentDir = ''; //create path from cwd.
+	var pathToFileOrFolder = ''; //actual path to file or folder.
+	if(currentDir != '/') {
+		pathToCurrentDir = currentDir + '/';
+	} else {
+		pathToCurrentDir = currentDir;
+	}
 
 	if(typeof(fileOrFolder) == 'undefined') {
 		fileOrFolder = $('#file-explorer tbody tr.clicked-row').find('a.directory').html();
@@ -395,14 +472,19 @@ $('#delete').on('click',function(){
 
 		console.log('folder: '+fileOrFolder);
 
-		fPath = fPath + fileOrFolder;
+		pathToFileOrFolder = pathToCurrentDir + fileOrFolder;
+
+		$('.loading').addClass('loading-gif');
 
 		$.ajax({
-			type: 'GET',
+			type: 'DELETE',
             url: 'delete',
-            data: {cloudName: cloud, path : fPath, userCloudID: userCloudID},
+            data: {cloudName: cloud, path : pathToFileOrFolder, userCloudID: userCloudID},
             cache: false 
 		}).done(function() {
+
+			$('.loading').removeClass('loading-gif');
+			getFolderContents(cloud,currentDir);
 
 			$('.container').notify('deleted!',{
 				'arrowShow' : false,
@@ -413,7 +495,6 @@ $('#delete').on('click',function(){
 				'showAnimation' : 'fadeIn',
 				'hideAnimation' : 'fadeOut'
 	 		});	
-	
 		});
 
 	}

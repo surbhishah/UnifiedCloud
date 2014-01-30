@@ -44,14 +44,14 @@
         </div>
         <!-- dashboardPanelHead -->
         <div class="row">
-            <table cellspacing="0" class="table">
+            <table cellspacing="0" class="table tablesorter">
                <thead>
                     <tr>
-                        <td>Name</td>
-                        <td>Modified On</td>
-                        <td>Size</td>
-                        <td>Type</td>
-                    </tr>
+                        <th>Name</th>
+                        <th>Modified On</th>
+                        <th>Size</th>
+                        <th>Type</th>
+                    <tr>
                 </thead>
                 <tbody>
                     @include('dashboard.tableBody')
@@ -73,6 +73,8 @@
 {{ HTML::script('packages/js/dashboard.js')}}
 {{ HTML::script('packages/js/jquery-dateformat.js')}}
 {{ HTML::script('packages/bootstrap/js/modal.js' )}}
+{{ HTML::script('packages/js/jquery.tablesorter.js' )}}
+
 @stop
 
 @section('links')

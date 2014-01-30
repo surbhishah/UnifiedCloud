@@ -16,7 +16,7 @@ class FilesController extends BaseController{
 	public function postFile($cloudName){
 		try{
 			
-			$cloudName = Input::get('cloudName');
+			//$cloudName = Input::get('cloudName');
 			$userCloudID = Input::get('userCloudID');		
 			$cloudDestinationPath = Input::get('cloudDestinationPath');
 			$factory = new CloudFactory(); 

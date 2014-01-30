@@ -9,10 +9,13 @@
         <form role="form" id="fileUploadForm">
           <div class="form-group">
             <label for="InputFile">File input</label>
-            <input type="file" name="userfile" id="userfile">
+            <input type="file" name="files[]" id="userfile" multiple="1">
           </div>
           <div>
             <input type="hidden" name="cloudDestinationPath" value="">
+          </div>
+          <div>
+            <input type="hidden" name="userCloudID" value="">
           </div>
           <button type="submit" class="btn btn-default">Upload</button>
         </form>
