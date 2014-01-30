@@ -2,26 +2,35 @@
 /*===========================================*/
 /*============mixins=========================*/
 /*===========================================*/
-/* line 67, ../sass/dashboard.scss */
+/* line 69, ../sass/dashboard.scss */
+#dropboxAuthModal input {
+  width: 50%;
+}
+/* line 73, ../sass/dashboard.scss */
+#dropboxAuthModal .col-md-12 {
+  margin-bottom: 10px;
+}
+
+/* line 79, ../sass/dashboard.scss */
 .loading-gif {
   background-image: url(../../img/loading.gif);
   background-repeat: no-repeat;
 }
 
-/* line 72, ../sass/dashboard.scss */
+/* line 84, ../sass/dashboard.scss */
 .clicked-row {
   background-color: #D0D0D0 !important;
 }
 
-/* line 76, ../sass/dashboard.scss */
+/* line 88, ../sass/dashboard.scss */
 body {
   background-image: url(../../img/light_toast.png);
 }
-/* line 79, ../sass/dashboard.scss */
+/* line 91, ../sass/dashboard.scss */
 body .container {
   position: relative;
 }
-/* line 82, ../sass/dashboard.scss */
+/* line 94, ../sass/dashboard.scss */
 body .loading {
   position: absolute;
   width: 32px;
@@ -30,29 +39,29 @@ body .loading {
   left: 50%;
   z-index: 120;
 }
-/* line 93, ../sass/dashboard.scss */
+/* line 105, ../sass/dashboard.scss */
 body .dashboard-heading {
   color: #00ddd8;
 }
-/* line 97, ../sass/dashboard.scss */
+/* line 109, ../sass/dashboard.scss */
 body .cloud-control {
   margin-top: 42px;
 }
-/* line 100, ../sass/dashboard.scss */
+/* line 112, ../sass/dashboard.scss */
 body .cloud-control .cloud-control-buttons {
   font-size: 1.3em;
   cursor: pointer;
 }
-/* line 105, ../sass/dashboard.scss */
+/* line 117, ../sass/dashboard.scss */
 body .select-cloud {
   color: #393939;
 }
-/* line 107, ../sass/dashboard.scss */
+/* line 119, ../sass/dashboard.scss */
 body .select-cloud img {
   width: 100px;
   height: 100px;
 }
-/* line 113, ../sass/dashboard.scss */
+/* line 125, ../sass/dashboard.scss */
 body #side-bar {
   background-image: url(../../img/noisy_net.png);
   background-color: #262c3a;
@@ -63,7 +72,7 @@ body #side-bar {
   color: #cf4858;
   text-shadow: 0px 1px 1px rgba(31, 31, 31, 0.4);
 }
-/* line 125, ../sass/dashboard.scss */
+/* line 137, ../sass/dashboard.scss */
 body #side-bar ul li {
   text-align: left;
   padding: 6px 0px 4px 10px;
@@ -71,50 +80,50 @@ body #side-bar ul li {
   margin-top: 0px !important;
   cursor: pointer;
 }
-/* line 133, ../sass/dashboard.scss */
+/* line 145, ../sass/dashboard.scss */
 body #side-bar ul li:hover {
   color: #c1c4cf;
 }
-/* line 137, ../sass/dashboard.scss */
+/* line 149, ../sass/dashboard.scss */
 body #side-bar ul .glyphicon {
   margin-top: 4px;
   margin-right: 10px;
 }
-/* line 142, ../sass/dashboard.scss */
+/* line 154, ../sass/dashboard.scss */
 body #side-bar ul .selected {
   color: #12161b !important;
   background-color: whitesmoke;
   border-left: 5px solid #00ddd8;
 }
-/* line 150, ../sass/dashboard.scss */
+/* line 162, ../sass/dashboard.scss */
 body #side-bar ul .cloud {
   color: #81848f;
 }
-/* line 155, ../sass/dashboard.scss */
+/* line 167, ../sass/dashboard.scss */
 body #side-bar #side-bar-header {
   min-height: 32px;
   color: #cf4858;
   cursor: default !important;
 }
-/* line 164, ../sass/dashboard.scss */
+/* line 176, ../sass/dashboard.scss */
 body #file-explorer {
   background-color: whitesmoke;
   min-height: 500px;
   border-radius: 0px 8px 8px 0px;
   box-shadow: 2px 1px 2px 0px rgba(31, 31, 31, 0.4);
 }
-/* line 171, ../sass/dashboard.scss */
+/* line 183, ../sass/dashboard.scss */
 body #file-explorer table {
   margin-bottom: 0px !important;
 }
-/* line 175, ../sass/dashboard.scss */
+/* line 187, ../sass/dashboard.scss */
 body #file-explorer table thead {
   display: table;
   width: 100%;
   color: #393939;
   font-weight: bolder;
 }
-/* line 180, ../sass/dashboard.scss */
+/* line 192, ../sass/dashboard.scss */
 body #file-explorer table thead tr {
   font-size: 1.2em;
   color: #12161b;
@@ -135,11 +144,11 @@ body #file-explorer table thead tr th:nth-child(3) {
 body #file-explorer table thead tr th:nth-child(4) {
   width: 18%;
 }
-/* line 186, ../sass/dashboard.scss */
+/* line 198, ../sass/dashboard.scss */
 body #file-explorer table thead tr th {
   cursor: pointer;
 }
-/* line 192, ../sass/dashboard.scss */
+/* line 204, ../sass/dashboard.scss */
 body #file-explorer table tbody {
   color: #393939;
   font-weight: normal;
@@ -147,34 +156,34 @@ body #file-explorer table tbody {
   display: block;
   overflow: auto;
 }
-/* line 199, ../sass/dashboard.scss */
+/* line 211, ../sass/dashboard.scss */
 body #file-explorer table tbody a {
   color: #393939;
 }
-/* line 203, ../sass/dashboard.scss */
+/* line 215, ../sass/dashboard.scss */
 body #file-explorer table tbody a:hover {
   color: #7e7e7e;
 }
-/* line 209, ../sass/dashboard.scss */
+/* line 221, ../sass/dashboard.scss */
 body #file-explorer table tbody tr {
   font-size: 14px;
   line-height: 32px;
   display: table;
   width: 100%;
 }
-/* line 215, ../sass/dashboard.scss */
+/* line 227, ../sass/dashboard.scss */
 body #file-explorer table tbody tr td:first-child {
   cursor: pointer;
 }
-/* line 220, ../sass/dashboard.scss */
+/* line 232, ../sass/dashboard.scss */
 body #file-explorer table tbody tr td .glyphicon {
   margin-right: 5px;
 }
-/* line 232, ../sass/dashboard.scss */
+/* line 244, ../sass/dashboard.scss */
 body #file-explorer table tr {
   padding: 15px;
 }
-/* line 236, ../sass/dashboard.scss */
+/* line 248, ../sass/dashboard.scss */
 body #file-explorer table td {
   text-align: left;
 }
@@ -194,15 +203,15 @@ body #file-explorer table td:nth-child(3) {
 body #file-explorer table td:nth-child(4) {
   width: 18%;
 }
-/* line 243, ../sass/dashboard.scss */
+/* line 255, ../sass/dashboard.scss */
 body #file-explorer #new-folder-input {
   width: 50%;
 }
-/* line 247, ../sass/dashboard.scss */
+/* line 259, ../sass/dashboard.scss */
 body #file-explorer #new-folder-input:focus {
   border-color: #cf4858;
 }
-/* line 251, ../sass/dashboard.scss */
+/* line 263, ../sass/dashboard.scss */
 body #file-explorer .breadcrumb {
   margin-bottom: 0px !important;
   background-color: whitesmoke;
@@ -211,7 +220,7 @@ body #file-explorer .breadcrumb {
   border-radius: 0px 4px 0px 0px;
   min-height: 32px;
 }
-/* line 260, ../sass/dashboard.scss */
+/* line 272, ../sass/dashboard.scss */
 body #file-explorer .breadcrumb li {
   cursor: pointer;
   font-size: 1.2em;

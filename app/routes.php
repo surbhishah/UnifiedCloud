@@ -78,7 +78,7 @@ Route::get('user/dashboard', array(
 //Route::get('user/{cloud}',array('as'=>'authenticate', 'uses'=>'UsersController@getRegistrationPage'));
 
 // Route to user authentication
-Route::get('authenticate/{cloudName}/{userCloudName}',array(
+Route::get('user/authenticate/{cloudName}/{userCloudName}',array(
 	'as'=>'authenticate_route',
 	'uses'=>'UsersController@getRegistrationPage'
 	));

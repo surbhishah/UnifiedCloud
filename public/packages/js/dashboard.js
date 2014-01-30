@@ -500,4 +500,13 @@ $('#delete').on('click',function(){
 	}
 	
 });
+
+//auth 
+$('#Dropbox-auth').on('click',function(){
+	var userCloudName = $('[name="userCloudName"]').val();
+	var cloudName = $('#dropboxAuthModal .modal-title').html();
+	url = "authenticate/" + cloudName + "/" +userCloudName;
+	console.log(url);
+	window.location.href = url;
+});
 });//end of document

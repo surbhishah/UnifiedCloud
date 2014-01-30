@@ -64,6 +64,18 @@ $shadow: rgba(31,31,31,0.4);
 
 /*===========================================*/
 
+#dropboxAuthModal {
+	
+	input {
+		width: 50%;
+	}
+
+	.col-md-12 {
+		margin-bottom: 10px;
+	}
+
+}
+
 .loading-gif {
 		background-image: url(../../img/loading.gif);
 		background-repeat: no-repeat;		
