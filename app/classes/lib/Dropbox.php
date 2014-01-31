@@ -410,16 +410,17 @@ class Dropbox implements CloudInterface{
                 $userID = Session::get('userID');
 
                 if(User::userAlreadyExists($uid, self::$cloudID)){
-					return View::make('complete')
+					return Redirect::route('dashboard')
 							->with('message','You already have an account with us!');
 				}
 				else if(UserCloudInfo::userCloudNameAlreadyExists($userID,self::$cloudID, $userCloudName)){
-					return View::make('complete')
-							->with('message','You already have an account with this name "'.$userCloudName .'" Please choose another fab name!');		
+					return Redirect::route('dashboard')
+							->with('message','You already have an account with this name "'.$userCloudName);		
 				}
 				else{
 					$userCloudID = UserCloudInfo::setAccessToken($userID,$userCloudName, $uid, self::$cloudID, $accessToken);
 					return Redirect::route('dashboard');
+							->with('message','Cloud successfully added "'.$userCloudName);		
 				}
             }
             catch (Dropbox\WebAuthException_BadRequest $ex) {
