@@ -2,11 +2,23 @@
 /* ========== Colors for common ============== */
 /* ======================================== */
 /* line 20, ../sass/common.scss */
+.alert {
+  position: fixed;
+  z-index: 200;
+  width: 250px;
+  height: auto;
+  left: 50%;
+  top: 10px;
+  border-radius: 4px;
+  margin-left: -125px;
+}
+
+/* line 31, ../sass/common.scss */
 body {
   background-image: url(../../img/light_toast.png);
 }
 
-/* line 24, ../sass/common.scss */
+/* line 35, ../sass/common.scss */
 .brand {
   /*font-family: 'Indie Flower';*/
   font-family: 'Covered By Your Grace';
@@ -14,7 +26,7 @@ body {
   color: #cf4858;
 }
 
-/* line 31, ../sass/common.scss */
+/* line 42, ../sass/common.scss */
 .brand-small {
   font-family: 'Covered By Your Grace';
   color: #cf4858 !important;
@@ -22,40 +34,40 @@ body {
   text-shadow: 0px 1px 1px rgba(12, 12, 12, 0.4);
 }
 
-/* line 38, ../sass/common.scss */
+/* line 49, ../sass/common.scss */
 .btn-default-new {
   background-color: #fff;
   color: #595959;
 }
 
-/* line 43, ../sass/common.scss */
+/* line 54, ../sass/common.scss */
 .btn-default-new:hover {
   background-color: #ddd;
   color: #595959;
 }
 
 /* ========== for login page ============== */
-/* line 49, ../sass/common.scss */
+/* line 60, ../sass/common.scss */
 .card {
   background-color: #fff;
   color: #f4655f;
   padding: 15px;
 }
 
-/* line 55, ../sass/common.scss */
+/* line 66, ../sass/common.scss */
 .btn-custom-small:hover {
   color: #ffffff;
   border-color: #ffffff;
   background-color: #f4655f;
 }
 
-/* line 61, ../sass/common.scss */
+/* line 72, ../sass/common.scss */
 .btn-custom-small a:hover {
   color: #ffffff;
   text-decoration: none;
 }
 
-/* line 66, ../sass/common.scss */
+/* line 77, ../sass/common.scss */
 .btn-custom-small {
   color: #f4655f;
   border: 1px solid;
@@ -64,13 +76,13 @@ body {
   padding: 7px 14px;
 }
 
-/* line 74, ../sass/common.scss */
+/* line 85, ../sass/common.scss */
 .btn-custom-small a {
   color: #f4655f;
   text-decoration: none;
 }
 
-/* line 79, ../sass/common.scss */
+/* line 90, ../sass/common.scss */
 .card .form-control:focus {
   border-color: #f4655f;
   outline: 0;
@@ -78,7 +90,7 @@ body {
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(244, 101, 95, 0.6);
 }
 
-/* line 86, ../sass/common.scss */
+/* line 97, ../sass/common.scss */
 .footer {
   /*         text-decoration: none;
           color: $white; 
@@ -100,61 +112,61 @@ body {
   padding-top: 21px;
   padding-bottom: 21px;
 }
-/* line 88, ../sass/common.scss */
+/* line 99, ../sass/common.scss */
 .footer h4 {
   color: #f4655f;
   font-weight: bolder;
 }
-/* line 93, ../sass/common.scss */
+/* line 104, ../sass/common.scss */
 .footer img {
   width: 48px;
   height: 48px;
 }
-/* line 106, ../sass/common.scss */
+/* line 117, ../sass/common.scss */
 .footer .follow-us div {
   width: 36px;
   height: 36px;
   float: left;
   margin-right: 10px;
 }
-/* line 112, ../sass/common.scss */
+/* line 123, ../sass/common.scss */
 .footer #fb {
   background-image: url("../../img/fb_nohover.png");
   background-size: 36px 36px;
   background-repeat: no-repeat;
 }
-/* line 115, ../sass/common.scss */
+/* line 126, ../sass/common.scss */
 .footer #twitter {
   background-image: url("../../img/twitter_nohover.png");
   background-size: 36px 36px;
   background-repeat: no-repeat;
 }
-/* line 118, ../sass/common.scss */
+/* line 129, ../sass/common.scss */
 .footer #github {
   background-image: url("../../img/github_nohover.png");
   background-size: 36px 36px;
   background-repeat: no-repeat;
 }
-/* line 122, ../sass/common.scss */
+/* line 133, ../sass/common.scss */
 .footer #fb:hover {
   background-image: url("../../img/fb_hover.png");
   background-size: 34px 34px;
   background-repeat: no-repeat;
 }
-/* line 125, ../sass/common.scss */
+/* line 136, ../sass/common.scss */
 .footer #twitter:hover {
   background-image: url("../../img/twitter_hover.png");
   background-size: 34px 34px;
   background-repeat: no-repeat;
 }
-/* line 128, ../sass/common.scss */
+/* line 139, ../sass/common.scss */
 .footer #github:hover {
   background-image: url("../../img/github_hover.png");
   background-size: 34px 34px;
   background-repeat: no-repeat;
 }
 
-/* line 148, ../sass/common.scss */
+/* line 159, ../sass/common.scss */
 .main-nav {
   margin-bottom: 0px;
   background-image: url(../../img/noisy_net.png);

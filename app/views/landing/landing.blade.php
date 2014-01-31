@@ -17,12 +17,13 @@
 @section('content')
 <!-- navigation to be seperated into another include file -->
 
-    @include('layouts.nav.navigation')
     @if(Session::has('message'))    
-        <div class="notification">
-          {{ Session::get('message') }}  
+        <div class="alert alert-success alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        {{ Session::get('message') }}
         </div>
     @endif
+    @include('layouts.nav.navigation')
     <img src="packages/img/wcloud-256-1.png" id="box">
     <img src="packages/img/wcloud-256-2.png" id="box2">
     <img src="packages/img/wcloud-256-1.png" id="box3">
