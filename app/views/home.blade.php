@@ -150,7 +150,7 @@
 <br>
 <br>
 <br>
-{{ Form::open(array('route'=>'upload_with_encryption', 'files' => true, 'as'=>'upload','method'=>'post'))}}
+{{ Form::open(array('route'=>'upload_with_encryption', 'cloudName' => 'Dropbox' ,'files' => true, 'as'=>'upload','method'=>'post'))}}
 {{ Form::hidden('cloudName','Dropbox' )	}}
 {{ Form::label('userCloudID','userCloudID:')}}
 {{ Form::text('userCloudID')	}}<br>

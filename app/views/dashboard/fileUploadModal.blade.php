@@ -15,6 +15,9 @@
             <input type="checkbox" id="encryptCheck">
             <label>Encrypt file before upload</label>
           </div>
+          <div class="passKeyInput">
+            
+          </div>
           <div>
             <input type="hidden" name="cloudDestinationPath" value="">
           </div>

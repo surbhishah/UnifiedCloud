@@ -322,6 +322,14 @@ $('#upload').tooltip({
 	'title' : 'Upload'
 });
 
+//input passkey input when checkbox clicked
+$('#encryptCheck').on('change',function(){
+	if(this.checked) {
+		var passKeyInputDiv = $('#fileUploadForm .passKeyInput');
+    	passKeyInputDiv.html("<input type='password' name='passKey' class='form-control' placeholder='Encryption Pass Key'>");
+    }  	
+});
+
 $('#fileUploadForm').submit(function(e) {
        	e.preventDefault();
 
@@ -329,29 +337,46 @@ $('#fileUploadForm').submit(function(e) {
        	$('[name="userCloudID"]').attr('value',userCloudID);
         data = new FormData($('#fileUploadForm')[0]);
         console.log('Submitting');
-        $.ajax({
-            type: 'POST',
-            url: 'upload/Dropbox',
-            data: data,
-            cache: false,
-            contentType: false,
-            processData: false
-        }).done(function(data) {
-            console.log(data);
 
-            //notify user on success
-			notification('File uploaded','success');
-	 		//update folder contents
-			getFolderContents(cloud,$('#cwd').html(),'false');
+        var encryptFile = $('#encryptCheck').prop('checked');
+        console.log("encrypt file before upload: "+encryptFile);
+
+        if(encryptFile) {
+        	console.log('sending via Encryption');
+        	ajaxUpload('uploadWithEncryption/Dropbox');
+        } else {
+			// url: 'upload/Dropbox'
+			ajaxUpload('upload/Dropbox');		        	
+        }
 
 
-        }).fail(function(jqXHR,status, errorThrown) {
-            console.log(errorThrown);
-            console.log(jqXHR.responseText);
-            console.log(jqXHR.status);
-        });
 });
 
+function ajaxUpload(url) {
+	$.ajax({
+        type: 'POST',
+        url: url,
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false
+    }).done(function(data) {
+        //console.log(data);
+
+        //notify user on success
+        $('#fileUploadModal').modal('hide');
+		notification('File uploaded','success');
+ 		//update folder contents
+		//getFolderContents(cloud,$('#cwd').html(),'false');
+    }).fail(function(jqXHR,status, errorThrown) {
+        console.log(errorThrown);
+        console.log(jqXHR.responseText);
+        console.log(jqXHR.status);
+        $('#fileUploadModal').modal('hide');
+
+        notification('Upload failed!','error');
+    });
+}
 
 //refresh
 $('#refresh').tooltip({
