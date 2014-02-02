@@ -10,6 +10,13 @@ function step(){
 
 $('.alert').alert();
 
+//setting timeout for alert messages
+window.setTimeout(function() {
+	$('.alert').fadeTo(500,0).slideUp(500,function(){
+		$(this).alert('close');
+	});
+},2000);
+
 $('.container').notify($('.notification').html(),{
 			'arrowShow' : false,
 			'elementPosition' : 'top center',
