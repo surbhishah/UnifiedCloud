@@ -1,11 +1,17 @@
 <?php
 
+// use repositories\UserRepositoryInterface as User;
+
 class UsersController extends BaseController {
 
     public $restful = true;
-    
-    public function __construct() {
-      //  $this->beforeFilter('csrf', array('on'=>'post'));
+    protected $user;
+
+    //dependency injection for model using repositories
+    public function __construct(UserRepositoryInterface $user) {
+        
+        $this->user = $user;
+        $this->beforeFilter('csrf', array('on'=>'post'));
 
         //Route filters provide a convenient way of limiting access to a given route,
         //which is useful for creating areas of your site which require authentication.
@@ -22,7 +28,7 @@ class UsersController extends BaseController {
         if (Auth::attempt(array('email'=>Input::get('email'),'password' =>Input::get('password')))) {
            
            //Session email variable to get user data from tables
-            $user = User::getUserAttributes(Input::get('email'), array('userID'));
+            $user = $this->user->getUserAttributes(Input::get('email'), array('userID'));
             //redundant because Auth::attempt will check this.
             if($user!=null) {
                 Session::put('userID',$user->userID);
@@ -56,7 +62,7 @@ class UsersController extends BaseController {
             $email =  Input::get('email');
             $password = Input::get('password');
 
-            $result = User::createUser($firstName,$lastName,$email,$password);
+            $result = $this->user->createUser($firstName,$lastName,$email,$password);
             return Redirect::route('landing')->with('message', 'Thanks for registering!');
         // validation passed, save user in DB
         } else {

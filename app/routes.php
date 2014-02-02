@@ -11,6 +11,7 @@
 |
 */
 
+App::bind('UserRepositoryInterface','EloquentUserRepository');
 //test routes
 Route::get('mock',function(){
 	return View::make('dashboard.dashboardMock');
