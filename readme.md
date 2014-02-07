@@ -7,6 +7,7 @@ This project aims to bring Dropbox , Google drive and SkyDrive under the same um
 - getFolderContents return all data, refactor to limit data.
 - sharing folder
 - sharing encrypted files
+- fix getFolderContents to preserve encryption_key_hash and is_encryption fields in DB.
 
 #Testing
 
