@@ -7,7 +7,7 @@ class EloquentUserRepository implements UserRepositoryInterface {
 	}
 
 	public function getUserAttributes($email,$attributes) {
-		return User::getUserAttributes($email,$attributes);
+		return User::getUserAttributes($email,$attributes)->toArray();
 	}
 
 }
