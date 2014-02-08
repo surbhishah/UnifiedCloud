@@ -34,9 +34,10 @@ class SharedFilesController extends BaseController {
 /**********************************************************************************************/    
     public function getFilesSharedByUser(){
         try{
-        //    $ownerID = Input::get('ownerID');//UNCOMMEnt if testing from home.blade.php
-          $ownerID = Session::get('userID'); 
-          return SharedFile::getFilesSharedByUser($ownerID);
+            $ownerID = Input::get('ownerID');//UNCOMMEnt if testing from home.blade.php
+        //  $ownerID = Session::get('ownerID'); 
+          Log::info("From getFilesSharedByUser ", array('ownerID' => $ownerID));
+          return User::find($ownerID)->filesSharedByUser;
             
         }catch(Exception $e){
             Log::info("Exception raised in SharedFilesController::getFilesSharedByUser");
@@ -47,9 +48,10 @@ class SharedFilesController extends BaseController {
 /**********************************************************************************************/    
     public function getFilesSharedWithUser(){
         try{
-    //        $sharerID = Input::get('sharerID'); //UNCOMMEnt if testing from home.blade.php
-            $sharerID = Session::get('userID'); 
-            return SharedFile::getFilesSharedWithUser($sharerID);
+            $sharerID = Input::get('sharerID'); //UNCOMMEnt if testing from home.blade.php
+     //       $sharerID = Input::get('sharerID');  
+            return User::find($sharerID)->filesSharedWithUser;
+
         }catch(Exception $e){
             Log::info("Exception raised in SharedFilesController::getFilesSharedWithUser");
             Log::error($e->getMessage());

@@ -5,6 +5,14 @@ class UserCloudInfo extends Eloquent  {
 
 	protected $table = 'user_cloud_info';
 	protected $primaryKey='user_cloudID';
+
+	public function user(){
+		$this->belongsTo('User','userID','userID');
+	}
+	public function files(){
+		// first userCloudID = foreign key, second userCloudID = local key
+		$this->hasMany('FileModel','userCloudID', 'userCloudID');
+	}
 /**********************************************************************************************/
 	/*
 	*	@params:

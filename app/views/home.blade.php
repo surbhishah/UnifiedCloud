@@ -25,7 +25,7 @@
 <br>
 
 {{ Form::open(array('route'=>'files_shared_with_user_route', 'as'=>'sharedwith','method'=>'get')) }}
-{{ Form::label('SharerID','SharerID')}}
+{{ Form::label('sharerID','SharerID')}}
 {{ Form::text('sharerID')	}}
 {{ Form::submit('Get files shared with this Sharer')	}}
 {{ Form::close()	}}
