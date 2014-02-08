@@ -9,6 +9,7 @@ This project aims to bring Dropbox , Google drive and SkyDrive under the same um
 - sharing encrypted files
 - fix getFolderContents to preserve encryption_key_hash and is_encryption fields in DB.
 - convert font-family to scss variables
+- add dashboard nav button on landing page if user logged in and on nav page. or find alternate solution
 #Testing
 
 - Run test code using
