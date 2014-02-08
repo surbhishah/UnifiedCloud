@@ -8,6 +8,8 @@ function step(){
         features.css('top',(0*100)+'%');
 }
 
+$('.alert').alert();
+
 $('.container').notify($('.notification').html(),{
 			'arrowShow' : false,
 			'elementPosition' : 'top center',

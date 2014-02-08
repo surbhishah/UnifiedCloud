@@ -45,12 +45,18 @@ class UsersController extends BaseController {
         $validator = Validator::make(Input::all(), User::$rules);
         if ($validator->passes()) {
     
-            $user = new User;
+            /*$user = new User;
             $user->first_name = Input::get('first_name');
             $user->last_name = Input::get('last_name');
             $user->email = Input::get('email');
             $user->password = Hash::make(Input::get('password'));
-            $user->save();
+            $user->save();*/
+            $firstName = Input::get('first_name');
+            $lastName = Input::get('last_name');
+            $email =  Input::get('email');
+            $password = Input::get('password');
+
+            $result = User::createUser($firstName,$lastName,$email,$password);
             return Redirect::route('landing')->with('message', 'Thanks for registering!');
         // validation passed, save user in DB
         } else {

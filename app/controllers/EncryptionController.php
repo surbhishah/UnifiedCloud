@@ -32,7 +32,7 @@ class EncryptionController extends BaseController {
 			$i=0;// TO BE COMMENTED GEtting $result is not necessary ,,,delete it later abhishek
 			$files = Input::file('files');
 			foreach($files as $file){
-
+				Log::info('getting files from upload postEncryptFiles',array('passKey',$userPassKey));
 				$result[$i] = $this->encryptFile($cloudName,$userCloudID,$cloudDestinationPath,$file,$userPassKey);
 				//$result[$i]= $cloud->upload($userCloudID, $file, $cloudDestinationPath);	
 				$i++;
@@ -85,6 +85,11 @@ class EncryptionController extends BaseController {
 			
 		    //encrypting randomPassKey with userPassKey
 		    $randomPassKeyHash = Encryption::encrypt($randomPassKey,$userPassKey);
+			Log::info('setting encryption key hash',array(
+					'key hash',$randomPassKeyHash,
+					'userCloudID',$userCloudID,
+					'cloudDestinationPath',$cloudDestinationPath,
+					'fileName',$fileName));
 
 		    //store $randomPassKeyHash in files table
 		    FileModel::setEncryptionKeyHash($userCloudID,$fileName,$cloudDestinationPath,$randomPassKeyHash);

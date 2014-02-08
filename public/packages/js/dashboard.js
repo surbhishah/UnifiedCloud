@@ -5,12 +5,24 @@ userCloudID=0;
 var baseUrl = window.location.pathname;
 //alert(baseUrl);
 
+/*================= functions ======================*/
 function testFunction(str) {
 	$(".cloud-controls").click(function(){
 		alert(str);
 	});
 }
 
+function notification(message,messageType) {
+	$('.container').notify(message,{
+		'arrowShow' : false,
+		'elementPosition' : 'top center',
+		'globalPosition' : 'top center',
+		'className' : messageType,
+		'autoHideDelay' : '2000',
+		'showAnimation' : 'fadeIn',
+		'hideAnimation' : 'fadeOut'
+	});
+}
 
 function getReadableSize(size) {
 	if(size < 1024) {
@@ -26,8 +38,9 @@ function getReadableSize(size) {
 	}
 }	
 
+
 /*
-* @parem: string file extension
+* @param: string file extension
 * @return: associative array: class for glyphicon
 *							ext for extension
 */
@@ -56,19 +69,12 @@ function getClassFromExtension(ext) {
 }
 
 function createNewFolder(folderName,jObj) {
-		if(folderName == '') {
+	if(folderName == '') {
 		
 		//remove tr when not folder name specified
 		jObj.parent().parent().remove();
-		$('.container').notify('folder name required',{
-			'arrowShow' : false,
-			'elementPosition' : 'top center',
-			'globalPosition' : 'top center',
-			'className' : 'error',
-			'autoHideDelay' : '2000',
-			'showAnimation' : 'fadeIn',
-			'hideAnimation' : 'fadeOut'
- 		});
+	
+		notification('folder name required','error');
 
 	} else {
 
@@ -80,15 +86,7 @@ function createNewFolder(folderName,jObj) {
             cache: false 
 		}).done(function() {
 
-			$('.container').notify('Folder created',{
-				'arrowShow' : false,
-				'elementPosition' : 'top center',
-				'globalPosition' : 'top center',
-				'className' : 'success',
-				'autoHideDelay' : '2000',
-				'showAnimation' : 'fadeIn',
-				'hideAnimation' : 'fadeOut'
-	 		});	
+			notification('Folder created','success');
 		});
 
 		jObj.parent().parent().remove();
@@ -302,15 +300,7 @@ $('#download').on('click',function(){
 
 		console.log(folderPath);
 		if(typeof(folder) == 'undefined') {
-			$('.container').notify('Select a file/folder first',{
-				'arrowShow' : false,
-				'elementPosition' : 'top center',
-				'globalPosition' : 'top center',
-				'className' : 'error',
-				'autoHideDelay' : '2000',
-				'showAnimation' : 'fadeIn',
-				'hideAnimation' : 'fadeOut'
-	 		});
+			notification('Select a file/folder first','error');
 		} else {
 			url = "download_folder?userCloudID="+ userCloudID +"&cloudName=" + cloud + "&folderPath=" + folderPath; 	
 			window.location.href = url;
@@ -332,6 +322,14 @@ $('#upload').tooltip({
 	'title' : 'Upload'
 });
 
+//input passkey input when checkbox clicked
+$('#encryptCheck').on('change',function(){
+	if(this.checked) {
+		var passKeyInputDiv = $('#fileUploadForm .passKeyInput');
+    	passKeyInputDiv.html("<input type='password' name='passKey' class='form-control' placeholder='Encryption Pass Key'>");
+    }  	
+});
+
 $('#fileUploadForm').submit(function(e) {
        	e.preventDefault();
 
@@ -339,38 +337,46 @@ $('#fileUploadForm').submit(function(e) {
        	$('[name="userCloudID"]').attr('value',userCloudID);
         data = new FormData($('#fileUploadForm')[0]);
         console.log('Submitting');
-        $.ajax({
-            type: 'POST',
-            url: 'upload/Dropbox',
-            data: data,
-            cache: false,
-            contentType: false,
-            processData: false
-        }).done(function(data) {
-            console.log(data);
 
-            //notify user on success
-            $('.container').notify('File uploaded',{
-				'arrowShow' : false,
-				'elementPosition' : 'top center',
-				'globalPosition' : 'top center',
-				'className' : 'success',
-				'autoHideDelay' : '2000',
-				'showAnimation' : 'fadeIn',
-				'hideAnimation' : 'fadeOut'
-	 		});
+        var encryptFile = $('#encryptCheck').prop('checked');
+        console.log("encrypt file before upload: "+encryptFile);
 
-	 		//update folder contents
-			getFolderContents(cloud,$('#cwd').html(),'false');
+        if(encryptFile) {
+        	console.log('sending via Encryption');
+        	ajaxUpload('uploadWithEncryption/Dropbox');
+        } else {
+			// url: 'upload/Dropbox'
+			ajaxUpload('upload/Dropbox');		        	
+        }
 
 
-        }).fail(function(jqXHR,status, errorThrown) {
-            console.log(errorThrown);
-            console.log(jqXHR.responseText);
-            console.log(jqXHR.status);
-        });
 });
 
+function ajaxUpload(url) {
+	$.ajax({
+        type: 'POST',
+        url: url,
+        data: data,
+        cache: false,
+        contentType: false,
+        processData: false
+    }).done(function(data) {
+        //console.log(data);
+
+        //notify user on success
+        $('#fileUploadModal').modal('hide');
+		notification('File uploaded','success');
+ 		//update folder contents
+		//getFolderContents(cloud,$('#cwd').html(),'false');
+    }).fail(function(jqXHR,status, errorThrown) {
+        console.log(errorThrown);
+        console.log(jqXHR.responseText);
+        console.log(jqXHR.status);
+        $('#fileUploadModal').modal('hide');
+
+        notification('Upload failed!','error');
+    });
+}
 
 //refresh
 $('#refresh').tooltip({
@@ -451,16 +457,7 @@ $('#delete').on('click',function(){
 		
 		if(typeof(fileOrFolder) == 'undefined') {
 			//notify to select file/folder
-
-			$('.container').notify('Select a file/folder first',{
-				'arrowShow' : false,
-				'elementPosition' : 'top center',
-				'globalPosition' : 'top center',
-				'className' : 'error',
-				'autoHideDelay' : '2000',
-				'showAnimation' : 'fadeIn',
-				'hideAnimation' : 'fadeOut'
- 			});
+			notification('Select a file/folder first','error');
 		}
 	} else {
 
@@ -479,20 +476,9 @@ $('#delete').on('click',function(){
 
 			$('.loading').removeClass('loading-gif');
 			getFolderContents(cloud,currentDir,'false');
-
-			$('.container').notify('deleted!',{
-				'arrowShow' : false,
-				'elementPosition' : 'top center',
-				'globalPosition' : 'top center',
-				'className' : 'success',
-				'autoHideDelay' : '2000',
-				'showAnimation' : 'fadeIn',
-				'hideAnimation' : 'fadeOut'
-	 		});	
+			notification('deleted!','success');
 		});
-
 	}
-	
 });
 
 //auth 

@@ -8,8 +8,15 @@
       <div class="modal-body">
         <form role="form" id="fileUploadForm">
           <div class="form-group">
-            <label for="InputFile">File input</label>
+            <label>Select a file to upload</label>
             <input type="file" name="files[]" id="userfile" multiple="1">
+          </div>
+          <div>
+            <input type="checkbox" id="encryptCheck">
+            <label>Encrypt file before upload</label>
+          </div>
+          <div class="passKeyInput">
+            
           </div>
           <div>
             <input type="hidden" name="cloudDestinationPath" value="">
@@ -17,7 +24,7 @@
           <div>
             <input type="hidden" name="userCloudID" value="">
           </div>
-          <button type="submit" class="btn btn-default">Upload</button>
+          <button type="submit" class="btn btn-custom-small">Upload</button>
         </form>
       </div>
     </div><!-- /.modal-content -->
