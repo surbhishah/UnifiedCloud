@@ -30,4 +30,6 @@ This project aims to bring Dropbox , Google drive and SkyDrive under the same um
 
 #Ideas
 - Refactor models and introduce CloudFactory through dependency injection
-
+and write serviceProvider if necessary for this bindings, because
+these bindings need to be executed before routes or controllers are called.
+Therefore remove App::bind from routes.php
