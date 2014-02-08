@@ -1,6 +1,7 @@
+#Kumo.
 This project aims to bring Dropbox , Google drive and SkyDrive under the same umbrella.
 
-#TODO
+##TODO
 
 - Do not forget to uncomment lines RequestUtil.php in Dropbox which checks for 64 bit php.
 - Add route group to restrict access to routes.
@@ -10,7 +11,7 @@ This project aims to bring Dropbox , Google drive and SkyDrive under the same um
 - fix getFolderContents to preserve encryption_key_hash and is_encryption fields in DB.
 - convert font-family to scss variables
 - add dashboard nav button on landing page if user logged in and on nav page. or find alternate solution
-#Testing
+##Testing
 
 - Run test code using
 ``` bash
@@ -26,4 +27,7 @@ This project aims to bring Dropbox , Google drive and SkyDrive under the same um
 ``` bash
     $ phpunit --exclude-group <group-name> 
 ```
+
+#Ideas
+- Refactor models and introduce CloudFactory through dependency injection
 
