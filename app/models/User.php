@@ -31,13 +31,21 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	protected $hidden = array('password');
 	protected $primaryKey = 'userID';
 
-	public function filesSharedByUser(){// NOT used for now 
+	public function filesSharedByUser(){
         return $this->hasMany('SharedFile', 'ownerID' , 'userID');
     }
-	public function filesSharedWithUser(){// NOT used for now
+	public function filesSharedWithUser(){
 		return $this->hasMany('SharedFile', 'sharerID', 'userID');
 	}
-/**
+
+	public function userClouds(){
+		return $this->hasMany('UserCloudInfo', 'userID', 'userID');
+	}
+
+	public function clouds(){
+		return $this->hasManyThrough('Cloud','UserCloudInfo','userID','userCloudID');
+	}
+	/**
 	 * Get the unique identifier for the user.
 	 *
 	 * @return mixed

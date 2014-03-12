@@ -2,6 +2,15 @@
 <br>
 <br>
 <br>
+{{ Form::open(array('route'=>'get_full_file_structure', 'as'=>'get_full_file_structure','method'=>'get')) }}
+{{ Form::hidden('cloudName','Dropbox' )	}}
+{{ Form::label('userCloudID','userCloudID:')}}
+{{ Form::text('userCloudID')	}}<br>
+{{ Form::submit('Get full file structure')	}}
+{{ Form::close()	}}
+<br>
+<br>
+<br>
 
 {{ Form::open(array('route'=>'download_shared_file_route', 'as'=>'download_shared_file','method'=>'get')) }}
 {{ Form::label('sharedFileID','sharedfileID')}}
@@ -18,15 +27,14 @@
 {{ Form::text('sharedFileID')	}}
 {{ Form::label('Access_rights','accessRights')}}
 {{ Form::text('accessRights')	}}
-
-{{ Form::submit('Get files shared with this Sharer')	}}
+{{ Form::submit('Change Access Rights')	}}
 {{ Form::close()	}}
 <br>
 <br>
 <br>
 
 {{ Form::open(array('route'=>'files_shared_with_user_route', 'as'=>'sharedwith','method'=>'get')) }}
-{{ Form::label('SharerID','SharerID')}}
+{{ Form::label('sharerID','SharerID')}}
 {{ Form::text('sharerID')	}}
 {{ Form::submit('Get files shared with this Sharer')	}}
 {{ Form::close()	}}

@@ -225,5 +225,25 @@ class FilesController extends BaseController{
 
 	}
 /************************************************************************************************/
-	
+	public function getFullFileStructure(){
+		try{
+			$cloudName = Input::get('cloudName');
+			$userCloudID = Input::get('userCloudID');
+			$factory = new CloudFactory();
+			$cloud = $factory->createCloud($cloudName);
+			return View::make('complete')->with('message', $cloud->getFullFileStructure($userCloudID));
+			
+		}catch(UnknownCloudException $e){
+				Log::info("UnknownCloudException raised in FilesController::getFullFileStructure");
+				Log::error($e->getMessage());
+				throw $e;
+
+		}catch(Exception $e){
+				Log::info("Exception raised in FilesController::getFullFileStructure");
+				Log::error($e->getMessage());
+				throw $e;
+			
+		}
+
+	}	
 }
