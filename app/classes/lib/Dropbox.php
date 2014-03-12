@@ -619,7 +619,7 @@ class Dropbox implements CloudInterface{
  			return $data;
  
  		}catch(Exception $e){
- 				Log::info("Exception raised in Dropbox::getFullFileStructure",array('userCloudID'=>$userCloudID));
+				Log::info("Exception raised in Dropbox::getFullFileStructure",array('userCloudID'=>$userCloudID));
  				Log::error($e);
  				throw $e;
  		}
