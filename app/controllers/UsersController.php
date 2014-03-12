@@ -12,11 +12,13 @@ class UsersController extends BaseController {
         $this->beforeFilter('auth', array('only'=>array('getDashboard')));
     }
 
+
     public function getDashboard() {
         $clouds = UserCloudInfo::getClouds(Session::get('userID'));
             //return View::make('complete')->with('message',$clouds);
         return View::make('dashboard.dashboard',array('title' => 'Dashboard','clouds' => $clouds));    
     }
+
 
     public function postSignin() {
         if (Auth::attempt(array('email'=>Input::get('email'),'password' =>Input::get('password')))) {
@@ -108,7 +110,7 @@ class UsersController extends BaseController {
 
         }
     }        
-// todo this is a development function...to be deleted later 
+    // todo this is a development function...to be deleted later 
     public function getHome(){
         return View::make('home');
     }

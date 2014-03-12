@@ -13,6 +13,9 @@ class UserCloudInfo extends Eloquent  {
 		// first userCloudID = foreign key, second userCloudID = local key
 		$this->hasMany('FileModel','userCloudID', 'userCloudID');
 	}
+	public function cloud(){
+		$this->hasOne('Cloud','cloudID','cloudID');
+	}
 /**********************************************************************************************/
 	/*
 	*	@params:
@@ -61,7 +64,7 @@ class UserCloudInfo extends Eloquent  {
 	*/
 		
 	public static function getClouds($userID) {
-		// user_cloudID is also returned 
+		//user_cloudID is also returned 
 		$clouds = DB::table('user_cloud_info')
 						->join('clouds',function($join) use ($userID){
 							$join->on('user_cloud_info.cloudID','=','clouds.cloudID')
@@ -98,6 +101,15 @@ class UserCloudInfo extends Eloquent  {
 	*/
 	public static function getUserID($userCloudID){
 		return UserCloudInfo::where('user_cloudID','=',$userCloudID)->get()->first()->pluck('userID');
+	}
+	public static function setCursor($userCloudID, $cursor){
+		$userCloudInfo = UserCloudInfo::find($userCloudID)->get()->first();
+		$userCloudInfo->cursor = $cursor;
+		$userCloudInfo->save();
+	}
+	public static function getCursor($userCloudID){
+		$userCloudInfo = UserCloudInfo::find($userCloudID)->get()->first();
+		return $userCloudInfo->cursor;
 	}
 }
 /**********************************************************************************************/

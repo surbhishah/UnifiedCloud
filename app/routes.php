@@ -182,3 +182,9 @@ Route::get('user/change_access_rights',array(
 	'as'=>'change_access_rights_route',
 	'uses'=>'SharedFilesController@getChangeAccessRights'
 ));
+
+// Get full file structure 
+Route::get('user/get_full_file_structure',array(
+	'as'=>'get_full_file_structure',
+	'uses'=>'FilesController@getFullFileStructure'
+));

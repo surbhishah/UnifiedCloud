@@ -568,5 +568,61 @@ class Dropbox implements CloudInterface{
 
 	}
 /************************************************************************************************/
-
+// To be called when a user adds a new cloud to UnifiedCloud
+ // At that time , we bring in all information from dropbox and save it to our database
+ // After this we just bring the delta (ie the changes that have been made) and reflect them in our database
+ 
+ 	public function getFullFileStructure($userCloudID){
+ 		 try{
+ 			$client = self::getClient($userCloudID);
+ 			// First null : cursor
+ 			// Second null: path_prefix
+ 			$i=0;
+ 			$cursor = null;
+ 			do{
+ 				$data = $client->getDelta($cursor,null);
+ 				$hasMore = $data['has_more'];// if hasMore = true then we are supposed to call
+ 			//	Log::info('from Dropbox::getFullFileStructure hasMore',array('hasMore' => $hasMore));
+ 				// getDelta again so as to get more data
+ 				//cursor :A string that encodes the latest information that has been returned.
+ 				//On the next call to /delta, pass in this value.
+ 				$cursor = $data['cursor'];
+ 				UserCloudInfo::setCursor($userCloudID, $cursor);
+ 				$fileData = $data['entries'];
+ 			//	Log::info('data received: ',array('data' => serialize($fileData)));
+ 				//reset is always true on the initial call to /delta (i.e. when no cursor is passed in).
+ 				//$reset = $data['reset'];
+ 				foreach ($fileData as $file) { 
+ 					$completePath = $file[1]['path'];
+ 					list($path, $fileName)=	Utility::splitPath($completePath);
+ 					$newFile = array();
+					$newFile['path']=$path;
+					$newFile['fileName']=$fileName;
+					$newFile['lastModifiedTime']=$file[1]['modified'];
+					$newFile['rev']=$file[1]['rev'];
+					$newFile['size']=$file[1]['size'];
+					$newFile['isDirectory']=$file[1]['is_dir'];
+					$newFile['hash']=null;
+					FileModel::addOrUpdateFile($userCloudID, $newFile);
+			
+ 					//Log::info('running foreach these many times',array('file' => $fileName));
+ 				}
+ 
+ 				$i++;
+ 				//Log::Info('running DO these many times: ',array('i' => $i));
+ 			}while($hasMore==true && $i<10);
+ 
+ 			//update user cloud info table.
+ 			//UnifiedCloud::setHasUserFiles($userID,self::$cloudID,true);
+ 			//Log::info('setHasUserFiles set in Dropbox::getFullFileStructure',array('get' => UnifiedCloud::getHasUserFiles($userID,self::$cloudID)));
+ 
+ 			return $data;
+ 
+ 		}catch(Exception $e){
+ 				Log::info("Exception raised in Dropbox::getFullFileStructure",array('userCloudID'=>$userCloudID));
+ 				Log::error($e);
+ 				throw $e;
+ 		}
+ 	}
+ /************************************************************************************************/	
 }

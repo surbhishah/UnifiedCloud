@@ -2,6 +2,15 @@
 <br>
 <br>
 <br>
+{{ Form::open(array('route'=>'get_full_file_structure', 'as'=>'get_full_file_structure','method'=>'get')) }}
+{{ Form::hidden('cloudName','Dropbox' )	}}
+{{ Form::label('userCloudID','userCloudID:')}}
+{{ Form::text('userCloudID')	}}<br>
+{{ Form::submit('Get full file structure')	}}
+{{ Form::close()	}}
+<br>
+<br>
+<br>
 
 {{ Form::open(array('route'=>'download_shared_file_route', 'as'=>'download_shared_file','method'=>'get')) }}
 {{ Form::label('sharedFileID','sharedfileID')}}

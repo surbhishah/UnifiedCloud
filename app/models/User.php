@@ -37,10 +37,13 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	public function filesSharedWithUser(){
 		return $this->hasMany('SharedFile', 'sharerID', 'userID');
 	}
-	
-	public function clouds(){
-		return $this->hasMany('UserCloudInfo', 'userID', 'userID');
 
+	public function userClouds(){
+		return $this->hasMany('UserCloudInfo', 'userID', 'userID');
+	}
+
+	public function clouds(){
+		return $this->hasManyThrough('Cloud','UserCloudInfo','userID','userCloudID');
 	}
 	/**
 	 * Get the unique identifier for the user.

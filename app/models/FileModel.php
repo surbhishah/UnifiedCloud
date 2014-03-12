@@ -9,7 +9,7 @@ class FileModel extends Eloquent  {
 	public function sharedFile(){
         return $this->hasMany('SharedFile', 'fileID' , 'fileID');
     }
-	public function cloud(){
+	public function userCloud(){
 		$this->belongsTo('UserCloudInfo','userCloudID','userCloudID');
 	}
 	public function tempFile(){

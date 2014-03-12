@@ -36,8 +36,7 @@ class SharedFilesController extends BaseController {
         try{
             $ownerID = Input::get('ownerID');//UNCOMMEnt if testing from home.blade.php
         //  $ownerID = Session::get('ownerID'); 
-          Log::info("From getFilesSharedByUser ", array('ownerID' => $ownerID));
-          return User::find($ownerID)->filesSharedByUser;
+            return User::find($ownerID)->filesSharedByUser;
             
         }catch(Exception $e){
             Log::info("Exception raised in SharedFilesController::getFilesSharedByUser");
@@ -49,7 +48,7 @@ class SharedFilesController extends BaseController {
     public function getFilesSharedWithUser(){
         try{
             $sharerID = Input::get('sharerID'); //UNCOMMEnt if testing from home.blade.php
-     //       $sharerID = Input::get('sharerID');  
+     //     $sharerID = Input::get('sharerID');  
             return User::find($sharerID)->filesSharedWithUser;
 
         }catch(Exception $e){
@@ -88,9 +87,14 @@ class SharedFilesController extends BaseController {
     public function getSharedFile(){// download a shared file 
      try{
             $sharedFileID = Input::get('sharedFileID');
-            $file = SharedFile::getFile($sharedFileID);
-            $cloudID = UserCloudInfo::find($file->user_cloudID)->pluck('cloudID');
-            $cloudName = Cloud::getCloudName($cloudID);
+            $file = SharedFile::find($sharedFileID)->file()->first();
+            $userCloud = $file->userCloud()->first();
+            $cloud = $userCloud->cloud()->first();
+            $cloudName = $cloud->name;
+
+            //$cloudID = UserCloudInfo::find($file->user_cloudID)->pluck('cloudID');
+            //$cloudName = Cloud::getCloudName($cloudID);
+            
             $factory = new CloudFactory(); 
             $cloud = $factory->createCloud($cloudName);
             $fileDestination=$cloud->download($file->user_cloudID, $file->path, $file->file_name);
