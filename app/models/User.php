@@ -115,5 +115,12 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	public static function getFilesSharedByUser($ownerID){
 		return User::find($ownerID)->filesSharedByUser->file;
 	}
-	
+	public static function exists($userID){
+		$user = User::find($userID);
+		if($user == null)
+			return false;
+		else 
+			return true;
+
+	}
 }

@@ -185,6 +185,27 @@ Route::get('user/change_access_rights',array(
 
 // Get full file structure 
 Route::get('user/get_full_file_structure',array(
-	'as'=>'get_full_file_structure',
+	'as'=>'get_full_file_structure_route',
 	'uses'=>'FilesController@getFullFileStructure'
+));
+// Create group 
+Route::get('user/group/create',array(
+	'as'=>'create_group_route',
+	'uses'=>'SharedFilesController@getCreateGroup'
+));
+// Get groups
+Route::get('user/group/get',array(
+	'as'=>'get_groups_route',
+	'uses'=>'SharedFilesController@getGroups'
+));
+// Add member to group 
+Route::post('user/group/add',array(
+	'as'=>'add_member_route',
+	'uses'=>'SharedFilesController@postAddMember'
+));
+
+// Get group members 
+Route::get('user/group/getMembers',array(
+	'as'=>'get_group_members_route',
+	'uses'=>'SharedFilesController@getMembers'
 ));

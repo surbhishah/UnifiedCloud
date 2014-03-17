@@ -2,7 +2,46 @@
 <br>
 <br>
 <br>
-{{ Form::open(array('route'=>'get_full_file_structure', 'as'=>'get_full_file_structure','method'=>'get')) }}
+{{ Form::open(array('route'=>'get_group_members_route', 'as'=>'get_members','method'=>'get')) }}
+{{ Form::label('groupID','GroupID ')}}
+{{ Form::text('groupID')	}}<br>
+{{ Form::submit('Get group members')	}}
+{{ Form::close()	}}
+<br>
+<br>
+<br>
+{{ Form::open(array('route'=>'add_member_route', 'as'=>'add_member','method'=>'post')) }}
+{{ Form::label('groupID','GroupID ')}}
+{{ Form::text('groupID')	}}<br>
+{{ Form::label('emamil','New Member email')}}
+{{ Form::text('newMemberEmail')	}}<br>
+{{ Form::submit('Add this user to this group')	}}
+{{ Form::close()	}}
+<br>
+<br>
+<br>
+{{ Form::open(array('route'=>'get_groups_route', 'as'=>'get_groups','method'=>'get')) }}
+{{ Form::label('userID','1')}}
+{{ Form::text('userID')	}}<br>
+{{ Form::submit('Get Groups to which this user belongs')	}}
+{{ Form::close()	}}
+<br>
+<br>
+<br>
+{{ Form::open(array('route'=>'create_group_route', 'as'=>'create_group','method'=>'get')) }}
+{{ Form::label('Group Name','Group Name:')}}
+{{ Form::hidden('userID','1')}}
+{{ Form::text('groupName')	}}<br>
+{{ Form::submit('Create Group')	}}
+{{ Form::close()	}}
+
+
+
+
+<br>
+<br>
+<br>
+{{ Form::open(array('route'=>'get_full_file_structure_route', 'as'=>'get_full_file_structure','method'=>'get')) }}
 {{ Form::hidden('cloudName','Dropbox' )	}}
 {{ Form::label('userCloudID','userCloudID:')}}
 {{ Form::text('userCloudID')	}}<br>

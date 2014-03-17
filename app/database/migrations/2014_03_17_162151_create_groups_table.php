@@ -12,6 +12,8 @@ class CreateGroupsTable extends Migration {
 			$table->string('name');
 			$table->integer('adminID')->unsigned();
 			$table->foreign('adminID')->references('userID')->on('users')->onDelete('cascade');
+			$table->unique(array('name','adminID'));// a user(admin) cannot have two groups of same name
+			// However, user can belong to multiple groups of same name
 			$table->timestamps();
 		});
 	}
