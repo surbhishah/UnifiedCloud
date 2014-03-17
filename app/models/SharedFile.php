@@ -22,41 +22,7 @@ class SharedFile extends Eloquent  {
 		return $this->belongsTo('FileModel','fileID','fileID');
 	}    
 /**********************************************************************************************/	
-	public static function createSharedFile($fileID, $ownerID, $sharerID, $accessRights){
-		$sharedFile = new SharedFile;
-		$sharedFile->fileID = $fileID;
-		$sharedFile->ownerID = $ownerID;
-		$sharedFile->sharerID = $sharerID;
-		$sharedFile->access_rights = $accessRights;//  accessRights has to be either R or RW , 
-		$sharedFile->save();						// if you pass anything else,
-		return $sharedFile;							// then null is added to db 
-	}
-/**********************************************************************************************/	
-	public static function getFilesSharedByUser($ownerID){//TODO SURBHI
-/*		return DB::table('shared_files')
-			->where('ownerID','=', $ownerID)
-			->join(	'files' , 	'shared_files.fileID'	, '=' , 'files.fileID' )
-			->join(	'users',	'shared_files.sharerID',	'='	,	'users.userID')
-
-			->select(	'shared_fileID'	,	'file_name'	,	'first_name',
-				'last_name', 'access_rights')
-			->get();
-*/
-			
-	}	
-
-/**********************************************************************************************/	
-	public static function getFilesSharedWithUser($sharerID){
-		return DB::table('shared_files')
-			->where('sharerID','=', $sharerID)
-			->join(	'files' , 	'shared_files.fileID'	, '=' , 'files.fileID' )
-			->join(	'users',	'shared_files.ownerID',	'='	,	'users.userID')
-
-			->select(	'shared_fileID'	,	'file_name'	,	'first_name',
-				'last_name'	, 'access_rights')
-			->get();	
-	}
-/**********************************************************************************************/	
+	
 	public static function removeSharing($sharedFileID){
 		SharedFile::destroy($sharedFileID);
 	}

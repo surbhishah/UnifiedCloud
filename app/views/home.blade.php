@@ -15,19 +15,8 @@
 {{ Form::open(array('route'=>'download_shared_file_route', 'as'=>'download_shared_file','method'=>'get')) }}
 {{ Form::label('sharedFileID','sharedfileID')}}
 {{ Form::text('sharedFileID')	}}
-
+{{ Form::hidden('userID','2')}}
 {{ Form::submit('Download Shared File')	}}
-{{ Form::close()	}}
-<br>
-<br>
-<br>
-
-{{ Form::open(array('route'=>'change_access_rights_route', 'as'=>'change_access_rights','method'=>'get')) }}
-{{ Form::label('sharedFileID','sharedfileID')}}
-{{ Form::text('sharedFileID')	}}
-{{ Form::label('Access_rights','accessRights')}}
-{{ Form::text('accessRights')	}}
-{{ Form::submit('Change Access Rights')	}}
 {{ Form::close()	}}
 <br>
 <br>
@@ -62,8 +51,6 @@
 {{ Form::text('fileName')}}			
 {{ Form::label('Share', 'Share with? Email ID ')	}}
 {{ Form::text('sharerEmail')}}			
-{{ Form::label('Access', 'Access Rights: ')	}}
-{{ Form::text('accessRights')}}			
 {{ Form::submit('Share')	}}
 {{ Form::close()	}}
 <br>

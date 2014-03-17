@@ -71,7 +71,7 @@ class SharedFilesController extends BaseController {
 
     }
 /**********************************************************************************************/    
-    public function getChangeAccessRights(){
+/*    public function getChangeAccessRights(){
         try{
             $sharedFileID = Input::get('sharedFileID');
             $accessRights = Input::get('accessRights');
@@ -83,18 +83,19 @@ class SharedFilesController extends BaseController {
             throw $e;
         }
     }
-/**********************************************************************************************/    
+*//**********************************************************************************************/    
     public function getSharedFile(){// download a shared file 
      try{
             $sharedFileID = Input::get('sharedFileID');
-            $file = SharedFile::find($sharedFileID)->file()->first();
-            $userCloud = $file->userCloud()->first();
-            $cloud = $userCloud->cloud()->first();
-            $cloudName = $cloud->name;
-
-            //$cloudID = UserCloudInfo::find($file->user_cloudID)->pluck('cloudID');
-            //$cloudName = Cloud::getCloudName($cloudID);
-            
+            $sharedFile = SharedFile::find($sharedFileID);
+            // This file has not been shared with this user, then return 
+            if($sharedFile->sharerID != Session::get('userID'))
+                return "This file has not been shared with you.";
+            // else go ahead and download the file
+            $file = $sharedFile->file()->first();
+            $userCloudID = FileModel::find($file->fileID)->pluck('user_cloudID');
+            $cloudID = UserCloudInfo::find($userCloudID)->pluck('cloudID');
+            $cloudName = Cloud::getCloudName($cloudID);
             $factory = new CloudFactory(); 
             $cloud = $factory->createCloud($cloudName);
             $fileDestination=$cloud->download($file->user_cloudID, $file->path, $file->file_name);
@@ -108,12 +109,14 @@ class SharedFilesController extends BaseController {
     }
 /**********************************************************************************************/    
     public function getCreateGroup(){
-        //TODO Surbhi
-    }
-/**********************************************************************************************/    
-    public function postSharedFile(){
-        //$userID = Session::get('userID');
-        //TODO SURBHI
+     try{
+            $groupName = Input::get('groupName');
+            
+        }catch(Exception $e){
+            Log::info("Exception raised in SharedFilesController::getCreateGroup");
+            Log::error($e->getMessage());
+            throw $e;
+        }   
     }
 /**********************************************************************************************/    
 }
