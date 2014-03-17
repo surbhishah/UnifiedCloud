@@ -4,6 +4,9 @@ class Temp extends Eloquent  {
 
 	protected $table = 'temp';
 	protected $primaryKey = 'fileID';
+	public function file(){
+		$this->belongsTo('FileModel','fileID','fileID');
+	}
 	/**********************************************************************************************/
 	/*
 	*	@params:

@@ -17,9 +17,7 @@ class SharedFile extends Eloquent  {
     public function sharer(){
     	return $this->belongsTo('User','sharerID','userID');
     }
-
-
-
+    
 	public function file(){
 		return $this->belongsTo('FileModel','fileID','fileID');
 	}    
@@ -35,7 +33,7 @@ class SharedFile extends Eloquent  {
 	}
 /**********************************************************************************************/	
 	public static function getFilesSharedByUser($ownerID){//TODO SURBHI
-		return DB::table('shared_files')
+/*		return DB::table('shared_files')
 			->where('ownerID','=', $ownerID)
 			->join(	'files' , 	'shared_files.fileID'	, '=' , 'files.fileID' )
 			->join(	'users',	'shared_files.sharerID',	'='	,	'users.userID')
@@ -43,7 +41,10 @@ class SharedFile extends Eloquent  {
 			->select(	'shared_fileID'	,	'file_name'	,	'first_name',
 				'last_name', 'access_rights')
 			->get();
+*/
+			
 	}	
+
 /**********************************************************************************************/	
 	public static function getFilesSharedWithUser($sharerID){
 		return DB::table('shared_files')
