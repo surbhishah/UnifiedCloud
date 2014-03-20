@@ -22,6 +22,12 @@ Route::post('user/test',array(
 	'uses' => 'EncryptionController@postTestGet'
 ));
 
+//test route for home.php
+
+Route::get('/home',function(){
+	return View::make('hello');
+});
+
 // open front page 
 Route::get('/', array( 'as' => 'landing', function()
 {
