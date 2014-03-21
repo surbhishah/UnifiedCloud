@@ -48,6 +48,8 @@
             <div class="form-group">
                 <input type="password" name="password_confirmation" class="form-control" placeholder="Confirm Password">
             </div>
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            
           <button type="submit" class="btn btn-custom">Submit</button>
         </form><!--
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

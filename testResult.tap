@@ -1,0 +1,6 @@
+TAP version 13
+ok 1 - ExampleTest::testIndex
+ok 2 - UserControllerTest::testPostCreateForCorrectSignUp
+ok 3 - UserControllerTest::testPostSignin
+ok 4 - UserControllerTest::testPostSigninIncorrect
+1..4

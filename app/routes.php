@@ -11,6 +11,7 @@
 |
 */
 
+App::bind('UserRepositoryInterface','EloquentUserRepository');
 //test routes
 Route::get('mock',function(){
 	return View::make('dashboard.dashboardMock');
@@ -20,6 +21,12 @@ Route::post('user/test',array(
 	'as' => 'upload_with_encryption_test',
 	'uses' => 'EncryptionController@postTestGet'
 ));
+
+//test route for home.php
+
+Route::get('/home',function(){
+	return View::make('hello');
+});
 
 // open front page 
 Route::get('/', array( 'as' => 'landing', function()

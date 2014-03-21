@@ -1,17 +1,27 @@
 <?php
 
+// use repositories\UserRepositoryInterface as User;
+
 class UsersController extends BaseController {
 
     public $restful = true;
-    
-    public function __construct() {
-      //  $this->beforeFilter('csrf', array('on'=>'post'));
+    protected $user;
+    /**
+     * dependency injection for model using repositories.
+     * Repositories are classes abstracting models from controllers
+     * so that we do not need to make calls to Eloquent ORM, instead
+     * the model interface has now become replaceable which allows
+     * to write tests using Mockery and also allows us to replace ORM if required.  
+     */
+    public function __construct(UserRepositoryInterface $user) {
+        
+        $this->user = $user;
+        $this->beforeFilter('csrf', array('on'=>'post'));
 
         //Route filters provide a convenient way of limiting access to a given route,
         //which is useful for creating areas of your site which require authentication.
         $this->beforeFilter('auth', array('only'=>array('getDashboard')));
     }
-
 
     public function getDashboard() {
         $clouds = UserCloudInfo::getClouds(Session::get('userID'));
@@ -24,17 +34,11 @@ class UsersController extends BaseController {
         if (Auth::attempt(array('email'=>Input::get('email'),'password' =>Input::get('password')))) {
            
            //Session email variable to get user data from tables
-            $user = User::getUserAttributes(Input::get('email'), array('userID'));
-            //redundant because Auth::attempt will check this.
-            if($user!=null) {
-                Session::put('userID',$user->userID);
-                return Redirect::route('dashboard');
-            }
-            else { 
-                throw new Exception('Invalid Email passed to UsersController::postSignin');
-                return Redirect::route('sign_in_page')
-                          ->with('message', 'Incorrect email or password');
-            }
+            $user = $this->user->getUserAttributes(Input::get('email'), array('userID'));
+            var_dump($user['userID']);
+            Session::put('userID',$user['userID']);
+            return Redirect::route('dashboard');
+           
         } else {
            return Redirect::route('sign_in_page')
               ->with('message', 'Incorrect email or password')
@@ -45,25 +49,19 @@ class UsersController extends BaseController {
     public function postCreate()
     {
         $validator = Validator::make(Input::all(), User::$rules);
-        if ($validator->passes()) {
+        if (!$validator->fails()) {
     
-            /*$user = new User;
-            $user->first_name = Input::get('first_name');
-            $user->last_name = Input::get('last_name');
-            $user->email = Input::get('email');
-            $user->password = Hash::make(Input::get('password'));
-            $user->save();*/
             $firstName = Input::get('first_name');
             $lastName = Input::get('last_name');
             $email =  Input::get('email');
             $password = Input::get('password');
 
-            $result = User::createUser($firstName,$lastName,$email,$password);
+            $result = $this->user->createUser($firstName,$lastName,$email,$password);
             return Redirect::route('landing')->with('message', 'Thanks for registering!');
         // validation passed, save user in DB
         } else {
             // validation failed, display error messages
-            return Redirect::to('signup')
+            return Redirect::route('sign_up')
                 ->with('message', 'The following errors occurred')
                 ->withErrors($validator)->withInput(Input::except('password'));
         }
