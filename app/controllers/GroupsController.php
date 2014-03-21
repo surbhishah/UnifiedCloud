@@ -28,6 +28,18 @@ class GroupsController extends BaseController {
         }   
     }
 /**********************************************************************************************/    
+    public function deleteGroup(){
+        try{
+            $groupID = Input::get('groupID');
+            return Group::deleteGroup($groupID);
+
+        }catch(Exception $e){
+            Log::info("Exception raised in GroupsController::deleteGroup");
+            Log::error($e->getMessage());
+            throw $e;
+        }
+    }
+/**********************************************************************************************/    
     public function getGroups(){//TODO Return complete data 
         try{
             //$adminID = Session::get('userID');// Uncomment this ABHISHEK
@@ -47,13 +59,17 @@ class GroupsController extends BaseController {
             $newMemberEmail = Input::get('newMemberEmail');
             $groupID = Input::get('groupID');
             $newMember = User::getUserAttributes($newMemberEmail, array('userID'));
+            // Check is this group exists
+            if(Group::find($groupID) == null)
+                return View::make('complete')
+                            ->with('message','This group does not exist');
             if($newMember == null)
                 return "User with email ".$newMemberEmail." does not seem to have an account with us.";
         
-            if(GroupMember::exists($groupID, $newMemberID))
+            else if(GroupMember::exists($groupID, $newMember->userID))
                 return "User with email ".$newMemberEmail." already exists in this group.";
             else
-                return GroupMember::addMember($groupID, $newMemberID);// This function need not return anything
+                return GroupMember::addMember($groupID, $newMember->userID);// This function need not return anything
         
         }catch(Exception $e){
             Log::info("Exception raised in GroupsController::postAddMember");
@@ -63,14 +79,15 @@ class GroupsController extends BaseController {
 
     }
 /**********************************************************************************************/    
-    public function getMembers(){// Get members of a group //TODO,,more information regarding members
+    public function getMembers(){// Get members information of a group 
         try{
             $groupID = Input::get('groupID');
             $group = Group::find($groupID);
             if($group == null)
-                return "This group does not exist";
+                return View::make('complete')
+                            ->with('message','This group does not exist');
             else
-                return $group->groupMembers;        
+                return GroupMember::getMembers($groupID);        
 
         }catch(Exception $e){
             Log::info("Exception raised in GroupsController::getMembers");
@@ -79,49 +96,36 @@ class GroupsController extends BaseController {
         }
     }
 /**********************************************************************************************/    
-    public function deleteMember(){// delete membership of a group member 
+    public function deleteMember(){// delete membership of a group member //TODO Check correctness
         try{
             // only admin can delete a group member 
             // so check if the user trying to delete is the admin of the group 
             $groupID = Input::get('groupID');
+            //Check if this group exists
+            if(Group::find($groupID) == null)
+                return View::make('complete')
+                            ->with('message','This group does not exist');
             $adminID = Group::getAdminID($groupID);
             //$currentUserID = Session::get('userID');// Uncomment this later ABHISHEK
             $currentUserID = Input::get('userID');
+            
             if($currentUserID == $adminID ){// Current user is the admin then ok 
+
                 $groupMemberID = Input::get('groupMemberID');
-                GroupMember::delete($groupMemberID);
+                GroupMember::deleteMember($groupMemberID);
+
             }else{// current user is not admin, he does not have rights to administer this group
+
                 View::make('complete')->with('message','You are not the admin of this group , 
-                    you cannot delete a member of this group')
+                    you cannot delete a member of this group');
+
             }
         }catch(Exception $e){
             Log::info("Exception raised in GroupsController::deleteMember");
             Log::error($e->getMessage());
             throw $e;
-        }
+        }   
     }
 /**********************************************************************************************/    
-	public function shareFileWithGroup(){
-	try{
-            // only admin can delete a group member 
-            // so check if the user trying to delete is the admin of the group 
-            $groupID = Input::get('groupID');
-            $adminID = Group::getAdminID($groupID);
-            //$currentUserID = Session::get('userID');// Uncomment this later ABHISHEK
-            $currentUserID = Input::get('userID');
-            if($currentUserID == $adminID ){// Current user is the admin then ok 
-                $groupMemberID = Input::get('groupMemberID');
-                GroupMember::delete($groupMemberID);
-            }else{// current user is not admin, he does not have rights to administer this group
-                View::make('complete')->with('message','You are not the admin of this group , 
-                    you cannot delete a member of this group')
-            }
-        }catch(Exception $e){
-            Log::info("Exception raised in GroupsController::shareFileWithGroup");
-            Log::error($e->getMessage());
-            throw $e;
-        }	
-	}
-/**********************************************************************************************/    
-
+	
 }

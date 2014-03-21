@@ -186,6 +186,11 @@ Route::get('user/group/create',array(
 	'as'=>'create_group_route',
 	'uses'=>'GroupsController@getCreateGroup'
 ));
+// delete group 
+Route::delete('user/group/delete',array(
+	'as'=>'delete_group_route',
+	'uses'=>'GroupsController@deleteGroup'
+));
 // Get groups
 Route::get('user/group/get',array(
 	'as'=>'get_groups_route',
@@ -208,4 +213,15 @@ Route::get('user/group/getMembers',array(
 Route::delete('user/group/deleteMember',array(
 	'as'=>'delete_group_member_route',
 	'uses'=>'GroupsController@deleteMember'
+));
+
+// Search user
+Route::get('user/search',array(
+	'as'=>'search_user_route',
+	'uses'=>'SearchController@getSearchUsers'
+));
+// Share with group route
+Route::get('user/group/share',array(
+	'as'=>'share_with_group_route',
+	'uses'=>'SharedFilesController@getShareFileWithGroup'
 ));

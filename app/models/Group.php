@@ -30,5 +30,18 @@ class Group extends Eloquent  {
 		$group = Group::find($groupID);
 		return $group->adminID;
 	}
+/**********************************************************************************************/	
+	public static function searchGroup($searchString){
+		return User::where('name', 'LIKE', "$searchString%")->get(array('groupID','groupName'));
+	}
+/**********************************************************************************************/	
+	public static function deleteGroup($groupID){
+		$group = Group::find($groupID);
+		if($group != null){
+			$group->delete();
+		}
+	}
+/**********************************************************************************************/	
 	
+/**********************************************************************************************/	
 }

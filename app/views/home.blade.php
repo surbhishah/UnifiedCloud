@@ -2,11 +2,42 @@
 <br>
 <br>
 <br>
+{{ Form::open(array('route'=>'delete_group_route', 'as'=>'delete_group','method'=>'delete')) }}
+{{ Form::label('groupID','GroupID ')}}
+{{ Form::text('groupID')	}}<br>
+{{ Form::submit('Delete group')	}}
+{{ Form::close()	}}
+<br>
+<br>
+<br>
+{{ Form::open(array('route'=>'share_with_group_route', 'as'=>'share_group','method'=>'get')) }}
+{{ Form::label('groupID','GroupID ')}}
+{{ Form::text('groupID')	}}<br>
+{{ Form::label('userID','userID')}}
+{{ Form::text('userID')	}}<br>
+{{ Form::label('fileID','fileID')}}
+{{ Form::text('fileID')	}}<br>
+{{ Form::submit('Share with group')	}}
+{{ Form::close()	}}
+
+<br>
+<br>
+<br>
+{{ Form::open(array('route'=>'search_user_route', 'as'=>'search','method'=>'get')) }}
+{{ Form::label('searchString','searchString:')}}
+{{ Form::text('searchString')	}}<br>
+{{ Form::submit('Search')	}}
+{{ Form::close()	}}
+<br>
+<br>
+<br>
 {{ Form::open(array('route'=>'delete_group_member_route', 'as'=>'delete_member','method'=>'delete')) }}
 {{ Form::label('groupID','GroupID ')}}
 {{ Form::text('groupID')	}}<br>
 {{ Form::label('groupMemberID','GroupMemberID ')}}
 {{ Form::text('groupMemberID')	}}<br>
+{{ Form::label('userID','userID ')}}
+{{ Form::text('userID')	}}<br>
 {{ Form::submit('Delete member ')	}}
 {{ Form::close()	}}
 <br>

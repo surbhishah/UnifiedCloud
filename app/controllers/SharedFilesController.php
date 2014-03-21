@@ -6,7 +6,7 @@ class SharedFilesController extends BaseController {
 /**********************************************************************************************/    
     public function getShareFile(){// Share a file with a user 
         try{
-            $sharerEmail = Input::get('sharerEmail');// email of the person with whom file is to be shared
+            $sharerEmail = Input::get('email');// email of the person with whom file is to be shared
             $sharer = User::getUserAttributes($sharerEmail,array('userID'));
             if($sharer == null){// No person with this email id is registered with our app
                 return View::make('complete')->with('message','No user with the email ID :'.$sharerEmail.' 
@@ -96,6 +96,37 @@ class SharedFilesController extends BaseController {
             throw $e;
         }   
     }
+/**********************************************************************************************/    
+    public function getShareFileWithGroup(){
+    try{
+            $groupID = Input::get('groupID');
+            $fileID = Input::get('fileID');//ID of the file to be shared
+            $ownerID = Input::get('userID');// Comment this later 
+            // $ownerID = Session::get('userID');//Uncomment this later
+            $group = Group::find($groupID);
+            if($group == null){
+                return View::make('complete')
+                            ->with('message','This group does not exist');
+                        }
+
+            $groupMembers = $group->groupMembers;
+            foreach ($groupMembers as $groupMember) {
+                // No need to share the file with its owner 
+                if($groupMember->memberID != $ownerID){
+                   SharedFile::createSharedFile($fileID, $ownerID, $groupMember->memberID);             
+                }
+            }
+
+        }catch(Exception $e){
+            Log::info("Exception raised in SharedFilesController::getShareFileWithGroup");
+            Log::error($e->getMessage());
+            throw $e;
+        }   
+    }
+/**********************************************************************************************/    
+    public function getShareFolder(){}
+/**********************************************************************************************/    
+    public function getShareFolderWithGroup(){}
 /**********************************************************************************************/    
 
 }
