@@ -28,5 +28,9 @@ class GroupMember extends Eloquent  {
 		else // This group already has this member
 			return true;
 	}
+	public static function delete($groupMemberID){
+		$groupMember = GroupMember::find($groupMemberID);
+		$groupMember ->delete();
+	}
 	
 }

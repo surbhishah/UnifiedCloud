@@ -70,13 +70,6 @@ Route::get('user/dashboard', array(
 	));
 
 
-// UNCOMMENT these two routes when you need authentication of dropbox 
-// I have disabled this functionality after getting accessToken for my dropbox account 
-// and hardcoding it in the seeds 
-
-
-//Route::get('user/{cloud}',array('as'=>'authenticate', 'uses'=>'UsersController@getRegistrationPage'));
-
 // Route to user authentication
 Route::get('user/authenticate/{cloudName}/{userCloudName}',array(
 	'as'=>'authenticate_route',
@@ -95,6 +88,11 @@ Route::get('user/home',array(
 	'uses'=>'UsersController@getHome'
 ));
 
+// Get full file structure 
+Route::get('user/get_full_file_structure',array(
+	'as'=>'get_full_file_structure_route',
+	'uses'=>'FilesController@getFullFileStructure'
+));
 // download
 Route::get('user/download',array(
 	'as'=>'download_route',
@@ -183,29 +181,31 @@ Route::get('user/change_access_rights',array(
 	'uses'=>'SharedFilesController@getChangeAccessRights'
 ));
 
-// Get full file structure 
-Route::get('user/get_full_file_structure',array(
-	'as'=>'get_full_file_structure_route',
-	'uses'=>'FilesController@getFullFileStructure'
-));
 // Create group 
 Route::get('user/group/create',array(
 	'as'=>'create_group_route',
-	'uses'=>'SharedFilesController@getCreateGroup'
+	'uses'=>'GroupsController@getCreateGroup'
 ));
 // Get groups
 Route::get('user/group/get',array(
 	'as'=>'get_groups_route',
-	'uses'=>'SharedFilesController@getGroups'
+	'uses'=>'GroupsController@getGroups'
 ));
 // Add member to group 
 Route::post('user/group/add',array(
 	'as'=>'add_member_route',
-	'uses'=>'SharedFilesController@postAddMember'
+	'uses'=>'GroupsController@postAddMember'
 ));
 
 // Get group members 
 Route::get('user/group/getMembers',array(
 	'as'=>'get_group_members_route',
-	'uses'=>'SharedFilesController@getMembers'
+	'uses'=>'GroupsController@getMembers'
+));
+
+
+// delete group member 
+Route::delete('user/group/deleteMember',array(
+	'as'=>'delete_group_member_route',
+	'uses'=>'GroupsController@deleteMember'
 ));

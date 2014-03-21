@@ -2,6 +2,16 @@
 <br>
 <br>
 <br>
+{{ Form::open(array('route'=>'delete_group_member_route', 'as'=>'delete_member','method'=>'delete')) }}
+{{ Form::label('groupID','GroupID ')}}
+{{ Form::text('groupID')	}}<br>
+{{ Form::label('groupMemberID','GroupMemberID ')}}
+{{ Form::text('groupMemberID')	}}<br>
+{{ Form::submit('Delete member ')	}}
+{{ Form::close()	}}
+<br>
+<br>
+<br>
 {{ Form::open(array('route'=>'get_group_members_route', 'as'=>'get_members','method'=>'get')) }}
 {{ Form::label('groupID','GroupID ')}}
 {{ Form::text('groupID')	}}<br>

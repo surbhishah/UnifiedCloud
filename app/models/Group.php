@@ -26,6 +26,9 @@ class Group extends Eloquent  {
 			return true;// A group with this name and same adminID exists
 	}
 /**********************************************************************************************/	
-	
+	public static function getAdminID($groupID){
+		$group = Group::find($groupID);
+		return $group->adminID;
+	}
 	
 }
