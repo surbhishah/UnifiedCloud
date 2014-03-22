@@ -14,8 +14,14 @@ class SearchController extends BaseController {
 		return Group::searchGroup($searchString);
 	}
 /**********************************************************************************************/    
-	public function getSearchGroupsUsers(){//TODO
-
+	public function getSearchGroupsUsers(){
+		$searchString = Input::get('searchString');
+		$result1 = User::searchUser($searchString)->toArray();
+		//return $result1;
+		$result2 = Group::searchGroup($searchString)->toArray();
+		//return $result2;
+		$result= array_merge_recursive($result1, $result2);
+		return $result;
 	}
 /**********************************************************************************************/    
 }
