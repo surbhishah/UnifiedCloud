@@ -1074,9 +1074,14 @@ var // currently active contextMenu trigger
                         }
                     }
                 
-                    // add icons
-                    if (item.icon) {
+                    // add icons ORIGINAL
+                    /*if (item.icon) {
                         $t.addClass("icon icon-" + item.icon);
+                    }*/
+
+                    //ABHISHEK EDIT
+                    if(item.icon) {
+                        $t.addClass("icon " + item.icon);
                     }
                 }
                 

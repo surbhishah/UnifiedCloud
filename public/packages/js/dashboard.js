@@ -3,15 +3,27 @@ $(function(){
 cloud ="";
 userCloudID=0;
 var baseUrl = window.location.pathname;
-//alert(baseUrl);
+//console.log(baseUrl);
 
-/*================= functions ======================*/
+/* ========================================================
+ *	Core helper functions
+ * ========================================================
+ */
+
+/**
+ * test function
+ */
 function testFunction(str) {
 	$(".cloud-controls").click(function(){
 		alert(str);
 	});
 }
 
+/**
+ * call notify function with default values
+ * @param  {String} message     Message text.
+ * @param  {String} messageType Type of message to configure presentation of notification
+ */
 function notification(message,messageType) {
 	$('.container').notify(message,{
 		'arrowShow' : false,
@@ -24,6 +36,10 @@ function notification(message,messageType) {
 	});
 }
 
+/**
+ * convert bytes to human readable sizes
+ * @param  {Integer} size Size of file in bytes
+ */
 function getReadableSize(size) {
 	if(size < 1024) {
 		return size.toString() + " Bytes";
@@ -40,9 +56,9 @@ function getReadableSize(size) {
 
 
 /*
-* @param: string file extension
-* @return: associative array: class for glyphicon
-*							ext for extension
+* @param {String} ext File extension
+* @return: {associative array} class for glyphicon
+*							
 */
 function getClassFromExtension(ext) {
 	var result = {};
@@ -68,6 +84,11 @@ function getClassFromExtension(ext) {
 	}
 }
 
+/**
+ * function triggered on create new folder event
+ * @param  {string} folderName 
+ * @param  {[type]} jObj       li element over which this function is called
+ */
 function createNewFolder(folderName,jObj) {
 	if(folderName == '') {
 		
@@ -94,6 +115,12 @@ function createNewFolder(folderName,jObj) {
 
 }
 
+/**
+ * get the folder content of the current folder
+ * @param  {String} cloud cloud name for which action must be performed
+ * @param  {String} fPath file path 
+ * @param  {Boolean String} cache to decide if the folder content should be cached
+ */
 function getFolderContents(cloud,fPath,cache) {
 
 	$('.loading').addClass('loading-gif');
@@ -125,7 +152,7 @@ function getFolderContents(cloud,fPath,cache) {
 			if(file.is_directory == '1') {
 				var tr=$("<tr class='folder'></tr>");
 				tbody.append(tr);
-				var td = $("<td><span class='glyphicon glyphicon-folder-close'></span><a  href='#' class='directory'>" + file.file_name +"</a></td>" );
+				var td = $("<td class='context-menu-one'><span class='glyphicon glyphicon-folder-close'></span><a  href='#' class='directory'>" + file.file_name +"</a></td>" );
 				tr.append(td);
 			} else {
 				var tr=$("<tr></tr>");
@@ -134,7 +161,7 @@ function getFolderContents(cloud,fPath,cache) {
 				//getting file extension
 				ext = file.file_name.split('.').pop();
 				extClass = getClassFromExtension(ext);
-				var td = $('<td><span class="' + extClass['class'] + '"></span><a href="#" class="file">' + file.file_name +'</a></td>' );
+				var td = $('<td class="context-menu-one"><span class="' + extClass['class'] + '"></span><a href="#" class="file">' + file.file_name +'</a></td>' );
 				tr.append(td);
 			}
 
@@ -165,8 +192,10 @@ function getFolderContents(cloud,fPath,cache) {
 	
 
 }
-
-
+/* ========================================================
+ *	Sorting for file explorer
+ * ========================================================
+ */
 // Intializing tablesorter plugin
     $("table").tablesorter({ 
         // define a custom text extraction function 
@@ -202,6 +231,51 @@ $('th').on('click',function(){
 		$("table").trigger("sorton",[sorting]);
 });
 
+
+/* ========================================================
+ *	All tooltips
+ * ========================================================
+ */
+$('#download').tooltip({
+	'trigger' : 'hover',
+	'title' : 'Download'
+});
+
+$('#upload').tooltip({
+	'trigger' : 'hover',
+	'title' : 'Upload'
+});
+
+$('#refresh').tooltip({
+	'trigger' : 'hover',
+	'title' : 'Refresh'
+});
+
+$('#settings').tooltip({
+	'trigger' : 'hover',
+	'title' : 'Settings'
+});
+
+$('#new-folder').tooltip({
+	'trigger' : 'hover',
+	'title' : 'New Folder'
+});
+$('#delete').tooltip({
+	'trigger' : 'hover',
+	'title' : 'Delete'
+});
+
+$('#add-cloud').tooltip({
+	'trigger' : 'hover',
+	'title' : 'Add new cloud'
+});
+
+/* ========================================================
+ *	Core functions start here
+ * ========================================================
+ */
+
+// get data based on the clicked user cloud
 $('.cloud').click(function(){
 
 	$('.cloud').removeClass('selected');
@@ -219,7 +293,7 @@ $('.cloud').click(function(){
 });
 
 $("#file-explorer tbody").on("click","a.directory",function(){
-	//alert("working!" + $(this).html());
+	//console.log("working!" + $(this).html());
 	var nextPath =	$(this).html();
 	var cwd = $('#cwd').html();
 
@@ -238,7 +312,7 @@ $("#file-explorer tbody").on("click","a.directory",function(){
 
 //register click on table row.
 $('#file-explorer tbody').on('click','tr',function(e){
-	//alert('clicked');
+	//console.log('clicked table row');
 	$('tr').not(this).removeClass('clicked-row');
     $(this).toggleClass('clicked-row'); 
     e.stopPropagation();
@@ -248,13 +322,13 @@ $('#file-explorer tbody').on('click','tr',function(e){
 //NOTE: focus is only associated with elements like input, table
 //cannot have that is why I'm using this trick to handle focusout. 
 $(document).on('click',function(){
-	//alert('focusout');
+	//console.log('focusout from table row');
 	$('tr.clicked-row').removeClass('clicked-row');
 });
 
 //breacrumb controls
 $('.breadcrumb').on('click','li',function(){
-	//alert($(this).html());
+	//console.log($(this).html());
 	var val = $(this);
     fPathArray = new Array();
     
@@ -273,17 +347,12 @@ $('.breadcrumb').on('click','li',function(){
 		fPath = '/';
 	$('#cwd').html(fPath);
 	getFolderContents(cloud,fPath,'true');
-	//alert(fPath);
+	//console.log(fPath);
 });
 
 //download
-$('#download').tooltip({
-	'trigger' : 'hover',
-	'title' : 'Download'
-});
-
 $('#download').on('click',function(){
-	//alert("working!");
+	//console.log("download menu button clicked !");
 
 	//set variables for ajax call
 	var cwd = $('#cwd').html();
@@ -308,7 +377,7 @@ $('#download').on('click',function(){
 		}
 	}
 	else {
-	//alert(cwd + " : "+ file);
+	//console.log(cwd + " : "+ file);
 		url = "download?userCloudID="+ userCloudID +"&cloudName=" + cloud + "&cloudSourcePath=" + cwd + "&fileName=" + file; 
 		console.log(url);
 		window.location.href = url;
@@ -317,11 +386,6 @@ $('#download').on('click',function(){
 
 
 //upload
-$('#upload').tooltip({
-	'trigger' : 'hover',
-	'title' : 'Upload'
-});
-
 //input passkey input when checkbox clicked
 $('#encryptCheck').on('change',function(){
 	if(this.checked) {
@@ -379,10 +443,6 @@ function ajaxUpload(url) {
 }
 
 //refresh
-$('#refresh').tooltip({
-	'trigger' : 'hover',
-	'title' : 'Refresh'
-});
 
 $('#refresh').on('click',function(){
 	
@@ -390,17 +450,8 @@ $('#refresh').on('click',function(){
 });
 
 //settings
-$('#settings').tooltip({
-	'trigger' : 'hover',
-	'title' : 'Settings'
-});
-
+// TODO Abhishek Nair
 //new-folder
-$('#new-folder').tooltip({
-	'trigger' : 'hover',
-	'title' : 'New Folder'
-});
-
 $('#new-folder').on('click',function(){
 	var tbody = $('tbody');
 	var tr = $('<tr></tr>');
@@ -434,11 +485,6 @@ $('tbody').on('keypress','#new-folder-input',function(e){
 
 
 //delete file or folder 
-$('#delete').tooltip({
-	'trigger' : 'hover',
-	'title' : 'Delete'
-});
-
 $('#delete').on('click',function(){
 
 	var fileOrFolder = $('#file-explorer tbody tr.clicked-row').find('a.file').html(); 
@@ -481,7 +527,7 @@ $('#delete').on('click',function(){
 	}
 });
 
-//auth 
+//auth call for Dropbox
 $('#Dropbox-auth').on('click',function(){
 	var userCloudName = $('[name="userCloudName"]').val();
 	var cloudName = $('#dropboxAuthModal .modal-title').html();
@@ -489,4 +535,39 @@ $('#Dropbox-auth').on('click',function(){
 	console.log(url);
 	window.location.href = url;
 });
+
+
+//auth call for Google Drive
+$('#Drive-auth').on('click',function(){
+	var userCloudName = $('[name="userCloudName"]').val();
+	var cloudName = $('#googleDriveAuthModal .modal-title').html();
+	url = "authenticate/" + cloudName + "/" +userCloudName;
+	console.log(url);
+	window.location.href = url;
+});
+
+
+/* ========================================================
+ *	Context Menu functions
+ * ========================================================
+ */
+$.contextMenu({
+    selector: '.context-menu-one', 
+    /*trigger: 'hover',
+    delay: 500,*/
+    callback: function(key, options) {
+        var m = "You clicked: " + key;
+        console.log(m); 
+    },
+    items: {
+        "download": {name: "Download" , icon:"glyphicon glyphicon-download"},
+        "share": {name: "Share" , icon:"glyphicon glyphicon-share"},
+        "delete": {name: "Delete" , icon:"glyphicon glyphicon-delete"}
+    }
+});
+
+/*$('.context-menu-one').on('click', function(e){
+    console.log('clicked', this);
+})*/
+	
 });//end of document
