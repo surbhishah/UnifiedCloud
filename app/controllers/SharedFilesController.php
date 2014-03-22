@@ -125,9 +125,9 @@ class SharedFilesController extends BaseController {
         }   
     }
 /**********************************************************************************************/    
-    public function getShareFolder(){}
+    public function getShareFolder(){}//TODO
 /**********************************************************************************************/    
-    public function getShareFolderWithGroup(){}
+    public function getShareFolderWithGroup(){}//TODO
 /**********************************************************************************************/    
     public function getUnshareFileFromGroup(){
         try{

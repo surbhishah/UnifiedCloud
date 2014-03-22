@@ -32,7 +32,7 @@ class Group extends Eloquent  {
 	}
 /**********************************************************************************************/	
 	public static function searchGroup($searchString){
-		return User::where('name', 'LIKE', "$searchString%")->get(array('groupID','groupName'));
+		return Group::where('name', 'LIKE', "$searchString%")->get(array('groupID','name'));
 	}
 /**********************************************************************************************/	
 	public static function deleteGroup($groupID){

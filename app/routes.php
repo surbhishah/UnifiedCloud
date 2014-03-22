@@ -223,9 +223,9 @@ Route::delete('user/group/deleteMember',array(
 ));
 
 // Search user
-Route::get('user/search',array(
-	'as'=>'search_user_route',
-	'uses'=>'SearchController@getSearchUsers'
+Route::get('user_group/search',array(
+	'as'=>'search_user_group_route',
+	'uses'=>'SearchController@getSearchGroupsUsers'
 ));
 // Share with group route
 Route::get('user/group/share',array(

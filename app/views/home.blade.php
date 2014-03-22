@@ -33,7 +33,7 @@
 <br>
 <br>
 <br>
-{{ Form::open(array('route'=>'search_user_route', 'as'=>'search','method'=>'get')) }}
+{{ Form::open(array('route'=>'search_user_group_route', 'as'=>'search','method'=>'get')) }}
 {{ Form::label('searchString','searchString:')}}
 {{ Form::text('searchString')	}}<br>
 {{ Form::submit('Search')	}}
