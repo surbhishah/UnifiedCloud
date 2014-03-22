@@ -12,7 +12,6 @@ class CreateSharedFilesTable extends Migration {
 			$table->foreign('fileID')->references('fileID')->on('files')->onDelete('cascade');
 			$table->integer('ownerID')->references('userID')->on('users')->onDelete('cascade');
 			$table->integer('sharerID')->references('userID')->on('users')->onDelete('cascade');
-			$table->enum('access_rights', array('R', 'RW'));
 			$table->unique(array('fileID','sharerID'));
 			$table->timestamps();
 		});

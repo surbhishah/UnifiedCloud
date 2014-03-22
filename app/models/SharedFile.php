@@ -5,7 +5,6 @@ class SharedFile extends Eloquent  {
 	protected $table = 'shared_files';
 	protected $primaryKey = 'shared_fileID';
 /**********************************************************************************************/	
-
 	public function owner()
     {
     	//User:	Model name 
@@ -22,55 +21,46 @@ class SharedFile extends Eloquent  {
 		return $this->belongsTo('FileModel','fileID','fileID');
 	}    
 /**********************************************************************************************/	
-	public static function createSharedFile($fileID, $ownerID, $sharerID, $accessRights){
-		$sharedFile = new SharedFile;
-		$sharedFile->fileID = $fileID;
-		$sharedFile->ownerID = $ownerID;
-		$sharedFile->sharerID = $sharerID;
-		$sharedFile->access_rights = $accessRights;//  accessRights has to be either R or RW , 
-		$sharedFile->save();						// if you pass anything else,
-		return $sharedFile;							// then null is added to db 
-	}
-/**********************************************************************************************/	
-	public static function getFilesSharedByUser($ownerID){//TODO SURBHI
-/*		return DB::table('shared_files')
-			->where('ownerID','=', $ownerID)
-			->join(	'files' , 	'shared_files.fileID'	, '=' , 'files.fileID' )
-			->join(	'users',	'shared_files.sharerID',	'='	,	'users.userID')
-
-			->select(	'shared_fileID'	,	'file_name'	,	'first_name',
-				'last_name', 'access_rights')
-			->get();
-*/
-			
-	}	
-
-/**********************************************************************************************/	
-	public static function getFilesSharedWithUser($sharerID){
-		return DB::table('shared_files')
-			->where('sharerID','=', $sharerID)
-			->join(	'files' , 	'shared_files.fileID'	, '=' , 'files.fileID' )
-			->join(	'users',	'shared_files.ownerID',	'='	,	'users.userID')
-
-			->select(	'shared_fileID'	,	'file_name'	,	'first_name',
-				'last_name'	, 'access_rights')
-			->get();	
-	}
-/**********************************************************************************************/	
-	public static function removeSharing($sharedFileID){
-		SharedFile::destroy($sharedFileID);
-	}
-/**********************************************************************************************/	
-	public static function setAccessRights($sharedFileID,$accessRights){
-		$sharedFile = SharedFile::find($sharedFileID);
-		$sharedFile->access_rights = $accessRights;
-		$sharedFile->save();
+	
+	public static function removeSharing($fileID, $sharerID){
+		$sharedFile = SharedFile::where('fileID','=',$fileID)->where('sharerID','=',$sharerID)->get()->first();
+		if($sharedFile != null)
+			$sharedFile->delete();
 	}
 /**********************************************************************************************/	
 	public static function getFile($sharedFileID){
 		$file = SharedFile::find($sharedFileID)->file;
 		return $file;
 	}
+/**********************************************************************************************/	
+	public static function createSharedFile($fileID, $ownerID, $sharerID){
+		$sharedFile = new SharedFile;
+		$sharedFile->fileID = $fileID;
+		$sharedFile->ownerID = $ownerID;
+		$sharedFile->sharerID = $sharerID;
+		$sharedFile->save();
+	}
+/**********************************************************************************************/	
+	public static function getFilesSharedByUser($ownerID){
+		return DB::select('
+			SELECT files.fileID,shared_files.sharerID, file_name, shared_files.created_at, first_name,last_name,email
+			FROM shared_files
+			LEFT JOIN users on (shared_files.sharerID = users.userID)
+			LEFT JOIN files on (shared_files.fileID = files.fileID)
+			WHERE shared_files.ownerID = ?
+			', array($ownerID));
+        
+        }
+/**********************************************************************************************/	
+        public static function getFilesSharedWithUser($sharerID){
+        	return DB::select('
+        		SELECT files.fileID, shared_files.ownerID, file_name, shared_files.created_at, first_name,last_name,email
+				FROM shared_files
+				LEFT JOIN users on (shared_files.ownerID = users.userID)
+				LEFT JOIN files on (shared_files.fileID = files.fileID)
+				WHERE sharerID = ?
+        		', array($sharerID));
+        }
 /**********************************************************************************************/	
 
 }

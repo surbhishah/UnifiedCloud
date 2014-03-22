@@ -4,24 +4,26 @@ class SharedFilesController extends BaseController {
 
     public $restful = true;
 /**********************************************************************************************/    
-    public function getShareFile(){
+    public function getShareFile(){// Share a file with a user 
         try{
-            $sharerEmail = Input::get('sharerEmail');// email of the person with whom file is to be shared
+            $sharerEmail = Input::get('email');// email of the person with whom file is to be shared
             $sharer = User::getUserAttributes($sharerEmail,array('userID'));
             if($sharer == null){// No person with this email id is registered with our app
                 return View::make('complete')->with('message','No user with the email ID :'.$sharerEmail.' 
                         is registered with our app');// TODO ABHISHEK
+            }else if($sharer->userID == Session::get('userID')){
+                return View::make('complete')->with('message',
+                'You dont want to share a file with yourself, may be there is a mistake');// TODO ABHISHEK
             }
             else{// Person with this email exists
                 $sharerID = $sharer->userID;
-                $accessRights = Input::get('accessRights');
                 $path = Input::get('path');
                 $fileName = Input::get('fileName');
                 $userCloudID = Input::get('userCloudID');
                 $file = FileModel::getFileAttributes($userCloudID, $path, $fileName, array('fileID'));
                 $fileID = $file->fileID;
                 $ownerID = UserCloudInfo::getUserID($userCloudID);
-                $sharedFile=SharedFile::createSharedFile($fileID, $ownerID, $sharerID, $accessRights);
+                $sharedFile=SharedFile::createSharedFile($fileID, $ownerID, $sharerID);
                 // COMMENT THIS LATER 
                 return $sharedFile;// This function does not return anything ...This return is just for testing                 
             }
@@ -35,8 +37,8 @@ class SharedFilesController extends BaseController {
     public function getFilesSharedByUser(){
         try{
             $ownerID = Input::get('ownerID');//UNCOMMEnt if testing from home.blade.php
-        //  $ownerID = Session::get('ownerID'); 
-            return User::find($ownerID)->filesSharedByUser;
+        //  $ownerID = Session::get('userID'); 
+            return SharedFile::getFilesSharedByUser($ownerID);
             
         }catch(Exception $e){
             Log::info("Exception raised in SharedFilesController::getFilesSharedByUser");
@@ -48,8 +50,8 @@ class SharedFilesController extends BaseController {
     public function getFilesSharedWithUser(){
         try{
             $sharerID = Input::get('sharerID'); //UNCOMMEnt if testing from home.blade.php
-     //     $sharerID = Input::get('sharerID');  
-            return User::find($sharerID)->filesSharedWithUser;
+            //$sharerID = Session::get('userID');
+            return SharedFile::getFilesSharedWithUser($sharerID);
 
         }catch(Exception $e){
             Log::info("Exception raised in SharedFilesController::getFilesSharedWithUser");
@@ -58,10 +60,11 @@ class SharedFilesController extends BaseController {
         }
     }
 /**********************************************************************************************/    
-    public function getUnshareFile(){
+    public function getUnshareFile(){// Remove sharing of a file 
         try{
-            $sharedFileID = Input::get('sharedFileID');
-            SharedFile::removeSharedFile($sharedFileID);
+            $fileID = Input::get('fileID');
+            $sharerID = Input::get('sharerID');
+            SharedFile::removeSharing($fileID, $sharerID);
 
         }catch(Exception $e){
             Log::info("Exception raised in SharedFilesController::getUnshareFile");
@@ -71,30 +74,18 @@ class SharedFilesController extends BaseController {
 
     }
 /**********************************************************************************************/    
-    public function getChangeAccessRights(){
-        try{
-            $sharedFileID = Input::get('sharedFileID');
-            $accessRights = Input::get('accessRights');
-            SharedFile::setAccessRights($sharedFileID, $accessRights);
-
-        }catch(Exception $e){
-            Log::info("Exception raised in SharedFilesController::getChangeAccessRights");
-            Log::error($e->getMessage());
-            throw $e;
-        }
-    }
-/**********************************************************************************************/    
     public function getSharedFile(){// download a shared file 
      try{
             $sharedFileID = Input::get('sharedFileID');
-            $file = SharedFile::find($sharedFileID)->file()->first();
-            $userCloud = $file->userCloud()->first();
-            $cloud = $userCloud->cloud()->first();
-            $cloudName = $cloud->name;
-
-            //$cloudID = UserCloudInfo::find($file->user_cloudID)->pluck('cloudID');
-            //$cloudName = Cloud::getCloudName($cloudID);
-            
+            $sharedFile = SharedFile::find($sharedFileID);
+            // This file has not been shared with this user, then return 
+            if($sharedFile->sharerID != Session::get('userID'))
+                return "This file has not been shared with you.";
+            // else go ahead and download the file
+            $file = $sharedFile->file()->first();
+            $userCloudID = FileModel::find($file->fileID)->pluck('user_cloudID');
+            $cloudID = UserCloudInfo::find($userCloudID)->pluck('cloudID');
+            $cloudName = Cloud::getCloudName($cloudID);
             $factory = new CloudFactory(); 
             $cloud = $factory->createCloud($cloudName);
             $fileDestination=$cloud->download($file->user_cloudID, $file->path, $file->file_name);
@@ -107,13 +98,56 @@ class SharedFilesController extends BaseController {
         }   
     }
 /**********************************************************************************************/    
-    public function getCreateGroup(){
-        //TODO Surbhi
+    public function getShareFileWithGroup(){
+    try{
+            $groupID = Input::get('groupID');
+            $fileID = Input::get('fileID');//ID of the file to be shared
+            $ownerID = Input::get('userID');// Comment this later 
+            // $ownerID = Session::get('userID');//Uncomment this later
+            $group = Group::find($groupID);
+            if($group == null){
+                return View::make('complete')
+                            ->with('message','This group does not exist');
+                        }
+
+            $groupMembers = $group->groupMembers;
+            foreach ($groupMembers as $groupMember) {
+                // No need to share the file with its owner 
+                if($groupMember->memberID != $ownerID){
+                   SharedFile::createSharedFile($fileID, $ownerID, $groupMember->memberID);             
+                }
+            }
+
+        }catch(Exception $e){
+            Log::info("Exception raised in SharedFilesController::getShareFileWithGroup");
+            Log::error($e->getMessage());
+            throw $e;
+        }   
     }
 /**********************************************************************************************/    
-    public function postSharedFile(){
-        //$userID = Session::get('userID');
-        //TODO SURBHI
+    public function getShareFolder(){}
+/**********************************************************************************************/    
+    public function getShareFolderWithGroup(){}
+/**********************************************************************************************/    
+    public function getUnshareFileFromGroup(){
+        try{
+                $groupID = Input::get('groupID');
+                $fileID = Input::get('fileID');
+                $group = Group::find($groupID);
+                if($group == null){
+                    return View::make('complete')
+                            ->with('message','This group does not exist');
+
+                }
+                $groupMembers = $group->groupMembers;
+                foreach ($groupMembers as $groupMember) {
+                    SharedFile::removeSharing($fileID, $groupMember->memberID);
+                }
+        }catch(Exception $e){
+            Log::info("Exception raised in SharedFilesController::getUnshareFileFromGroup");
+            Log::error($e->getMessage());
+            throw $e;
+        }
     }
 /**********************************************************************************************/    
 }

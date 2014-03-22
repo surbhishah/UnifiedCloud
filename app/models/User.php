@@ -120,9 +120,15 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		if($userCloudInfo==null)return false;
 		else return true;
 	}
-	//TODO
-	public static function getFilesSharedByUser($ownerID){
-		return User::find($ownerID)->filesSharedByUser->file;
+	public static function exists($userID){
+		$user = User::find($userID);
+		if($user == null)
+			return false;
+		else 
+			return true;
+
 	}
-	
+	public static function searchUser($searchString){
+		return User::where('email', 'LIKE', "$searchString%")->get(array('email'));
+	}
 }

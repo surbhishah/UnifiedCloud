@@ -156,5 +156,4 @@ class FileModel extends Eloquent  {
 							->get()->first();
 		return $encryptionKeyHash->encryption_key_hash;
 	}
-	
 }
