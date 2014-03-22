@@ -2,7 +2,97 @@
 <br>
 <br>
 <br>
-{{ Form::open(array('route'=>'get_full_file_structure', 'as'=>'get_full_file_structure','method'=>'get')) }}
+{{ Form::open(array('route'=>'unshare_group_route', 'as'=>'unshare_group','method'=>'get')) }}
+{{ Form::label('groupID','GroupID ')}}
+{{ Form::text('groupID')	}}<br>
+{{ Form::label('fileID','fileID ')}}
+{{ Form::text('fileID')	}}<br>
+{{ Form::submit('Unshare group')	}}
+{{ Form::close()	}}
+<br>
+<br>
+<br>
+{{ Form::open(array('route'=>'delete_group_route', 'as'=>'delete_group','method'=>'delete')) }}
+{{ Form::label('groupID','GroupID ')}}
+{{ Form::text('groupID')	}}<br>
+{{ Form::submit('Delete group')	}}
+{{ Form::close()	}}
+<br>
+<br>
+<br>
+{{ Form::open(array('route'=>'share_with_group_route', 'as'=>'share_group','method'=>'get')) }}
+{{ Form::label('groupID','GroupID ')}}
+{{ Form::text('groupID')	}}<br>
+{{ Form::label('userID','userID')}}
+{{ Form::text('userID')	}}<br>
+{{ Form::label('fileID','fileID')}}
+{{ Form::text('fileID')	}}<br>
+{{ Form::submit('Share with group')	}}
+{{ Form::close()	}}
+
+<br>
+<br>
+<br>
+{{ Form::open(array('route'=>'search_user_route', 'as'=>'search','method'=>'get')) }}
+{{ Form::label('searchString','searchString:')}}
+{{ Form::text('searchString')	}}<br>
+{{ Form::submit('Search')	}}
+{{ Form::close()	}}
+<br>
+<br>
+<br>
+{{ Form::open(array('route'=>'delete_group_member_route', 'as'=>'delete_member','method'=>'delete')) }}
+{{ Form::label('groupID','GroupID ')}}
+{{ Form::text('groupID')	}}<br>
+{{ Form::label('memberID','memberID ')}}
+{{ Form::text('memberID')	}}<br>
+{{ Form::label('userID','userID ')}}
+{{ Form::text('userID')	}}<br>
+{{ Form::submit('Delete member ')	}}
+{{ Form::close()	}}
+<br>
+<br>
+<br>
+{{ Form::open(array('route'=>'get_group_members_route', 'as'=>'get_members','method'=>'get')) }}
+{{ Form::label('groupID','GroupID ')}}
+{{ Form::text('groupID')	}}<br>
+{{ Form::submit('Get group members')	}}
+{{ Form::close()	}}
+<br>
+<br>
+<br>
+{{ Form::open(array('route'=>'add_member_route', 'as'=>'add_member','method'=>'post')) }}
+{{ Form::label('groupID','GroupID ')}}
+{{ Form::text('groupID')	}}<br>
+{{ Form::label('emamil','New Member email')}}
+{{ Form::text('newMemberEmail')	}}<br>
+{{ Form::submit('Add this user to this group')	}}
+{{ Form::close()	}}
+<br>
+<br>
+<br>
+{{ Form::open(array('route'=>'get_groups_route', 'as'=>'get_groups','method'=>'get')) }}
+{{ Form::label('userID','1')}}
+{{ Form::text('userID')	}}<br>
+{{ Form::submit('Get Groups to which this user belongs')	}}
+{{ Form::close()	}}
+<br>
+<br>
+<br>
+{{ Form::open(array('route'=>'create_group_route', 'as'=>'create_group','method'=>'get')) }}
+{{ Form::label('Group Name','Group Name:')}}
+{{ Form::hidden('userID','1')}}
+{{ Form::text('groupName')	}}<br>
+{{ Form::submit('Create Group')	}}
+{{ Form::close()	}}
+
+
+
+
+<br>
+<br>
+<br>
+{{ Form::open(array('route'=>'get_full_file_structure_route', 'as'=>'get_full_file_structure','method'=>'get')) }}
 {{ Form::hidden('cloudName','Dropbox' )	}}
 {{ Form::label('userCloudID','userCloudID:')}}
 {{ Form::text('userCloudID')	}}<br>
@@ -15,19 +105,8 @@
 {{ Form::open(array('route'=>'download_shared_file_route', 'as'=>'download_shared_file','method'=>'get')) }}
 {{ Form::label('sharedFileID','sharedfileID')}}
 {{ Form::text('sharedFileID')	}}
-
+{{ Form::hidden('userID','2')}}
 {{ Form::submit('Download Shared File')	}}
-{{ Form::close()	}}
-<br>
-<br>
-<br>
-
-{{ Form::open(array('route'=>'change_access_rights_route', 'as'=>'change_access_rights','method'=>'get')) }}
-{{ Form::label('sharedFileID','sharedfileID')}}
-{{ Form::text('sharedFileID')	}}
-{{ Form::label('Access_rights','accessRights')}}
-{{ Form::text('accessRights')	}}
-{{ Form::submit('Change Access Rights')	}}
 {{ Form::close()	}}
 <br>
 <br>
@@ -62,8 +141,6 @@
 {{ Form::text('fileName')}}			
 {{ Form::label('Share', 'Share with? Email ID ')	}}
 {{ Form::text('sharerEmail')}}			
-{{ Form::label('Access', 'Access Rights: ')	}}
-{{ Form::text('accessRights')}}			
 {{ Form::submit('Share')	}}
 {{ Form::close()	}}
 <br>
