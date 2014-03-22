@@ -2,6 +2,16 @@
 <br>
 <br>
 <br>
+{{ Form::open(array('route'=>'unshare_group_route', 'as'=>'unshare_group','method'=>'get')) }}
+{{ Form::label('groupID','GroupID ')}}
+{{ Form::text('groupID')	}}<br>
+{{ Form::label('fileID','fileID ')}}
+{{ Form::text('fileID')	}}<br>
+{{ Form::submit('Unshare group')	}}
+{{ Form::close()	}}
+<br>
+<br>
+<br>
 {{ Form::open(array('route'=>'delete_group_route', 'as'=>'delete_group','method'=>'delete')) }}
 {{ Form::label('groupID','GroupID ')}}
 {{ Form::text('groupID')	}}<br>
@@ -34,8 +44,8 @@
 {{ Form::open(array('route'=>'delete_group_member_route', 'as'=>'delete_member','method'=>'delete')) }}
 {{ Form::label('groupID','GroupID ')}}
 {{ Form::text('groupID')	}}<br>
-{{ Form::label('groupMemberID','GroupMemberID ')}}
-{{ Form::text('groupMemberID')	}}<br>
+{{ Form::label('memberID','memberID ')}}
+{{ Form::text('memberID')	}}<br>
 {{ Form::label('userID','userID ')}}
 {{ Form::text('userID')	}}<br>
 {{ Form::submit('Delete member ')	}}

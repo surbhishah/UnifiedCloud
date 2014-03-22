@@ -120,7 +120,6 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
 	}
 	public static function searchUser($searchString){
-		//$results = MyModel::where('name', 'LIKE', "%$term%")->get();
 		return User::where('email', 'LIKE', "$searchString%")->get(array('email'));
 	}
 }

@@ -30,14 +30,16 @@ class GroupMember extends Eloquent  {
 			return true;
 	}
 /**********************************************************************************************/	
-	public static function deleteMember($groupMemberID){
-		$groupMember = GroupMember::find($groupMemberID);
-		$groupMember->delete();
+	public static function deleteMember($groupID, $memberID){
+		$groupMember = GroupMember::where('groupID','=',$groupID)
+									->where('memberID','=',$memberID)->get()->first();
+		if($groupMember!=null)
+			$groupMember->delete();
 	}
 /**********************************************************************************************/	
 	public static function getMembers($groupID){
 		return DB::select('
-        		SELECT group_memberID, group_members.created_at as added_at, first_name,last_name,email
+        		SELECT memberID, group_members.created_at as added_at, first_name,last_name,email
 				FROM group_members
 				LEFT JOIN users on (group_members.memberID = users.userID)
 				WHERE groupID=?

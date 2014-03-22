@@ -40,7 +40,7 @@ class GroupsController extends BaseController {
         }
     }
 /**********************************************************************************************/    
-    public function getGroups(){//TODO Return complete data 
+    public function getGroups(){// Get group information of a user 
         try{
             //$adminID = Session::get('userID');// Uncomment this ABHISHEK
             $userID = Input::get('userID');// Get this frm session
@@ -96,7 +96,7 @@ class GroupsController extends BaseController {
         }
     }
 /**********************************************************************************************/    
-    public function deleteMember(){// delete membership of a group member //TODO Check correctness
+    public function deleteMember(){// delete membership of a group member 
         try{
             // only admin can delete a group member 
             // so check if the user trying to delete is the admin of the group 
@@ -111,8 +111,13 @@ class GroupsController extends BaseController {
             
             if($currentUserID == $adminID ){// Current user is the admin then ok 
 
-                $groupMemberID = Input::get('groupMemberID');
-                GroupMember::deleteMember($groupMemberID);
+                $memberID = Input::get('memberID');
+                if($memberID == $adminID){//Admin cannot delete himself
+                    return View::make('complete')
+                            ->with('message','You dont want to delete the admin of the group');
+                
+                }
+                GroupMember::deleteMember($groupID, $memberID);
 
             }else{// current user is not admin, he does not have rights to administer this group
 

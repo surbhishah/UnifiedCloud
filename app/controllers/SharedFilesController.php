@@ -62,8 +62,9 @@ class SharedFilesController extends BaseController {
 /**********************************************************************************************/    
     public function getUnshareFile(){// Remove sharing of a file 
         try{
-            $sharedFileID = Input::get('sharedFileID');
-            SharedFile::removeSharedFile($sharedFileID);
+            $fileID = Input::get('fileID');
+            $sharerID = Input::get('sharerID');
+            SharedFile::removeSharing($fileID, $sharerID);
 
         }catch(Exception $e){
             Log::info("Exception raised in SharedFilesController::getUnshareFile");
@@ -128,5 +129,25 @@ class SharedFilesController extends BaseController {
 /**********************************************************************************************/    
     public function getShareFolderWithGroup(){}
 /**********************************************************************************************/    
+    public function getUnshareFileFromGroup(){
+        try{
+                $groupID = Input::get('groupID');
+                $fileID = Input::get('fileID');
+                $group = Group::find($groupID);
+                if($group == null){
+                    return View::make('complete')
+                            ->with('message','This group does not exist');
 
+                }
+                $groupMembers = $group->groupMembers;
+                foreach ($groupMembers as $groupMember) {
+                    SharedFile::removeSharing($fileID, $groupMember->memberID);
+                }
+        }catch(Exception $e){
+            Log::info("Exception raised in SharedFilesController::getUnshareFileFromGroup");
+            Log::error($e->getMessage());
+            throw $e;
+        }
+    }
+/**********************************************************************************************/    
 }

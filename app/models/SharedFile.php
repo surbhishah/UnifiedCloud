@@ -22,16 +22,12 @@ class SharedFile extends Eloquent  {
 	}    
 /**********************************************************************************************/	
 	
-	public static function removeSharing($sharedFileID){
-		SharedFile::destroy($sharedFileID);
+	public static function removeSharing($fileID, $sharerID){
+		$sharedFile = SharedFile::where('fileID','=',$fileID)->where('sharerID','=',$sharerID)->get()->first();
+		if($sharedFile != null)
+			$sharedFile->delete();
 	}
 /**********************************************************************************************/	
-	/*public static function setAccessRights($sharedFileID,$accessRights){
-		$sharedFile = SharedFile::find($sharedFileID);
-		$sharedFile->access_rights = $accessRights;
-		$sharedFile->save();
-	}
-*//**********************************************************************************************/	
 	public static function getFile($sharedFileID){
 		$file = SharedFile::find($sharedFileID)->file;
 		return $file;
@@ -47,7 +43,7 @@ class SharedFile extends Eloquent  {
 /**********************************************************************************************/	
 	public static function getFilesSharedByUser($ownerID){
 		return DB::select('
-			SELECT shared_fileID, file_name, shared_files.created_at, first_name,last_name,email
+			SELECT files.fileID,shared_files.sharerID, file_name, shared_files.created_at, first_name,last_name,email
 			FROM shared_files
 			LEFT JOIN users on (shared_files.sharerID = users.userID)
 			LEFT JOIN files on (shared_files.fileID = files.fileID)
@@ -58,7 +54,7 @@ class SharedFile extends Eloquent  {
 /**********************************************************************************************/	
         public static function getFilesSharedWithUser($sharerID){
         	return DB::select('
-        		SELECT shared_fileID, file_name, shared_files.created_at, first_name,last_name,email
+        		SELECT files.fileID, shared_files.ownerID, file_name, shared_files.created_at, first_name,last_name,email
 				FROM shared_files
 				LEFT JOIN users on (shared_files.ownerID = users.userID)
 				LEFT JOIN files on (shared_files.fileID = files.fileID)
@@ -66,6 +62,7 @@ class SharedFile extends Eloquent  {
         		', array($sharerID));
         }
 /**********************************************************************************************/	
+
 }
 
 

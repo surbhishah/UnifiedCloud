@@ -225,3 +225,8 @@ Route::get('user/group/share',array(
 	'as'=>'share_with_group_route',
 	'uses'=>'SharedFilesController@getShareFileWithGroup'
 ));
+// UnShare with group route
+Route::get('user/group/unshare',array(
+	'as'=>'unshare_group_route',
+	'uses'=>'SharedFilesController@getUnshareFileFromGroup'
+));
