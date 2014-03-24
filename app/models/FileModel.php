@@ -38,7 +38,7 @@ class FileModel extends Eloquent  {
 		}
 		$file->user_cloudID = $userCloudID;
 		$file->path = $fileArray['path'];
-		$file->is_encrypted = false;
+		//$file->is_encrypted = false;
 		//$file->encryption_key_hash = null;  I am doing this so as to 
 		// avoid overwriting the hash 
 		// Also ...fileArray can never have any hash because it is the data coming from 

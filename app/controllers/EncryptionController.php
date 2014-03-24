@@ -21,31 +21,32 @@ class EncryptionController extends BaseController {
     public function postEncryptFiles($cloudName){
 		try{
 			
-			$cloudName = Input::get('cloudName');
 			$userCloudID = Input::get('userCloudID');		
 			$cloudDestinationPath = Input::get('cloudDestinationPath');
-
+			Log::info("inp postEncryptFiles", array("cloudName", $cloudName));
 			//Send passKey by POST
 			//passKey required to encrypt randomly generated Encryption key. 
 			$userPassKey = Input::get('passKey');
-
+				$factory = new CloudFactory(); 			// to controller 
+				$cloud = $factory->createCloud($cloudName);
+			
 			$i=0;// TO BE COMMENTED GEtting $result is not necessary ,,,delete it later abhishek
 			$files = Input::file('files');
 			foreach($files as $file){
 				Log::info('getting files from upload postEncryptFiles',array('passKey',$userPassKey));
 				$result[$i] = $this->encryptFile($cloudName,$userCloudID,$cloudDestinationPath,$file,$userPassKey);
-				//$result[$i]= $cloud->upload($userCloudID, $file, $cloudDestinationPath);	
+			//	$result[$i]= $cloud->upload($userCloudID, $file, $cloudDestinationPath);	
 				$i++;
 			}
 			return $result;//THIS is required only for testing
 				
 		}catch(UnknownCloudException $e){
-				Log::info("UnknownCloudException raised in FilesController::postUploadMultiple");
+				Log::info("UnknownCloudException raised in EncryptionController::postEncryptFiles");
 				Log::error($e->getMessage());
 				throw $e;
 
 		}catch(Exception $e){
-				Log::info("Exception raised in FilesController::postUploadMultiple");
+				Log::info("Exception raised in EncryptionController::postEncryptFiles");
 				Log::error($e->getMessage());
 				throw $e;
 		}

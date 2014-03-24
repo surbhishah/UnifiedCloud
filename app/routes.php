@@ -244,3 +244,18 @@ Route::get('remote/update_clouds/{userID}',array(
 	'as'=>'remote_update_clouds',
 	'uses'=>'AutosyncController@getUpdate'
 ));
+//upload any no of files 
+Route::post('remote/upload/{cloudName}/{userCloudID}',array(
+	'as'=>'remote_upload_route',
+	'uses'=>'AutosyncController@postFile'
+));
+//create folder
+Route::get('remote/create_folder/{cloudName}/{userCloudID}',array(
+	'as'=>'remote_create_folder_route',
+	'uses'=>'AutosyncController@getCreateFolder'
+));
+//delete folder/ file 
+Route::get('remote/delete/{cloudName}/{userCloudID}',array(
+	'as'=>'remote_delete_folder_route',
+	'uses'=>'AutosyncController@delete'
+));

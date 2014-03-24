@@ -81,9 +81,9 @@ class Dropbox implements CloudInterface{
 
 				// Delete the file on the server, Deleting the files because it is highly unlikely that
 				// user will download a file he has uploaded right now
-				chmod($serverDestinationPath.$fileName, 0750);
-				File::delete($serverDestinationPath.$fileName);
-				Utility::removeDir($serverDestinationPath);
+				//chmod($serverDestinationPath.$fileName, 0750);
+				//File::delete($serverDestinationPath.$fileName);
+				//Utility::removeDir($serverDestinationPath);
 
 			}catch(Exception $e){
 				Log::info("Exception raised in Dropbox::upload");

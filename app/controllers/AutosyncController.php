@@ -24,30 +24,62 @@ class AutosyncController extends BaseController {
             $cloudDestinationPath = Input::get('cloudDestinationPath');
             $factory = new CloudFactory(); 
             $cloud = $factory->createCloud($cloudName);
-            $i=0;// TO BE COMMENTED GEtting $result is not necessary ,,,delete it later abhishek
-            $files = Input::file('files');
-            foreach($files as $file){
-                $result[$i]= $cloud->upload($userCloudID, $file, $cloudDestinationPath);    
-                $i++;
-            }
-            return $result;//THIS is required only for testing
+            $file = Input::file('file');
+            $result= $cloud->upload($userCloudID, $file, $cloudDestinationPath);    
+            return Response::json($result);
                 
         }catch(UnknownCloudException $e){
-                Log::info("UnknownCloudException raised in FilesController::postFile");
+                Log::info("UnknownCloudException raised in AutosyncController::postFile");
                 Log::error($e->getMessage());
                 throw $e;
 
         }catch(Exception $e){
-                Log::info("Exception raised in FilesController::postFile");
+                Log::info("Exception raised in AutosyncController::postFile");
                 Log::error($e->getMessage());
                 throw $e;
         }   
             
     }
     
-    public function getCreateFolder(){
+    public function getCreateFolder($cloudName, $userCloudID){
+        try{
+        
+            $folderPath= Input::get('folderPath');
+            $factory = new CloudFactory(); 
+            $cloud = $factory->createCloud($cloudName);
+            $result = $cloud->createFolder($userCloudID, $folderPath);
+            //if $result == null then folder already exists
+            return Response::json($result);
 
+        }catch(UnknownCloudException $e){
+                Log::info("UnknownCloudException raised in AutosyncController::getCreateFolder");
+                Log::error($e->getMessage());
+                throw $e;
+
+        }catch(Exception $e){
+                Log::info("Exception raised in AutosyncController::getCreateFolder");
+                Log::error($e->getMessage());
+                throw $e;
+        }
     }
 
+    public function delete($cloudName, $userCloudID){
+        try{
+            $path= Input::get('path');
+            $factory = new CloudFactory(); 
+            $cloud = $factory->createCloud($cloudName);
+            $result = $cloud->delete($userCloudID,$path);
+            return Response::json($result);
 
+        }catch(UnknownCloudException $e){
+                Log::info("UnknownCloudException raised in AutosyncController::delete");
+                Log::error($e->getMessage());
+                throw $e;
+
+        }catch(Exception $e){
+                Log::info("Exception raised in AutosyncController::delete");
+                Log::error($e->getMessage());
+                throw $e;
+        }
+    }
 }
