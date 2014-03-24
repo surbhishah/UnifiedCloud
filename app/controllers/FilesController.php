@@ -30,12 +30,12 @@ class FilesController extends BaseController{
 			return $result;//THIS is required only for testing
 				
 		}catch(UnknownCloudException $e){
-				Log::info("UnknownCloudException raised in FilesController::postUploadMultiple");
+				Log::info("UnknownCloudException raised in FilesController::postFile");
 				Log::error($e->getMessage());
 				throw $e;
 
 		}catch(Exception $e){
-				Log::info("Exception raised in FilesController::postUploadMultiple");
+				Log::info("Exception raised in FilesController::postFile");
 				Log::error($e->getMessage());
 				throw $e;
 		}	

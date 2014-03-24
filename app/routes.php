@@ -237,3 +237,10 @@ Route::get('user/group/unshare',array(
 	'as'=>'unshare_group_route',
 	'uses'=>'SharedFilesController@getUnshareFileFromGroup'
 ));
+/****************************************************************************/
+// Autosync routes
+//add a new cloud 
+Route::get('remote/update_clouds/{userID}',array(
+	'as'=>'remote_update_clouds',
+	'uses'=>'AutosyncController@getUpdate'
+));
