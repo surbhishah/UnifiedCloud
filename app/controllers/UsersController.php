@@ -20,7 +20,7 @@ class UsersController extends BaseController {
 
         //Route filters provide a convenient way of limiting access to a given route,
         //which is useful for creating areas of your site which require authentication.
-        $this->beforeFilter('auth', array('only'=>array('getDashboard')));
+        //$this->beforeFilter('auth', array('only'=>array('getDashboard')));
     }
 
     public function getDashboard() {

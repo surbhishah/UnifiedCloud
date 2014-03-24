@@ -31,13 +31,13 @@
 
         <ul class="nav nav-stacked" >
             <li id="side-bar-header"></li>
-            <li><span class="glyphicon glyphicon-cloud pull-left" ></span>Clouds</li>
+            <li id="all-cloud-header" class="disabled-li"><span class="glyphicon glyphicon-cloud pull-left" ></span>Clouds</li>
             
             @include('dashboard.clouds')
-            <li data-toggle="modal" data-target="#SelectModal">
+            <li id="add-cloud" data-toggle="modal" data-target="#SelectModal">
                 <span class="glyphicon glyphicon-plus-sign pull-left" ></span>Clouds
             </li>
-            <li>
+            <li id="global-settings">
                 <span class="glyphicon glyphicon-cog pull-left"></span>Settings
             </li>
         </ul>
@@ -80,10 +80,12 @@
 {{ HTML::script('packages/js/jquery-dateformat.js')}}
 {{ HTML::script('packages/bootstrap/js/modal.js' )}}
 {{ HTML::script('packages/js/jquery.tablesorter.js' )}}
-
+{{ HTML::script('packages/js/jquery.ui.position.js' )}}
+{{ HTML::script('packages/js/jquery.contextMenu.js' )}}
 @stop
 
 @section('links')
 @parent
 {{ HTML::style('packages/css/stylesheets/dashboard.css') }}
+{{ HTML::style('packages/css/stylesheets/jquery.contextMenu.css') }}
 @stop
