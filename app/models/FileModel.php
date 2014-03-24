@@ -147,6 +147,7 @@ class FileModel extends Eloquent  {
 		$file->encryption_key_hash = $encryptionKeyHash;
 		$file->save();
 	}
+/**********************************************************************************************/
 
 	public static function getEncryptionKeyHash($userCloudID,$fileName,$path) {
 		$encryptionKeyHash = FileModel::where('user_cloudID','=',$userCloudID)
@@ -156,4 +157,23 @@ class FileModel extends Eloquent  {
 							->get()->first();
 		return $encryptionKeyHash->encryption_key_hash;
 	}
+/**********************************************************************************************/
+	public static function getFilesForSearch($userID){
+		$clouds = UserCloudInfo::getClouds($userID);
+		$fileArray =array();
+		$i = 0;
+		foreach ($clouds as $cloud) {
+			$files = self::getFilesOfCloud($cloud->user_cloudID);
+			$fileArray = array_merge($fileArray, $files);
+		}
+		return $fileArray;
+	}
+/**********************************************************************************************/
+	private static function getFilesOfCloud($userCloudID){
+		return FileModel::where('user_CloudID','=',$userCloudID)->select('user_cloudID', 'is_encrypted','path','file_name',
+			'is_directory','last_modified_time','size')
+				->get()
+				->toArray();
+	}
+/**********************************************************************************************/
 }

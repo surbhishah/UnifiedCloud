@@ -2,6 +2,14 @@
 <br>
 <br>
 <br>
+{{ Form::open(array('route'=>'search_files_route', 'as'=>'search_files','method'=>'get')) }}
+{{ Form::label('userID','userID ')}}
+{{ Form::text('userID')	}}<br>
+{{ Form::submit('Search file ')	}}
+{{ Form::close()	}}
+<br>
+<br>
+<br>
 {{ Form::open(array('route'=>'unshare_group_route', 'as'=>'unshare_group','method'=>'get')) }}
 {{ Form::label('groupID','GroupID ')}}
 {{ Form::text('groupID')	}}<br>

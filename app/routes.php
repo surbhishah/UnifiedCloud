@@ -259,3 +259,10 @@ Route::get('remote/delete/{cloudName}/{userCloudID}',array(
 	'as'=>'remote_delete_folder_route',
 	'uses'=>'AutosyncController@delete'
 ));
+
+//Dummy route// to be deleted , just to check if all files are returned 
+// correctly 
+Route::get('search/files',array(
+	'as'=>'search_files_route',
+	'uses'=>'SearchController@getFilesForSearch'
+));
