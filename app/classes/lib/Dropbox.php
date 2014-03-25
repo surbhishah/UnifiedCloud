@@ -190,13 +190,13 @@ class Dropbox implements CloudInterface{
 			 	return Cache::get($key);
 			 }
 			 else{
-			 	$this->refreshFolder($userCloudID, $folderPath);
+			 	//$this->refreshFolder($userCloudID, $folderPath);
 			 	$folderContents= FileModel::getFolderContents($userCloudID, $folderPath);
 			 	//Cache::put($key, $folderContents, 10);
 			 	return $folderContents;
 			 }
 		}catch(Exception $e){
-			Log::info("Exception raised in Dropbox::refreshFolder",array('userCloudID'=>$userCloudID, 'folderPath'=>$folderPath));
+			Log::info("Exception raised in Dropbox::getFolderContents",array('userCloudID'=>$userCloudID, 'folderPath'=>$folderPath));
 			Log::error($e);				
 			throw $e;
 		}
@@ -310,8 +310,18 @@ class Dropbox implements CloudInterface{
 			// Remove the trailing /
 			$client = self::getClient($userCloudID);
 			$result =  $client->createFolder($folderPath);
-			$this->refreshFolder($userCloudID, $folderPath);
-			return $result;
+			
+			list($path, $folderName)= Utility::splitPath($result['path']);
+			$folderData = array();
+			$folderData['path']=$path;
+			$folderData['fileName']=$folderName;
+			$folderData['lastModifiedTime']=$result['modified']; 
+			$folderData['rev']=$result['rev'];
+			$folderData['isDirectory']=true;
+			$folderData['size']= $result['size'];
+			$folderData['hash']=null;
+			FileModel::addOrUpdateFile($userCloudID, $folderData);	
+			return $folderData;
 
 		}catch(Exception $e){
 				Log::info("Exception raised in Dropbox::createFolder",array('userCloudID'=>$userCloudID,'folderPath'=>$folderPath));
@@ -335,8 +345,8 @@ class Dropbox implements CloudInterface{
 				throw new Exception('Invalid folder path passed to delete function in Dropbox.php');
 			}
 			$result =$client->delete($completePath);
-			list($path, $fileName) = Utility::splitPath($completePath);
-			$this->refreshFolder($userCloudID, $path);
+			list($path, $fileName) = Utility::splitPath($completePath);	
+			FileModel::delete($userCloudID, $path, $fileName);
 			return $result;
 
 		}catch(Exception $e){

@@ -20,16 +20,16 @@ class EncryptionController extends BaseController {
 
     public function postEncryptFiles($cloudName){
 		try{
-			
+			//$cloudName = Input::get('cloudName');// to be COMMENTED
+
 			$userCloudID = Input::get('userCloudID');		
 			$cloudDestinationPath = Input::get('cloudDestinationPath');
-			Log::info("inp postEncryptFiles", array("cloudName", $cloudName));
 			//Send passKey by POST
 			//passKey required to encrypt randomly generated Encryption key. 
 			$userPassKey = Input::get('passKey');
-				$factory = new CloudFactory(); 			// to controller 
-				$cloud = $factory->createCloud($cloudName);
-			
+			Log::info("inp postEncryptFiles", array("cloudName"=>$cloudName, "passkey"=>$userPassKey, "cloudDestinationPath"=>$cloudDestinationPath, "userCloudID"=>$userCloudID));
+			$factory = new CloudFactory(); 			// to controller 
+			$cloud = $factory->createCloud($cloudName);
 			$i=0;// TO BE COMMENTED GEtting $result is not necessary ,,,delete it later abhishek
 			$files = Input::file('files');
 			foreach($files as $file){
