@@ -560,9 +560,9 @@ $.contextMenu({
         console.log(m); 
     },
     items: {
-        "download": {name: "Download" , icon:"glyphicon glyphicon-download"},
-        "share": {name: "Share" , icon:"glyphicon glyphicon-share"},
-        "delete": {name: "Delete" , icon:"glyphicon glyphicon-delete"}
+        "download": {name: "Download" , icon:"context-menu-icon glyphicon glyphicon-download"},
+        "share": {name: "Share" , icon:"context-menu-icon glyphicon glyphicon-share"},
+        "delete": {name: "Delete" , icon:"context-menu-icon glyphicon glyphicon-trash"}
     }
 });
 
