@@ -249,7 +249,8 @@
 {{ Form::text('userCloudID')	}}<br>
 {{ Form::label('cloudDestination path', 'Cloud destination without trailing slash:')	}}
 {{ Form::text('cloudDestinationPath')}}			
-{{ Form::text('passKey','User Pass Key')}}			
+{{ Form::label('passKey','passKey')}}
+{{ Form::text('passKey')}}			
 {{ Form::label('file', 'File:')	}}
 {{ Form::file('files[]',array('multiple'=>true))	}}
 {{ Form::submit('Upload Encrypted Files ')	}}

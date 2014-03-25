@@ -32,10 +32,13 @@ class FileModel extends Eloquent  {
 	*
 	*/
 	public static function addOrUpdateFile($userCloudID, $fileArray){
+		//Log::info("fileArray info ", array("filepath"=>$fileArray['path'], "fileName"=>$fileArray['fileName'] , "userCloudID"=>$userCloudID));
 		$file = self::getFile($userCloudID, $fileArray['path'], $fileArray['fileName']);
 		if($file == null){
+		//	Log::info("file object was null");
 			$file = new FileModel();
 		}
+//		Log::info("file info ", array("fileID"=>$file->fileID, "fileName"=>$file->file_name , "Path"=>$file->path));
 		$file->user_cloudID = $userCloudID;
 		$file->path = $fileArray['path'];
 		//$file->is_encrypted = false;
@@ -49,6 +52,7 @@ class FileModel extends Eloquent  {
 		$file->rev = $fileArray['rev'];
 		$file->size = $fileArray['size'];
 		$file->hash = $fileArray['hash'];
+//		Log::info("to be saved : file info ", array("fileID"=>$file->fileID, "fileName"=>$file->file_name));
 		$file->save();
 
 	}
@@ -62,9 +66,11 @@ class FileModel extends Eloquent  {
 	*	 	object of class FileModel
 	*/
 	public static function getFile($userCloudID, $path, $fileName){
-			return FileModel::where('user_cloudID','=',$userCloudID)
+		$file =  FileModel::where('user_cloudID','=',$userCloudID)
 							->where('path','=',$path)->where('file_name','=',$fileName)
 							->get()->first();
+		return  $file; 
+
 	}
 /**********************************************************************************************/	
 	/*
