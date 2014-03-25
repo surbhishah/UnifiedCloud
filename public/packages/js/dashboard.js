@@ -351,7 +351,7 @@ $('.breadcrumb').on('click','li',function(){
 });
 
 //download
-$('#download').on('click',function(){
+function downloadContainer() {
 	//console.log("download menu button clicked !");
 
 	//set variables for ajax call
@@ -382,6 +382,9 @@ $('#download').on('click',function(){
 		console.log(url);
 		window.location.href = url;
 	}
+}
+$('#download').on('click',function(){
+	downloadContainer();
 });
 
 
@@ -557,7 +560,16 @@ $.contextMenu({
     delay: 500,*/
     callback: function(key, options) {
         var m = "You clicked: " + key;
-        console.log(m); 
+        console.log(m);
+        switch(key) {
+        	case "download" : 
+        		console.log("downloading...");
+        		downloadContainer();
+        		break;
+        	default:
+        		console.log("defaulting...");
+        		break;
+        } 
     },
     items: {
         "download": {name: "Download" , icon:"context-menu-icon glyphicon glyphicon-download"},

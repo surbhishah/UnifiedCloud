@@ -25,11 +25,11 @@ class SearchController extends BaseController {
 	}
 /**********************************************************************************************/    
 // TEST Function 
-	public function getFilesForSearch(){
-		$userID = Input::get('userID');
+	public function getFilesForSearch($userID){
+		//$userID = Input::get('userID');
 		$fileArray= FileModel::getFilesForSearch($userID);
-		return View::make('complete')
-					->with('message',$fileArray);
+		return Response::json($fileArray);
+		//return View::make('complete')->with('message',$fileArray);
 	}
 /**********************************************************************************************/    
 }

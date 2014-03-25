@@ -16,11 +16,11 @@
     <div class="loading"></div>
 
 <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-2">
         <h3 class="dashboard-heading"></h3>
     </div>
     <!-- col -->
-    <div class="col-md-9">
+    <div class="col-md-10">
         @include('dashboard.cloudControls')
     </div>
     <!-- col -->
@@ -82,6 +82,19 @@
 {{ HTML::script('packages/js/jquery.tablesorter.js' )}}
 {{ HTML::script('packages/js/jquery.ui.position.js' )}}
 {{ HTML::script('packages/js/jquery.contextMenu.js' )}}
+{{ HTML::script('packages/js/bootstrap-typeahead.js' )}}
+<script>
+    $('#file-search').typeahead({
+        ajax : {
+            url : 'search/files/1',
+            displayField : "file_name",
+            preProcess : function(data) {
+                console.log(data);
+                return data;
+            }
+        }
+    });
+</script>
 @stop
 
 @section('links')
