@@ -156,7 +156,7 @@
 <br>
 
 {{ Form::open(array('route'=>'upload_route', 'files' => true, 'as'=>'upload','method'=>'post')) }}
-{{ Form::hidden('cloudName','Dropbox' )	}}
+{{ Form::hidden('cloudName','googleDrive' )	}}
 {{ Form::label('userCloudID','userCloudID:')}}
 {{ Form::text('userCloudID')	}}<br>
 {{ Form::label('cloudDestination path', 'Cloud destination without trailing slash:')	}}
