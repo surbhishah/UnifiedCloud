@@ -101,8 +101,10 @@ class FileModel extends Eloquent  {
 	*
 	*/
 	public static function deleteFile($userCloudID, $path, $fileName){
-		FileModel::where('user_cloudID','=',$userCloudID)->where('path','=',$path)
-					->where('file_name','=',$fileName)->delete();
+		$file = FileModel::where('user_cloudID','=',$userCloudID)->where('path','=',$path)
+					->where('file_name','=',$fileName);
+		if($file !=null)
+					$file->delete();
 	}
 /**********************************************************************************************/
 	/*
