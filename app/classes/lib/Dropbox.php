@@ -346,7 +346,7 @@ class Dropbox implements CloudInterface{
 			}
 			$result =$client->delete($completePath);
 			list($path, $fileName) = Utility::splitPath($completePath);	
-			FileModel::delete($userCloudID, $path, $fileName);
+			FileModel::deleteFile($userCloudID, $path, $fileName);
 			return $result;
 
 		}catch(Exception $e){
