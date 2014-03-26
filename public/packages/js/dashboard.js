@@ -386,16 +386,16 @@ $('.breadcrumb').on('click','li',function(){
 });
 
 //download
-function downloadContainer() {
+function downloadContainer(selectorClass) {
 	//console.log("download menu button clicked !");
 
 	//set variables for ajax call
 	var cwd = $('#cwd').html();
-	var file = $('#file-explorer tbody tr.clicked-row').find('a.file').html(); 
+	var file = $('#file-explorer tbody tr'+selectorClass).find('a.file').html(); 
 	
 	if(typeof(file) == 'undefined') {
 		
-		var folder = $('#file-explorer tbody tr.clicked-row').find('a.directory').html(); 
+		var folder = $('#file-explorer tbody tr'+selectorClass).find('a.directory').html(); 
 		var folderPath='';
 		if(cwd == '/') 
 			folderPath = cwd+folder;
@@ -420,7 +420,7 @@ function downloadContainer() {
 }
 
 $('#download').on('click',function(){
-	downloadContainer();
+	downloadContainer('.clicked-row');
 });
 
 
@@ -543,10 +543,9 @@ $('tbody').on('keypress','#new-folder-input',function(e){
 });
 
 
-//delete file or folder 
-$('#delete').on('click',function(){
+function deleteItem(selectorClass) {
 
-	var fileOrFolder = $('#file-explorer tbody tr.clicked-row').find('a.file').html(); 
+	var fileOrFolder = $('#file-explorer tbody tr'+selectorClass).find('a.file').html(); 
 	var currentDir = $('#cwd').html();
 	var pathToCurrentDir = ''; //create path from cwd.
 	var pathToFileOrFolder = ''; //actual path to file or folder.
@@ -557,7 +556,7 @@ $('#delete').on('click',function(){
 	}
 
 	if(typeof(fileOrFolder) == 'undefined') {
-		fileOrFolder = $('#file-explorer tbody tr.clicked-row').find('a.directory').html();
+		fileOrFolder = $('#file-explorer tbody tr'+selectorClass).find('a.directory').html();
 		
 		
 		if(typeof(fileOrFolder) == 'undefined') {
@@ -584,6 +583,10 @@ $('#delete').on('click',function(){
 			notification('deleted!','success');
 		});
 	}
+}
+//delete file or folder 
+$('#delete').on('click',function(){
+	deleteItem('.clicked-row');
 });
 
 //auth call for Dropbox
@@ -611,37 +614,6 @@ $('#Drive-auth').on('click',function(){
  * ========================================================
  */
 
-downloadRightClickContainer() {
-	//set variables for ajax call
-	var cwd = $('#cwd').html();
-	var file = $('#file-explorer tbody tr.right-clicked-row').find('a.file').html(); 
-	
-	if(typeof(file) == 'undefined') {
-		
-		var folder = $('#file-explorer tbody tr.right-clicked-row').find('a.directory').html(); 
-		var folderPath='';
-		if(cwd == '/') 
-			folderPath = cwd+folder;
-		else 
-			folderPath = cwd + '/' + folder;
-
-		console.log(folderPath);
-		if(typeof(folder) == 'undefined') {
-			notification('Select a file/folder first','error');
-		} else {
-			url = "download_folder?userCloudID="+ userCloudID +"&cloudName=" + cloud + "&folderPath=" + folderPath; 	
-			window.location.href = url;
-
-		}
-	}
-	else {
-		//console.log(cwd + " : "+ file);
-		url = "download?userCloudID="+ userCloudID +"&cloudName=" + cloud + "&cloudSourcePath=" + cwd + "&fileName=" + file; 
-		console.log(url);
-		window.location.href = url;
-	}	
-}
-
 $.contextMenu({
     selector: '.context-menu-one', 
     /*trigger: 'hover',
@@ -650,9 +622,16 @@ $.contextMenu({
         var m = "You clicked: " + key;
         console.log(m);
         switch(key) {
-        	case "download" : 
+        	case "download": 
         		console.log("downloading...");
-        		downloadContainer();
+        		downloadContainer('.right-clicked-row');
+        		break;
+        	case "delete":
+        		console.log("deleting...");
+        		deleteItem(".right-clicked-row");
+        		break;
+        	case "share":
+        		console.log("sharing...");
         		break;
         	default:
         		console.log("defaulting...");
