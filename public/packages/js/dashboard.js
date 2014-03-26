@@ -318,12 +318,29 @@ $('#file-explorer tbody').on('click','tr',function(e){
     e.stopPropagation();
 });
 
+//register right click on table row.
+// case 1:
+//     'Left mouse button pressed'
+// case 2:
+//     'Middle mouse button pressed'
+// 	case 3:
+//     'Right mouse button pressed'
+$('#file-explorer tbody').on('mouseover','tr',function(e){
+	//console.log('clicked table row');
+	console.log("right click event here");
+	$('tr').not(this).removeClass('right-clicked-row');
+    $(this).toggleClass('right-clicked-row'); 
+    e.stopPropagation();
+
+});
+
 //remove class clicked-row when tbody loses focus 
 //NOTE: focus is only associated with elements like input. 
 //Table cannot have that is why I'm using this trick to handle focusout. 
 $(document).on('click',function(){
 	//console.log('focusout from table row');
 	$('tr.clicked-row').removeClass('clicked-row');
+	$('tr.right-clicked-row').removeClass('right-clicked-row');
 });
 
 //breacrumb controls
