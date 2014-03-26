@@ -352,7 +352,7 @@ $('#file-explorer tbody').on('mouseover','tr',function(e){
 
 });
 */
-//remove class clicked-row when tbody loses focus 
+//remove class clicked-row when tbody loses focus  
 //NOTE: focus is only associated with elements like input. 
 //Table cannot have that is why I'm using this trick to handle focusout. 
 $(document).on('click',function(){
@@ -418,6 +418,7 @@ function downloadContainer() {
 		window.location.href = url;
 	}
 }
+
 $('#download').on('click',function(){
 	downloadContainer();
 });
@@ -609,6 +610,38 @@ $('#Drive-auth').on('click',function(){
  *	Context Menu functions
  * ========================================================
  */
+
+downloadRightClickContainer() {
+	//set variables for ajax call
+	var cwd = $('#cwd').html();
+	var file = $('#file-explorer tbody tr.right-clicked-row').find('a.file').html(); 
+	
+	if(typeof(file) == 'undefined') {
+		
+		var folder = $('#file-explorer tbody tr.right-clicked-row').find('a.directory').html(); 
+		var folderPath='';
+		if(cwd == '/') 
+			folderPath = cwd+folder;
+		else 
+			folderPath = cwd + '/' + folder;
+
+		console.log(folderPath);
+		if(typeof(folder) == 'undefined') {
+			notification('Select a file/folder first','error');
+		} else {
+			url = "download_folder?userCloudID="+ userCloudID +"&cloudName=" + cloud + "&folderPath=" + folderPath; 	
+			window.location.href = url;
+
+		}
+	}
+	else {
+		//console.log(cwd + " : "+ file);
+		url = "download?userCloudID="+ userCloudID +"&cloudName=" + cloud + "&cloudSourcePath=" + cwd + "&fileName=" + file; 
+		console.log(url);
+		window.location.href = url;
+	}	
+}
+
 $.contextMenu({
     selector: '.context-menu-one', 
     /*trigger: 'hover',
