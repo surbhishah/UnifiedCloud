@@ -319,8 +319,8 @@ $('#file-explorer tbody').on('click','tr',function(e){
 });
 
 //remove class clicked-row when tbody loses focus 
-//NOTE: focus is only associated with elements like input, table
-//cannot have that is why I'm using this trick to handle focusout. 
+//NOTE: focus is only associated with elements like input. 
+//Table cannot have that is why I'm using this trick to handle focusout. 
 $(document).on('click',function(){
 	//console.log('focusout from table row');
 	$('tr.clicked-row').removeClass('clicked-row');
@@ -420,28 +420,46 @@ $('#fileUploadForm').submit(function(e) {
 });
 
 function ajaxUpload(url) {
+
+	//hide form and start loading gif until upload is complete or failed
+	$('#fileUploadModal').modal('hide');
+	$('.loading').addClass('loading-gif');
 	$.ajax({
         type: 'POST',
         url: url,
         data: data,
         cache: false,
         contentType: false,
-        processData: false
-    }).done(function(data) {
-        //console.log(data);
+        processData: false,
+    	success: function(data) {
+	        //console.log(data);
 
-        //notify user on success
-        $('#fileUploadModal').modal('hide');
-		notification('File uploaded','success');
- 		//update folder contents
-		//getFolderContents(cloud,$('#cwd').html(),'false');
-    }).fail(function(jqXHR,status, errorThrown) {
-        console.log(errorThrown);
-        console.log(jqXHR.responseText);
-        console.log(jqXHR.status);
-        $('#fileUploadModal').modal('hide');
+	        //remove loading gif after upload is complete
+	        $('.loading').removeClass('loading-gif');
+	        //notify user on success
+			notification('File uploaded','success');
+	 		//update folder contents
+			//getFolderContents(cloud,$('#cwd').html(),'false');
+			
+			//reset form
+			//$('#fileUploadForm').clearForm();
+    	},
+    	error: function(jqXHR,status, errorThrown) {
+	        console.log(errorThrown);
+	        console.log(jqXHR.responseText);
+	        console.log(jqXHR.status);
+	        $('#fileUploadModal').modal('hide');
+	        $('.loading').removeClass('loading-gif');
+	        notification('Upload failed!','error');
 
-        notification('Upload failed!','error');
+	        //reset form
+			//$('#fileUploadForm').clearForm();
+    	},
+    	complete: function() {
+    		$('#fileUploadForm').each(function(){
+    			this.reset();
+    		});
+    	}
     });
 }
 
@@ -454,6 +472,8 @@ $('#refresh').on('click',function(){
 
 //settings
 // TODO Abhishek Nair
+
+
 //new-folder
 $('#new-folder').on('click',function(){
 	var tbody = $('tbody');
