@@ -318,12 +318,47 @@ $('#file-explorer tbody').on('click','tr',function(e){
     e.stopPropagation();
 });
 
-//remove class clicked-row when tbody loses focus 
-//NOTE: focus is only associated with elements like input, table
-//cannot have that is why I'm using this trick to handle focusout. 
+//register right click on table row.
+// case 1:
+//     'Left mouse button pressed'
+// case 2:
+//     'Middle mouse button pressed'
+// 	case 3:
+//     'Right mouse button pressed'
+$('#file-explorer tbody').on('mouseover','tr',function(e){
+	//console.log('clicked table row');
+	console.log("mouse over event here");
+	$('tr').not(this).removeClass('right-clicked-row');
+    $(this).toggleClass('right-clicked-row');
+    // var x = e.clientX, y = e.clientY,
+    // elem = document.elementFromPoint(x, y);
+    // console.log($(elem).parent().attr('class')); 
+    e.stopPropagation();
+
+});
+
+// for later use.
+/*$('#file-explorer tbody').on('mousedown','tr',function(e){
+	//console.log('clicked table row');
+	if(e.which == 3) {
+		console.log("right click event here");
+		$('tr').not(this).removeClass('right-clicked-row');
+	    $(this).toggleClass('right-clicked-row');
+	    // var x = e.clientX, y = e.clientY,
+	    // elem = document.elementFromPoint(x, y);
+	    // console.log($(elem).parent().attr('class')); 
+	    e.stopPropagation();
+	}
+
+});
+*/
+//remove class clicked-row when tbody loses focus  
+//NOTE: focus is only associated with elements like input. 
+//Table cannot have that is why I'm using this trick to handle focusout. 
 $(document).on('click',function(){
 	//console.log('focusout from table row');
 	$('tr.clicked-row').removeClass('clicked-row');
+	$('tr.right-clicked-row').removeClass('right-clicked-row');
 });
 
 //breacrumb controls
@@ -351,16 +386,16 @@ $('.breadcrumb').on('click','li',function(){
 });
 
 //download
-$('#download').on('click',function(){
+function downloadContainer(selectorClass) {
 	//console.log("download menu button clicked !");
 
 	//set variables for ajax call
 	var cwd = $('#cwd').html();
-	var file = $('#file-explorer tbody tr.clicked-row').find('a.file').html(); 
+	var file = $('#file-explorer tbody tr'+selectorClass).find('a.file').html(); 
 	
 	if(typeof(file) == 'undefined') {
 		
-		var folder = $('#file-explorer tbody tr.clicked-row').find('a.directory').html(); 
+		var folder = $('#file-explorer tbody tr'+selectorClass).find('a.directory').html(); 
 		var folderPath='';
 		if(cwd == '/') 
 			folderPath = cwd+folder;
@@ -382,6 +417,10 @@ $('#download').on('click',function(){
 		console.log(url);
 		window.location.href = url;
 	}
+}
+
+$('#download').on('click',function(){
+	downloadContainer('.clicked-row');
 });
 
 
@@ -417,28 +456,46 @@ $('#fileUploadForm').submit(function(e) {
 });
 
 function ajaxUpload(url) {
+
+	//hide form and start loading gif until upload is complete or failed
+	$('#fileUploadModal').modal('hide');
+	$('.loading').addClass('loading-gif');
 	$.ajax({
         type: 'POST',
         url: url,
         data: data,
         cache: false,
         contentType: false,
-        processData: false
-    }).done(function(data) {
-        //console.log(data);
+        processData: false,
+    	success: function(data) {
+	        //console.log(data);
 
-        //notify user on success
-        $('#fileUploadModal').modal('hide');
-		notification('File uploaded','success');
- 		//update folder contents
-		//getFolderContents(cloud,$('#cwd').html(),'false');
-    }).fail(function(jqXHR,status, errorThrown) {
-        console.log(errorThrown);
-        console.log(jqXHR.responseText);
-        console.log(jqXHR.status);
-        $('#fileUploadModal').modal('hide');
+	        //remove loading gif after upload is complete
+	        $('.loading').removeClass('loading-gif');
+	        //notify user on success
+			notification('File uploaded','success');
+	 		//update folder contents
+			//getFolderContents(cloud,$('#cwd').html(),'false');
+			
+			//reset form
+			//$('#fileUploadForm').clearForm();
+    	},
+    	error: function(jqXHR,status, errorThrown) {
+	        console.log(errorThrown);
+	        console.log(jqXHR.responseText);
+	        console.log(jqXHR.status);
+	        $('#fileUploadModal').modal('hide');
+	        $('.loading').removeClass('loading-gif');
+	        notification('Upload failed!','error');
 
-        notification('Upload failed!','error');
+	        //reset form
+			//$('#fileUploadForm').clearForm();
+    	},
+    	complete: function() {
+    		$('#fileUploadForm').each(function(){
+    			this.reset();
+    		});
+    	}
     });
 }
 
@@ -451,6 +508,8 @@ $('#refresh').on('click',function(){
 
 //settings
 // TODO Abhishek Nair
+
+
 //new-folder
 $('#new-folder').on('click',function(){
 	var tbody = $('tbody');
@@ -484,10 +543,9 @@ $('tbody').on('keypress','#new-folder-input',function(e){
 });
 
 
-//delete file or folder 
-$('#delete').on('click',function(){
+function deleteItem(selectorClass) {
 
-	var fileOrFolder = $('#file-explorer tbody tr.clicked-row').find('a.file').html(); 
+	var fileOrFolder = $('#file-explorer tbody tr'+selectorClass).find('a.file').html(); 
 	var currentDir = $('#cwd').html();
 	var pathToCurrentDir = ''; //create path from cwd.
 	var pathToFileOrFolder = ''; //actual path to file or folder.
@@ -498,7 +556,7 @@ $('#delete').on('click',function(){
 	}
 
 	if(typeof(fileOrFolder) == 'undefined') {
-		fileOrFolder = $('#file-explorer tbody tr.clicked-row').find('a.directory').html();
+		fileOrFolder = $('#file-explorer tbody tr'+selectorClass).find('a.directory').html();
 		
 		
 		if(typeof(fileOrFolder) == 'undefined') {
@@ -525,6 +583,10 @@ $('#delete').on('click',function(){
 			notification('deleted!','success');
 		});
 	}
+}
+//delete file or folder 
+$('#delete').on('click',function(){
+	deleteItem('.clicked-row');
 });
 
 //auth call for Dropbox
@@ -551,19 +613,37 @@ $('#Drive-auth').on('click',function(){
  *	Context Menu functions
  * ========================================================
  */
+
 $.contextMenu({
     selector: '.context-menu-one', 
     /*trigger: 'hover',
     delay: 500,*/
     callback: function(key, options) {
         var m = "You clicked: " + key;
-        console.log(m); 
+        console.log(m);
+        switch(key) {
+        	case "download": 
+        		console.log("downloading...");
+        		downloadContainer('.right-clicked-row');
+        		break;
+        	case "delete":
+        		console.log("deleting...");
+        		deleteItem(".right-clicked-row");
+        		break;
+        	case "share":
+        		console.log("sharing...");
+        		break;
+        	default:
+        		console.log("defaulting...");
+        		break;
+        } 
     },
     items: {
         "download": {name: "Download" , icon:"context-menu-icon glyphicon glyphicon-download"},
         "share": {name: "Share" , icon:"context-menu-icon glyphicon glyphicon-share"},
         "delete": {name: "Delete" , icon:"context-menu-icon glyphicon glyphicon-trash"}
-    }
+    },
+    autoHide: true
 });
 
 /*$('.context-menu-one').on('click', function(e){

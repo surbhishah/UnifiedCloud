@@ -262,7 +262,7 @@ Route::get('remote/delete/{cloudName}/{userCloudID}',array(
 
 //Dummy route// to be deleted , just to check if all files are returned 
 // correctly 
-Route::get('search/files',array(
+Route::get('user/search/files/{userID}',array(
 	'as'=>'search_files_route',
 	'uses'=>'SearchController@getFilesForSearch'
 ));
