@@ -246,6 +246,11 @@ $('#upload').tooltip({
 	'title' : 'Upload'
 });
 
+$('#share').tooltip({
+	'trigger' : 'hover',
+	'title' : 'Share'
+});
+
 $('#refresh').tooltip({
 	'trigger' : 'hover',
 	'title' : 'Refresh'
@@ -281,8 +286,8 @@ $('.cloud').click(function(){
 	$('.cloud').removeClass('selected');
 	$(this).addClass('selected');
 	cloud = this.id;
-	userCloudID = $(this).find('span').attr('id');
-	//console.log(userCloudID);
+	userCloudID = $(this).find('.cloud-name').attr('id');
+	console.log("userCloudID is " + userCloudID);
 	var fPath = '/';
 
 	//populate breadcrumb

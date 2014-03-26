@@ -102,6 +102,14 @@ $white: #ffffff;
 }
 
 body {
+
+	.float-left {
+		float: left;
+	}
+
+	.clear-both {
+		clear: both;
+	}
 	background-image: url(../../img/light_toast.png);
 	
 	.container {
@@ -162,12 +170,15 @@ body {
 		ul {
 			
 			// active li items
+			list-style: none;
+			padding: 10px !important;
 			li {
 				text-align: left;
 				padding: 6px 0px 4px 10px;
 				font-size: 1.2em;
 				margin-top: 0px !important;
 				cursor: pointer;
+				height: 2em;
 			}
 
 			li:hover {
@@ -199,8 +210,12 @@ body {
 			}
 
 			.cloud {
-				padding-left: 40px;
+				padding-left: 20px;
 				color: $main-text;
+
+				.glyphicon {
+					margin-right: 5px !important;
+				}
 			}
 		}
 

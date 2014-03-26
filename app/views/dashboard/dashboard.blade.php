@@ -27,24 +27,32 @@
 </div>
 <!-- row -->
 <div class="row">
-    <div class="col-md-2" id="side-bar">
+    <div class="col-xs-2 col-md-2" id="side-bar">
 
-        <ul class="nav nav-stacked" >
+        <ul class="side-bar-buttonlist" >
             <li id="side-bar-header"></li>
-            <li id="all-cloud-header" class="disabled-li"><span class="glyphicon glyphicon-cloud pull-left" ></span>Clouds</li>
+            <li id="all-cloud-header" class="disabled-li">
+                <span class="glyphicon glyphicon-cloud float-left" ></span>
+                <span class="hidden-xs hidden-sm">Clouds</span>
+                <span class="clear-both"></span>
+            </li>
             
             @include('dashboard.clouds')
             <li id="add-cloud" data-toggle="modal" data-target="#SelectModal">
-                <span class="glyphicon glyphicon-plus-sign pull-left" ></span>Clouds
+                <span class="glyphicon glyphicon-plus-sign float-left" ></span>
+                <span class="hidden-xs hidden-sm">Clouds</span>
+                <span class="clear-both"></span>
             </li>
             <li id="global-settings">
-                <span class="glyphicon glyphicon-cog pull-left"></span>Settings
+                <span class="glyphicon glyphicon-cog float-left"></span>
+                <span class="hidden-xs hidden-sm">Settings</span>
+                <span class="clear-both"></span>
             </li>
         </ul>
         <!-- ul  -->
     </div>
     <!-- side-bar col-->
-    <div class="col-md-10" id="file-explorer">
+    <div class="col-xs-10 col-md-10" id="file-explorer">
         <div class="row">
             @include('dashboard.dashboardPanelHead')
         </div>
