@@ -327,13 +327,31 @@ $('#file-explorer tbody').on('click','tr',function(e){
 //     'Right mouse button pressed'
 $('#file-explorer tbody').on('mouseover','tr',function(e){
 	//console.log('clicked table row');
-	console.log("right click event here");
+	console.log("mouse over event here");
 	$('tr').not(this).removeClass('right-clicked-row');
-    $(this).toggleClass('right-clicked-row'); 
+    $(this).toggleClass('right-clicked-row');
+    // var x = e.clientX, y = e.clientY,
+    // elem = document.elementFromPoint(x, y);
+    // console.log($(elem).parent().attr('class')); 
     e.stopPropagation();
 
 });
 
+// for later use.
+/*$('#file-explorer tbody').on('mousedown','tr',function(e){
+	//console.log('clicked table row');
+	if(e.which == 3) {
+		console.log("right click event here");
+		$('tr').not(this).removeClass('right-clicked-row');
+	    $(this).toggleClass('right-clicked-row');
+	    // var x = e.clientX, y = e.clientY,
+	    // elem = document.elementFromPoint(x, y);
+	    // console.log($(elem).parent().attr('class')); 
+	    e.stopPropagation();
+	}
+
+});
+*/
 //remove class clicked-row when tbody loses focus 
 //NOTE: focus is only associated with elements like input. 
 //Table cannot have that is why I'm using this trick to handle focusout. 
@@ -612,7 +630,8 @@ $.contextMenu({
         "download": {name: "Download" , icon:"context-menu-icon glyphicon glyphicon-download"},
         "share": {name: "Share" , icon:"context-menu-icon glyphicon glyphicon-share"},
         "delete": {name: "Delete" , icon:"context-menu-icon glyphicon glyphicon-trash"}
-    }
+    },
+    autoHide: true
 });
 
 /*$('.context-menu-one').on('click', function(e){
