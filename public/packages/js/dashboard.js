@@ -215,8 +215,9 @@ function getSharedFileContents() {
 		//console.log(jsonData);
 		//server sends json as string
 		//parsing json string to json object
-		jsonData = $.parseJSON(jsonData);
 		console.log(jsonData);
+		//jsonData = $.parseJSON(jsonData);
+		//console.log(jsonData);
 
 		var table = $('#file-explorer');
 		var tbody = table.find('tbody');
