@@ -10,7 +10,7 @@
         action="downloadEncryptedFile">
           <div class="passKeyInput">
             <label for="passkeyid">Enter pass key</label>
-            <input type="text" id="passkeyid" class="form-control" name="passKey">
+            <input type="password" id="passkeyid" class="form-control" name="passKey">
           </div>
           <!-- <div>
             <input type="hidden" name="cloudSourcePath" value="">
