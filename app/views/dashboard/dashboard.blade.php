@@ -48,11 +48,16 @@
                 <span class="hidden-xs hidden-sm">Shared files</span>
                 <span class="clear-both"></span>
             </li>
-            <li id="global-settings">
+            <li id="show-shared-files-with-me">
+                <span class="glyphicon glyphicon-link float-left"></span>
+                <span class="hidden-xs hidden-sm">To me</span>
+                <span class="clear-both"></span>
+            </li>
+            <!-- <li id="global-settings">
                 <span class="glyphicon glyphicon-cog float-left"></span>
                 <span class="hidden-xs hidden-sm">Settings</span>
                 <span class="clear-both"></span>
-            </li>
+            </li> -->
         </ul>
         <!-- ul  -->
     </div>

@@ -43,7 +43,7 @@ class SharedFile extends Eloquent  {
 /**********************************************************************************************/	
 	public static function getFilesSharedByUser($ownerID){
 		return DB::select('
-			SELECT files.size ,files.fileID, files.path,shared_files.sharerID, file_name, shared_files.created_at, first_name,last_name,email
+			SELECT shared_files.shared_fileID, files.size ,files.fileID, files.path,shared_files.sharerID, file_name, shared_files.created_at, first_name,last_name,email
 			FROM shared_files
 			LEFT JOIN users on (shared_files.sharerID = users.userID)
 			LEFT JOIN files on (shared_files.fileID = files.fileID)
@@ -54,7 +54,7 @@ class SharedFile extends Eloquent  {
 /**********************************************************************************************/	
         public static function getFilesSharedWithUser($sharerID){
         	return DB::select('
-        		SELECT files.size,files.fileID,files.path, shared_files.ownerID, file_name, shared_files.created_at, first_name,last_name,email
+        		SELECT shared_files.shared_fileID,files.size,files.fileID,files.path, shared_files.ownerID, file_name, shared_files.created_at, first_name,last_name,email
 				FROM shared_files
 				LEFT JOIN users on (shared_files.ownerID = users.userID)
 				LEFT JOIN files on (shared_files.fileID = files.fileID)

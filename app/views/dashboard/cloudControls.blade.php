@@ -15,10 +15,9 @@
         <li><span class="glyphicon glyphicon-cloud-download" id="download"></span></li>
         <li><span class="glyphicon glyphicon-link" id="share" data-toggle="modal" data-target="#shareModal">    
         </span></li>
-        <li><span class="glyphicon glyphicon-tags" id="group"></span></li>
         <li><span class="glyphicon glyphicon-trash" id="delete"></span></li>
         <li><span class="glyphicon glyphicon-refresh" id="refresh"></span></li>
-        <li><span class="glyphicon glyphicon-cog" id="settings"></span></li>     
+<!--         <li><span class="glyphicon glyphicon-cog" id="settings"></span></li> -->     
     </ul>
 </div>
 

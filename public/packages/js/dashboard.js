@@ -241,7 +241,84 @@ function getSharedFileContents() {
 				//getting file extension
 				ext = file.file_name.split('.').pop();
 				extClass = getClassFromExtension(ext);
-				var td = $('<td class="context-menu-one"><span class="' + extClass['class'] + '"></span><a href="#" class="file">' + file.file_name +'</a></td>' );
+				var td = $('<td class="context-menu-share"><span class="' + extClass['class'] + '"></span><a href="#" class="file">' + file.file_name +'</a></td>' );
+				tr.append(td);
+			}
+
+			//getting extension of file
+			//ext = file.file_name.split('.').pop();
+
+			//using jqery-dateformat plugin to get more readable date data.
+			var td = $("<td>" + $.format.date(file.created_at,'h:mm p d MMM yyyy') +"</td>" );
+			tr.append(td);
+			
+			if(file.is_directory == '1') {
+				var td = $("<td>-</td>" );
+				tr.append(td);
+				var td = $("<td>Folder</td>" );
+				tr.append(td);
+			} else {
+				var td = $("<td>" + getReadableSize(file.size) +"</td>" );
+				tr.append(td);
+				var td = $("<td>" + extClass['ext'] +"</td>" );
+				tr.append(td);
+
+			}
+		});
+
+		$("table").trigger("update");
+		
+	});
+	
+
+}
+
+/**
+ * get the shared file content 
+ * @param  {String} cloud cloud name for which action must be performed
+ * @param  {String} fPath file path 
+ * @param  {Boolean String} cache to decide if the folder content should be cached
+ */
+function getSharedFileWithMeContents() {
+
+	$('.cloud-control').show();
+	
+	$('.loading').addClass('loading-gif');
+	$.ajax({
+		type:'GET',
+		url:'get_files_shared_with_user'
+	})
+	.done(function(jsonData){
+
+		$('.loading').removeClass('loading-gif');
+		//console.log(jsonData);
+		//server sends json as string
+		//parsing json string to json object
+		console.log(jsonData);
+		//jsonData = $.parseJSON(jsonData);
+		//console.log(jsonData);
+
+		var table = $('#file-explorer');
+		var tbody = table.find('tbody');
+
+		//we need the cloud name to make further ajax calls
+		//therefore appending cloud name as class name to tbody
+		//tbody.addClass(cloud);
+		tbody.html('');
+		$.each(jsonData,function(i,file){
+			var ext, extClass;
+			console.log("file object ----------------------------------------");
+			console.log(file);
+			if(file.is_directory == '1') {
+				//ignore no folders can be shared
+			} else {
+				var tr=$("<tr></tr>");
+				tbody.append(tr);
+
+				//getting file extension
+				ext = file.file_name.split('.').pop();
+				extClass = getClassFromExtension(ext);
+				var td = $('<td class="context-menu-share-with-user"><span class="' + extClass['class'] + '"></span><a href="#" class="file" id='+ file.shared_fileID + '>' + file.file_name +'</a></td>' );
 				tr.append(td);
 			}
 
@@ -692,6 +769,13 @@ $('#show-shared-files').click(function(e){
 	getSharedFileContents();
 });
 
+
+//get shared files with me
+$('#show-shared-files-with-me').click(function(e){
+	e.preventDefault();
+	getSharedFileWithMeContents();
+});
+
 //share 
 $('#shareForm').submit(function(e){
 	e.preventDefault();
@@ -721,6 +805,23 @@ $('#shareForm').submit(function(e){
 		});
 
 });
+
+
+function downloadSharedFileContainer() {
+	//console.log("download menu button clicked !");
+
+	//set variables for ajax call
+	//var cwd = $('#cwd').html();
+	var sharedFileID = $('#file-explorer tbody tr.right-clicked-row').find('a.file').attr('id'); 
+	
+	//console.log(cwd + " : "+ file);
+	console.log("sharedFileID" + sharedFileID);
+	url = "download_shared_file?sharedFileID=" + sharedFileID; 
+	console.log(url);
+	window.location.href = url;
+	
+}
+
 
 //delete file or folder 
 $('#delete').on('click',function(){
@@ -794,7 +895,7 @@ $('#share-search').typeahead({
     	//clear input box
     	elem = "<span class='badge list' emailVal=" +email+">"+email+"<span class='share-cancel glyphicon glyphicon-remove'></span></span>";
     	$('#shareUserList').append(elem);
-    	console.log($('#shareForm').find("#share-search").val(""));
+    	//console.log($('#shareForm').find("#share-search").val(""));
     	console.log("cleared")
     },
     ajax : {
@@ -812,75 +913,67 @@ $('#shareUserList').on('click','.share-cancel',function() {
     console.log('clicked', this);
 })*/
 	
+
+/* ========================================================
+ *	Share Context Menu functions
+ * ========================================================
+ */
+
+$.contextMenu({
+    selector: '.context-menu-share', 
+    /*trigger: 'hover',
+    delay: 500,*/
+    callback: function(key, options) {
+        var m = "You clicked: " + key;
+        console.log(m);
+        switch(key) {
+        	case "unshare":
+        		console.log("sharing...");
+        		break;
+        	default:
+        		console.log("defaulting...");
+        		break;
+        } 
+    },
+    items: {
+        "unshare": {name: "Unshare" , icon:"context-menu-icon glyphicon glyphicon-trash"}
+    },
+    autoHide: true
+});
+
+
+
+/* ========================================================
+ *	Share Context Menu functions
+ * ========================================================
+ */
+
+$.contextMenu({
+    selector: '.context-menu-share-with-user', 
+    /*trigger: 'hover',
+    delay: 500,*/
+    callback: function(key, options) {
+        var m = "You clicked: " + key;
+        console.log(m);
+        switch(key) {
+        	case "download": 
+        		console.log("downloading...");
+        		downloadSharedFileContainer('.right-clicked-row');
+        		break;
+        	case "unshare":
+        		console.log("sharing...");
+        		break;
+        	default:
+        		console.log("defaulting...");
+        		break;
+        } 
+    },
+    items: {
+        "download": {name: "Download" , icon:"context-menu-icon glyphicon glyphicon-download"},
+        "unshare": {name: "Unshare" , icon:"context-menu-icon glyphicon glyphicon-trash"}
+    },
+    autoHide: true
+});
+
 });//end of document
 
-/*
-function getSharedContents() {
-
-	$('.loading').addClass('loading-gif');
-	$.ajax({
-		type:'GET',
-		url:'get_files_shared_by_user',
-		cache: false
-	})
-	.done(function(jsonData){
-
-		$('.loading').removeClass('loading-gif');
-		//console.log(jsonData);
-		//server sends json as string
-		//parsing json string to json object
-		jsonData = $.parseJSON(jsonData);
-		console.log(jsonData);
-
-		var table = $('#file-explorer');
-		var tbody = table.find('tbody');
-
-		//we need the cloud name to make further ajax calls
-		//therefore appending cloud name as class name to tbody
-		//tbody.addClass(cloud);
-		tbody.html('');
-		$.each(jsonData,function(i,file){
-			var ext, extClass;
-
-			if(file.is_directory == '1') {
-				var tr=$("<tr class='folder'></tr>");
-				tbody.append(tr);
-				var td = $("<td class='context-menu-one'><span class='glyphicon glyphicon-folder-close'></span><a  href='#' class='directory'>" + file.file_name +"</a></td>" );
-				tr.append(td);
-			} else {
-				var tr=$("<tr></tr>");
-				tbody.append(tr);
-
-				//getting file extension
-				ext = file.file_name.split('.').pop();
-				extClass = getClassFromExtension(ext);
-				var td = $('<td class="context-menu-one"><span class="' + extClass['class'] + '"></span><a href="#" class="file">' + file.file_name +'</a></td>' );
-				tr.append(td);
-			}
-
-			//getting extension of file
-			//ext = file.file_name.split('.').pop();
-
-			//using jqery-dateformat plugin to get more readable date data.
-			var td = $("<td>" + $.format.date(file.last_modified_time,'h:mm p d MMM yyyy') +"</td>" );
-			tr.append(td);
-			
-			if(file.is_directory == '1') {
-				var td = $("<td>-</td>" );
-				tr.append(td);
-				var td = $("<td>Folder</td>" );
-				tr.append(td);
-			} else {
-				var td = $("<td>" + getReadableSize(file.size) +"</td>" );
-				tr.append(td);
-				var td = $("<td>" + extClass['ext'] +"</td>" );
-				tr.append(td);
-
-			}
-		});
-
-		$("table").trigger("update");
-		
-	});
-
-}*/
