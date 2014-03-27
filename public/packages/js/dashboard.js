@@ -164,7 +164,13 @@ function getFolderContents(cloud,fPath,cache) {
 				//getting file extension
 				ext = file.file_name.split('.').pop();
 				extClass = getClassFromExtension(ext);
-				var td = $('<td class="context-menu-one"><span class="' + extClass['class'] + '"></span><a href="#" class="file" is_encrypted='+file.is_encrypted+'>' + file.file_name +'</a></td>' );
+
+				if(file.is_encrypted == 1) {
+					var td = $('<td class="context-menu-one"><span class="glyphicon glyphicon-lock"></span><a href="#" class="file" is_encrypted='+file.is_encrypted+'>' + file.file_name +'</a></td>' );					
+				}
+				else {
+					var td = $('<td class="context-menu-one"><span class="' + extClass['class'] + '"></span><a href="#" class="file" is_encrypted='+file.is_encrypted+'>' + file.file_name +'</a></td>' );
+				}
 				tr.append(td);
 			}
 
