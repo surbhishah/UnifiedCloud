@@ -36,8 +36,8 @@ class SharedFilesController extends BaseController {
 /**********************************************************************************************/    
     public function getFilesSharedByUser(){
         try{
-            $ownerID = Input::get('ownerID');//UNCOMMEnt if testing from home.blade.php
-        //  $ownerID = Session::get('userID'); 
+            //$ownerID = Input::get('ownerID');//UNCOMMEnt if testing from home.blade.php
+             $ownerID = Session::get('userID'); 
             return SharedFile::getFilesSharedByUser($ownerID);
             
         }catch(Exception $e){
