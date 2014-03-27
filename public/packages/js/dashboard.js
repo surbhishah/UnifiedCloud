@@ -227,7 +227,8 @@ function getSharedFileContents() {
 		tbody.html('');
 		$.each(jsonData,function(i,file){
 			var ext, extClass;
-
+			console.log("file object ----------------------------------------");
+			console.log(file);
 			if(file.is_directory == '1') {
 				//ignore no folders can be shared
 			} else {
@@ -357,6 +358,8 @@ $('#add-cloud').tooltip({
  * ========================================================
  */
 
+
+
 // get data based on the clicked user cloud
 $('.cloud').click(function(){
 
@@ -364,6 +367,7 @@ $('.cloud').click(function(){
 	$('.cloud').removeClass('selected');
 	$(this).addClass('selected');
 	cloud = this.id;
+	console.log('cloud name: ' + cloud);
 	userCloudID = $(this).find('.cloud-name').attr('id');
 	console.log("userCloudID is " + userCloudID);
 	var fPath = '/';
@@ -540,10 +544,10 @@ $('#fileUploadForm').submit(function(e) {
 
         if(encryptFile) {
         	console.log('sending via Encryption');
-        	ajaxUpload('uploadWithEncryption/Dropbox');
+        	ajaxUpload('uploadWithEncryption/' + cloud);
         } else {
 			// url: 'upload/Dropbox'
-			ajaxUpload('upload/Dropbox');		        	
+			ajaxUpload('upload/' + cloud);		        	
         }
 
 
@@ -678,6 +682,12 @@ function deleteItem(selectorClass) {
 		});
 	}
 }
+
+//get shared files
+$('#show-shared-files').click(function(e){
+	e.preventDefault();
+	getSharedFileContents();
+});
 
 //share 
 $('#shareForm').submit(function(e){

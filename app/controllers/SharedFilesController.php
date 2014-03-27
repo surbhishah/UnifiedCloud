@@ -22,7 +22,8 @@ class SharedFilesController extends BaseController {
                 $userCloudID = Input::get('userCloudID');
                 $file = FileModel::getFileAttributes($userCloudID, $path, $fileName, array('fileID'));
                 $fileID = $file->fileID;
-                $ownerID = UserCloudInfo::getUserID($userCloudID);
+                //$ownerID = UserCloudInfo::getUserID($userCloudID);
+                $ownerID = Session::get('userID');
                 $sharedFile=SharedFile::createSharedFile($fileID, $ownerID, $sharerID);
                 // COMMENT THIS LATER 
                 return $sharedFile;// This function does not return anything ...This return is just for testing                 
@@ -37,7 +38,8 @@ class SharedFilesController extends BaseController {
     public function getFilesSharedByUser(){
         try{
             //$ownerID = Input::get('ownerID');//UNCOMMEnt if testing from home.blade.php
-             $ownerID = Session::get('userID'); 
+            $ownerID = Session::get('userID'); 
+            //return $ownerID;
             return SharedFile::getFilesSharedByUser($ownerID);
             
         }catch(Exception $e){

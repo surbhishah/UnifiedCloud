@@ -43,6 +43,11 @@
                 <span class="hidden-xs hidden-sm">Clouds</span>
                 <span class="clear-both"></span>
             </li>
+            <li id="show-shared-files">
+                <span class="glyphicon glyphicon-link float-left"></span>
+                <span class="hidden-xs hidden-sm">Shared files</span>
+                <span class="clear-both"></span>
+            </li>
             <li id="global-settings">
                 <span class="glyphicon glyphicon-cog float-left"></span>
                 <span class="hidden-xs hidden-sm">Settings</span>
