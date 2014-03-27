@@ -190,9 +190,9 @@ class Dropbox implements CloudInterface{
 			 	return Cache::get($key);
 			 }
 			 else{
-			 	//$this->refreshFolder($userCloudID, $folderPath);
+			 	$this->refreshFolder($userCloudID, $folderPath);
 			 	$folderContents= FileModel::getFolderContents($userCloudID, $folderPath);
-			 	//Cache::put($key, $folderContents, 10);
+			 	Cache::put($key, $folderContents, 10);
 			 	return $folderContents;
 			 }
 		}catch(Exception $e){
@@ -258,14 +258,7 @@ class Dropbox implements CloudInterface{
 				foreach ($filesReceived as $file) {
 					$completePathsReceived[$i]= $file['path'];
 				}
-				// $deletedFilesPaths =  paths to files which are present in our database($filesArray) 
-				//	but have been deleted at dropbox ($filesReceived)
-				$deletedFilesPaths = array_diff($completePaths, $completePathsReceived);
-				// Delete outdated entries from our db
-				foreach ($deletedFilesPaths as $completePath) {
-					list($path, $fileName) =  Utility::splitPath($completePath);
-					FileModel::deleteFile($userCloudID, $path, $fileName);
-				}
+				
 				// Update the folder data specially hash 
 				FileModel::addOrUpdateFile($userCloudID, $folderData);
 				foreach($filesReceived as $file){// Each file may be a folder or a file
