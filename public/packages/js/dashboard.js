@@ -195,6 +195,80 @@ function getFolderContents(cloud,fPath,cache) {
 	
 
 }
+
+/**
+ * get the shared file content 
+ * @param  {String} cloud cloud name for which action must be performed
+ * @param  {String} fPath file path 
+ * @param  {Boolean String} cache to decide if the folder content should be cached
+ */
+function getSharedFileContents() {
+
+	$('.loading').addClass('loading-gif');
+	$.ajax({
+		type:'GET',
+		url:'get_files_shared_by_user'
+	})
+	.done(function(jsonData){
+
+		$('.loading').removeClass('loading-gif');
+		//console.log(jsonData);
+		//server sends json as string
+		//parsing json string to json object
+		jsonData = $.parseJSON(jsonData);
+		console.log(jsonData);
+
+		var table = $('#file-explorer');
+		var tbody = table.find('tbody');
+
+		//we need the cloud name to make further ajax calls
+		//therefore appending cloud name as class name to tbody
+		//tbody.addClass(cloud);
+		tbody.html('');
+		$.each(jsonData,function(i,file){
+			var ext, extClass;
+
+			if(file.is_directory == '1') {
+				//ignore no folders can be shared
+			} else {
+				var tr=$("<tr></tr>");
+				tbody.append(tr);
+
+				//getting file extension
+				ext = file.file_name.split('.').pop();
+				extClass = getClassFromExtension(ext);
+				var td = $('<td class="context-menu-one"><span class="' + extClass['class'] + '"></span><a href="#" class="file">' + file.file_name +'</a></td>' );
+				tr.append(td);
+			}
+
+			//getting extension of file
+			//ext = file.file_name.split('.').pop();
+
+			//using jqery-dateformat plugin to get more readable date data.
+			var td = $("<td>" + $.format.date(file.last_modified_time,'h:mm p d MMM yyyy') +"</td>" );
+			tr.append(td);
+			
+			if(file.is_directory == '1') {
+				var td = $("<td>-</td>" );
+				tr.append(td);
+				var td = $("<td>Folder</td>" );
+				tr.append(td);
+			} else {
+				var td = $("<td>" + getReadableSize(file.size) +"</td>" );
+				tr.append(td);
+				var td = $("<td>" + extClass['ext'] +"</td>" );
+				tr.append(td);
+
+			}
+		});
+
+		$("table").trigger("update");
+		
+	});
+	
+
+}
+
 /* ========================================================
  *	Sorting for file explorer
  * ========================================================
