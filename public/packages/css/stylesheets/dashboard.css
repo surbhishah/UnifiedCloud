@@ -45,11 +45,17 @@ body .float-left {
 body .clear-both {
   clear: both;
 }
-/* line 115, ../sass/dashboard.scss */
+/* line 114, ../sass/dashboard.scss */
+body .share-cancel {
+  margin-left: 4px;
+  vertical-align: middle;
+  cursor: pointer;
+}
+/* line 123, ../sass/dashboard.scss */
 body .container {
   position: relative;
 }
-/* line 118, ../sass/dashboard.scss */
+/* line 126, ../sass/dashboard.scss */
 body .loading {
   position: absolute;
   width: 32px;
@@ -58,41 +64,41 @@ body .loading {
   left: 50%;
   z-index: 120;
 }
-/* line 129, ../sass/dashboard.scss */
+/* line 137, ../sass/dashboard.scss */
 body .dashboard-heading {
   color: #00ddd8;
 }
-/* line 134, ../sass/dashboard.scss */
+/* line 142, ../sass/dashboard.scss */
 body .cloud-control {
   margin-left: -15px;
   margin-top: 42px;
 }
-/* line 137, ../sass/dashboard.scss */
+/* line 145, ../sass/dashboard.scss */
 body .cloud-control .search-bar {
   width: 50%;
 }
-/* line 139, ../sass/dashboard.scss */
+/* line 147, ../sass/dashboard.scss */
 body .cloud-control .search-bar input:focus {
   border-color: rgba(244, 101, 95, 0.6);
   outline: 0;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(244, 101, 95, 0.6);
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(244, 101, 95, 0.6);
 }
-/* line 147, ../sass/dashboard.scss */
+/* line 155, ../sass/dashboard.scss */
 body .cloud-control .cloud-control-buttons {
   font-size: 1.3em;
   cursor: pointer;
 }
-/* line 152, ../sass/dashboard.scss */
+/* line 160, ../sass/dashboard.scss */
 body .select-cloud {
   color: #393939;
 }
-/* line 154, ../sass/dashboard.scss */
+/* line 162, ../sass/dashboard.scss */
 body .select-cloud img {
   width: 100px;
   height: 100px;
 }
-/* line 160, ../sass/dashboard.scss */
+/* line 168, ../sass/dashboard.scss */
 body #side-bar {
   background-image: url(../../img/noisy_net.png);
   background-color: #262c3a;
@@ -103,12 +109,12 @@ body #side-bar {
   color: #cf4858;
   text-shadow: 0px 1px 1px rgba(31, 31, 31, 0.4);
 }
-/* line 170, ../sass/dashboard.scss */
+/* line 178, ../sass/dashboard.scss */
 body #side-bar ul {
   list-style: none;
   padding: 10px !important;
 }
-/* line 175, ../sass/dashboard.scss */
+/* line 183, ../sass/dashboard.scss */
 body #side-bar ul li {
   text-align: left;
   padding: 6px 0px 4px 10px;
@@ -117,11 +123,11 @@ body #side-bar ul li {
   cursor: pointer;
   height: 2em;
 }
-/* line 184, ../sass/dashboard.scss */
+/* line 192, ../sass/dashboard.scss */
 body #side-bar ul li:hover {
   color: #c1c4cf;
 }
-/* line 189, ../sass/dashboard.scss */
+/* line 197, ../sass/dashboard.scss */
 body #side-bar ul .disabled-li,
 body #side-bar ul .disabled-li:hover {
   text-align: left;
@@ -131,50 +137,50 @@ body #side-bar ul .disabled-li:hover {
   cursor: default;
   color: #cf4858 !important;
 }
-/* line 198, ../sass/dashboard.scss */
+/* line 206, ../sass/dashboard.scss */
 body #side-bar ul .glyphicon {
   margin-top: 4px;
   margin-right: 10px;
 }
-/* line 203, ../sass/dashboard.scss */
+/* line 211, ../sass/dashboard.scss */
 body #side-bar ul .selected {
   color: white !important;
   box-shadow: inset 0 0 10px #101010;
 }
-/* line 212, ../sass/dashboard.scss */
+/* line 220, ../sass/dashboard.scss */
 body #side-bar ul .cloud {
   padding-left: 20px;
   color: #cf4858;
 }
-/* line 216, ../sass/dashboard.scss */
+/* line 224, ../sass/dashboard.scss */
 body #side-bar ul .cloud .glyphicon {
   margin-right: 5px !important;
 }
-/* line 222, ../sass/dashboard.scss */
+/* line 230, ../sass/dashboard.scss */
 body #side-bar #side-bar-header {
   min-height: 32px;
   color: #cf4858;
   cursor: default !important;
 }
-/* line 231, ../sass/dashboard.scss */
+/* line 239, ../sass/dashboard.scss */
 body #file-explorer {
   background-color: whitesmoke;
   min-height: 500px;
   border-radius: 0px 8px 8px 0px;
   box-shadow: 2px 1px 2px 0px rgba(31, 31, 31, 0.4);
 }
-/* line 238, ../sass/dashboard.scss */
+/* line 246, ../sass/dashboard.scss */
 body #file-explorer table {
   margin-bottom: 0px !important;
 }
-/* line 242, ../sass/dashboard.scss */
+/* line 250, ../sass/dashboard.scss */
 body #file-explorer table thead {
   display: table;
   width: 100%;
   color: #393939;
   font-weight: bolder;
 }
-/* line 247, ../sass/dashboard.scss */
+/* line 255, ../sass/dashboard.scss */
 body #file-explorer table thead tr {
   font-size: 1.2em;
   color: #12161b;
@@ -195,11 +201,11 @@ body #file-explorer table thead tr th:nth-child(3) {
 body #file-explorer table thead tr th:nth-child(4) {
   width: 18%;
 }
-/* line 253, ../sass/dashboard.scss */
+/* line 261, ../sass/dashboard.scss */
 body #file-explorer table thead tr th {
   cursor: pointer;
 }
-/* line 259, ../sass/dashboard.scss */
+/* line 267, ../sass/dashboard.scss */
 body #file-explorer table tbody {
   color: #393939;
   font-weight: normal;
@@ -207,34 +213,34 @@ body #file-explorer table tbody {
   display: block;
   overflow: auto;
 }
-/* line 266, ../sass/dashboard.scss */
+/* line 274, ../sass/dashboard.scss */
 body #file-explorer table tbody a {
   color: #393939;
 }
-/* line 270, ../sass/dashboard.scss */
+/* line 278, ../sass/dashboard.scss */
 body #file-explorer table tbody a:hover {
   color: #7e7e7e;
 }
-/* line 276, ../sass/dashboard.scss */
+/* line 284, ../sass/dashboard.scss */
 body #file-explorer table tbody tr {
   font-size: 14px;
   line-height: 32px;
   display: table;
   width: 100%;
 }
-/* line 282, ../sass/dashboard.scss */
+/* line 290, ../sass/dashboard.scss */
 body #file-explorer table tbody tr td:first-child {
   cursor: pointer;
 }
-/* line 287, ../sass/dashboard.scss */
+/* line 295, ../sass/dashboard.scss */
 body #file-explorer table tbody tr td .glyphicon {
   margin-right: 5px;
 }
-/* line 299, ../sass/dashboard.scss */
+/* line 307, ../sass/dashboard.scss */
 body #file-explorer table tr {
   padding: 15px;
 }
-/* line 303, ../sass/dashboard.scss */
+/* line 311, ../sass/dashboard.scss */
 body #file-explorer table td {
   text-align: left;
 }
@@ -254,15 +260,15 @@ body #file-explorer table td:nth-child(3) {
 body #file-explorer table td:nth-child(4) {
   width: 18%;
 }
-/* line 310, ../sass/dashboard.scss */
+/* line 318, ../sass/dashboard.scss */
 body #file-explorer #new-folder-input {
   width: 50%;
 }
-/* line 314, ../sass/dashboard.scss */
+/* line 322, ../sass/dashboard.scss */
 body #file-explorer #new-folder-input:focus {
   border-color: #cf4858;
 }
-/* line 318, ../sass/dashboard.scss */
+/* line 326, ../sass/dashboard.scss */
 body #file-explorer .breadcrumb {
   margin-bottom: 0px !important;
   background-color: whitesmoke;
@@ -271,7 +277,7 @@ body #file-explorer .breadcrumb {
   border-radius: 0px 4px 0px 0px;
   min-height: 32px;
 }
-/* line 327, ../sass/dashboard.scss */
+/* line 335, ../sass/dashboard.scss */
 body #file-explorer .breadcrumb li {
   cursor: pointer;
   font-size: 1.2em;

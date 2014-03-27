@@ -13,7 +13,8 @@
         <li><span class="glyphicon glyphicon-plus" id="new-folder"></span></li>
         <li><span class="glyphicon glyphicon-cloud-upload" id="upload" data-toggle="modal" data-target="#fileUploadModal"></span></li>
         <li><span class="glyphicon glyphicon-cloud-download" id="download"></span></li>
-        <li><span class="glyphicon glyphicon-share" id="share"></span></li>
+        <li><span class="glyphicon glyphicon-share" id="share" data-toggle="modal" data-target="#shareModal">    
+        </span></li>
         <li><span class="glyphicon glyphicon-trash" id="delete"></span></li>
         <li><span class="glyphicon glyphicon-refresh" id="refresh"></span></li>
         <li><span class="glyphicon glyphicon-cog" id="settings"></span></li>     

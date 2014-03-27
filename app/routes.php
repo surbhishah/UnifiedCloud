@@ -223,7 +223,7 @@ Route::delete('user/group/deleteMember',array(
 ));
 
 // Search user
-Route::get('user_group/search',array(
+Route::get('user/user_group/search',array(
 	'as'=>'search_user_group_route',
 	'uses'=>'SearchController@getSearchGroupsUsers'
 ));

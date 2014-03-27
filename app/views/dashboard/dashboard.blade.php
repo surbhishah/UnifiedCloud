@@ -12,7 +12,7 @@
 
     @include('dashboard.cloudSelectModal')
     @include('dashboard.fileUploadModal')
-
+    @include('dashboard.shareModal')
     <div class="loading"></div>
 
 <div class="row">

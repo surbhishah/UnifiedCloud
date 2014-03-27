@@ -2,6 +2,7 @@ $(function(){
 
 cloud ="";
 userCloudID=0;
+selectedFileName = '';
 var baseUrl = window.location.pathname;
 //console.log(baseUrl);
 
@@ -360,10 +361,21 @@ $('#file-explorer tbody').on('mouseover','tr',function(e){
 //remove class clicked-row when tbody loses focus  
 //NOTE: focus is only associated with elements like input. 
 //Table cannot have that is why I'm using this trick to handle focusout. 
-$(document).on('click',function(){
+$(document).click(function(e){
 	//console.log('focusout from table row');
-	$('tr.clicked-row').removeClass('clicked-row');
-	$('tr.right-clicked-row').removeClass('right-clicked-row');
+	var targetElement = $(e.target);
+	var targetElementId = targetElement.attr('id');
+	console.log(targetElement.attr('id') + " clicked on document");
+	if(targetElementId == "share") {
+		console.log("share it");
+		var elem = $('#file-explorer tbody tr'+'.clicked-row').find('a.file').html(); 
+		console.log("element value: " + elem);
+		selectedFileName = elem;
+	}
+	else {
+		$('tr.clicked-row').removeClass('clicked-row');
+		$('tr.right-clicked-row').removeClass('right-clicked-row');		
+	}
 });
 
 //breacrumb controls
@@ -589,6 +601,37 @@ function deleteItem(selectorClass) {
 		});
 	}
 }
+
+//share 
+$('#shareForm').submit(function(e){
+	e.preventDefault();
+	
+	var selectorClass = ".clicked-row";
+	var currentDir = $('#cwd').html();
+	var pathToCurrentDir = ''; //create path from cwd.
+	var pathToFileOrFolder = ''; //actual path to file or folder.
+	if(currentDir != '/') {
+		pathToCurrentDir = currentDir + '/';
+	} else {
+		pathToCurrentDir = currentDir;
+	}
+	$('.loading').addClass('loading-gif');
+	var userEmail = $('#shareUserList').find('span.list').attr('emailVal');
+	console.log(userEmail + " " + cloud + " " + pathToCurrentDir + " " + selectedFileName + " " + userCloudID);
+	$.ajax({
+			type: 'GET',
+            url: 'share',
+            data: {email: userEmail ,cloudName: cloud, path : pathToCurrentDir , fileName: selectedFileName , userCloudID: userCloudID},
+            cache: false 
+		}).done(function() {
+
+			$('.loading').removeClass('loading-gif');
+			//getFolderContents(cloud,currentDir,'false');
+			notification('shared!','success');
+		});
+
+});
+
 //delete file or folder 
 $('#delete').on('click',function(){
 	deleteItem('.clicked-row');
@@ -637,6 +680,7 @@ $.contextMenu({
         		break;
         	case "share":
         		console.log("sharing...");
+
         		break;
         	default:
         		console.log("defaulting...");
@@ -651,6 +695,29 @@ $.contextMenu({
     autoHide: true
 });
 
+
+$('#share-search').typeahead({
+    onSelect: function(item) {
+    	console.log(item.text);
+    	email = item.text;
+
+    	//clear input box
+    	elem = "<span class='badge list' emailVal=" +email+">"+email+"<span class='share-cancel glyphicon glyphicon-remove'></span></span>";
+    	$('#shareUserList').append(elem);
+    	console.log($('#shareForm').find("#share-search").val(""));
+    	console.log("cleared")
+    },
+    ajax : {
+    	triggerLength: 3,
+        url : 'user_group/search',
+        displayField : "email"
+        
+    }
+});
+
+$('#shareUserList').on('click','.share-cancel',function() {
+	console.log($(this).parent().remove());
+});
 /*$('.context-menu-one').on('click', function(e){
     console.log('clicked', this);
 })*/
