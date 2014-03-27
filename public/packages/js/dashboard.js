@@ -204,6 +204,8 @@ function getFolderContents(cloud,fPath,cache) {
  */
 function getSharedFileContents() {
 
+	$('.cloud-control').show();
+	
 	$('.loading').addClass('loading-gif');
 	$.ajax({
 		type:'GET',
@@ -247,7 +249,7 @@ function getSharedFileContents() {
 			//ext = file.file_name.split('.').pop();
 
 			//using jqery-dateformat plugin to get more readable date data.
-			var td = $("<td>" + $.format.date(file.last_modified_time,'h:mm p d MMM yyyy') +"</td>" );
+			var td = $("<td>" + $.format.date(file.created_at,'h:mm p d MMM yyyy') +"</td>" );
 			tr.append(td);
 			
 			if(file.is_directory == '1') {
