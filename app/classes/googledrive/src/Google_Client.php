@@ -123,9 +123,9 @@ class Google_Client {
 
   public function authenticate($code = null) {
     $service = $this->prepareService();
-	echo print_r($service);
+	//echo print_r($service);
     $this->authenticated = true;
-	echo $code;
+	//echo $code;
     return self::$auth->authenticate($service, $code);
   }
 
