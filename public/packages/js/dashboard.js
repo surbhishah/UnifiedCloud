@@ -600,7 +600,10 @@ function downloadContainer(selectorClass) {
 			window.location.href = url;
 		} else {
 			//file is encrypted to launch modal for passkey
-			
+			selectedFileName = file;
+			$('#encryptedFileDownloadModal').modal({
+				show : true
+			});
 		}
 	}
 }
@@ -641,6 +644,41 @@ $('#fileUploadForm').submit(function(e) {
 
 });
 
+$('#fileDownloadForm').submit(function(e){
+	//e.preventDefault;
+	//ajaxEncryptedDownload();
+/*	console.log($('#fileDownloadForm[name="cloudSourcePath"]').html());
+ 	$('#fileDownloadForm[name="cloudSourcePath"]').attr('value',$('#cwd').html());
+   	$('#fileDownloadForm[name="userCloudID"]').attr('value',userCloudID);
+   	$('#fileDownloadForm[name="fileName"]').attr('value',selectedFileName);
+   	$('#fileDownloadForm[name="passKey"]').attr('value',$('#passkeyid'));	
+  	$('#fileDownloadForm[name="cloudName"]').attr('value',cloud);
+  */	
+ 	$('<input />').attr('type', 'hidden')
+          .attr('name', "cloudSourcePath")
+          .attr('value', $('#cwd').html())
+          .appendTo('#fileDownloadForm');
+ 	
+
+ 	$('<input />').attr('type', 'hidden')
+          .attr('name', "userCloudID")
+          .attr('value', userCloudID)
+          .appendTo('#fileDownloadForm');
+
+
+ 	$('<input />').attr('type', 'hidden')
+          .attr('name', "fileName")
+          .attr('value', selectedFileName)
+          .appendTo('#fileDownloadForm');
+
+ 	$('<input />').attr('type', 'hidden')
+          .attr('name', "cloudName")
+          .attr('value', cloud)
+          .appendTo('#fileDownloadForm');
+
+ 	return true;
+});
+
 function ajaxUpload(url) {
 
 	//hide form and start loading gif until upload is complete or failed
@@ -661,7 +699,7 @@ function ajaxUpload(url) {
 	        //notify user on success
 			notification('File uploaded','success');
 	 		//update folder contents
-			//getFolderContents(cloud,$('#cwd').html(),'false');
+			getFolderContents(cloud,$('#cwd').html(),'false');
 			
 			//reset form
 			//$('#fileUploadForm').clearForm();
@@ -673,6 +711,66 @@ function ajaxUpload(url) {
 	        $('#fileUploadModal').modal('hide');
 	        $('.loading').removeClass('loading-gif');
 	        notification('Upload failed!','error');
+
+	        //reset form
+			//$('#fileUploadForm').clearForm();
+    	},
+    	complete: function() {
+    		$('#fileUploadForm').each(function(){
+    			this.reset();
+    		});
+    	}
+    });
+}
+
+function ajaxEncryptedDownload() {
+
+	//hide form and start loading gif until upload is complete or failed
+	//$('#fileUploadModal').modal('hide');
+ 	$('[name="cloudSourcePath"]').attr('value',$('#cwd').html());
+   	$('[name="userCloudID"]').attr('value',userCloudID);
+   	$('[name="fileName"]').attr('value',selectedFileName);
+   	$('[name="passKey"]').attr('value',$('#passkeyid'));
+  	$('[name="cloudName"]').attr('value',cloud);
+
+  	postData = {
+  		'cloudSourcePath' : $('#cwd').html(),
+  		'userCloudID' : userCloudID,
+  		'fileName' : selectedFileName,
+  		'passKey' : $('#passkeyid').val(),
+  		'cloudName' : cloud
+  	};
+
+  	console.log(postData);
+
+	$('.loading').addClass('loading-gif');
+	$.ajax({
+        type: 'POST',
+        url: 'downloadEncryptedFile',
+        data: postData,
+        cache: false,
+        contentType: false,
+        processData: false,
+    	success: function(data) {
+	        //console.log(data);
+
+	        //remove loading gif after upload is complete
+	        //$('.loading').removeClass('loading-gif');
+	        //notify user on success
+			//notification('File uploaded','success');
+	 		//update folder contents
+			//getFolderContents(cloud,$('#cwd').html(),'false');
+			
+			//reset form
+			//$('#fileUploadForm').clearForm();
+    	},
+    	error: function(jqXHR,status, errorThrown) {
+	        console.log(errorThrown);
+	        console.log(jqXHR.responseText);
+	        console.log(jqXHR.status);
+	        $('#fileUploadModal').modal('hide');
+	        //$('.loading').removeClass('loading-gif');
+	        //notification('Upload failed!','error');
 
 	        //reset form
 			//$('#fileUploadForm').clearForm();

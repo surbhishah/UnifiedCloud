@@ -13,6 +13,7 @@
     @include('dashboard.cloudSelectModal')
     @include('dashboard.fileUploadModal')
     @include('dashboard.shareModal')
+    @include('dashboard.encryptionModal')
     <div class="loading"></div>
 
 <div class="row">
