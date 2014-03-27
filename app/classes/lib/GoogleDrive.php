@@ -28,17 +28,17 @@ class GoogleDrive implements CloudInterface{
 				$client= $this->getClientObject($userCloudID);
 				
 				
-				$service = new Google_DriveService($client);
+			$service = new Google_DriveService($client);
 				$arr =  Utility::splitPath($cloudDestinationPath);
 				$folderName=$arr[1];
 				if($folderName<>''){
 				$s="mimeType='application/vnd.google-apps.folder' and trashed=false and title contains '".$folderName."'";
 			    $parameters = array("q"=> $s ,"maxResults"=>'1');
       
-              	$folderid=GoogleDrive::retrieveFolderId($service,$parameters);
+              $folderid=GoogleDrive::retrieveFolderId($service,$parameters);
           }
           else
-          		$folderid='root';
+          	$folderid='root';
 
                $serverDestinationPath= $serverDestinationPath.$fileName;
                $f =GoogleDrive::insertFile($service, $fileName, $folderid , $mime ,$serverDestinationPath);
@@ -74,7 +74,7 @@ class GoogleDrive implements CloudInterface{
 
 		public function download($userCloudID, $cloudSourcePath, $fileName)
 		{
-			    $serverDownloadPath = public_path().'/temp/googledrive_download/';
+			    $serverDownloadPath = public_path().'/temp/googledrive/downloads/';
 			   
 			    $file = FileModel::getFileAttributes($userCloudID, $cloudSourcePath, $fileName, array('fileID','rev'));
 
@@ -88,11 +88,11 @@ class GoogleDrive implements CloudInterface{
 		 	$service = new Google_DriveService($client);
 		
 		
-			if(Temp::TempFileExists($fileID)){
+			/*if(Temp::TempFileExists($fileID)){
 				 $fileDestination = $serverDownloadPath.$fileID;
 				 return $fileDestination;
 
-			}
+			}*/
 			    $s="title contains '".$fileName."'";
       
        			$parameters = array("q"=> $s,"maxResults"=>1);
@@ -101,49 +101,64 @@ class GoogleDrive implements CloudInterface{
 				$file_info=GoogleDrive::returnMimetype($service,$fileid);
 		
                 $flag= GoogleDrive::downloadfile($service,$file_info['mime'],$file_info['url'],$file_info['title'],$serverDownloadPath);
-               //echo $flag;
-               //echo $serverDownloadPath.$file_info['title'];
-                if($flag)
+            //echo $file_info['mime'];
+                //echo $serverDownloadPath.$file_info['title'];
                 	return $serverDownloadPath.$file_info['title'];
-                else
-                	return null;
+                
 		}
 
 		public function getFolderContents($userCloudID, $folderPath, $cached=false)
 		{
 			
+			try{
+			 $key = $userCloudID.$folderPath;
+			 if(Cache::has($key) && $cached =='true'){ //cached is a string, not boolean
+			 	return Cache::get($key);
+			 }
+			  else {
+
 			$client= $this->getClientObject($userCloudID);
 			$service = new Google_DriveService($client);
 
 			$f=Utility::splitPath($folderPath);
 			$fileName = $f[1];
-			if($fileName!='My Drive')
-{
+			if($fileName!='')
+			{
 
 			$s="mimeType='application/vnd.google-apps.folder' and trashed=false and title contains '".$fileName."'";
 			 $parameters = array("q"=> $s ,"maxResults"=>'1');
 			$folderid=self::retrieveFolderId($service, $parameters);
-		}
+			$flag='true';
+		 	}
 		else
+		{
 			$folderid='root';
 
-			
-		$flag =self::retrieveAllChanges($service, $startChangeId = NULL,$userCloudID,$folderPath,$folderid,$fileName);
 		
 
+		
+		}
+
+	$flag =self::retrieveAllChanges($service, $startChangeId = NULL,$userCloudID,$folderPath,$folderid,$fileName);
+	$flag='true';
 		if($flag=='true')
 			{
 				
 				
 				
 				$arr=self::printFilesInFolder($service,$folderid); //it returns fileid of each child file/folder of the
+				//print_r($arr);
 				//given forlder
 
 				$meta=self::getMetaData($service,$arr);//returns metadata of each file in folder
+				//print_r($meta);
+
 
 							foreach ($meta as $m) {
 					$filearr['fileName']=$m['title'];
-					$filearr['path']=$folderPath.'/'.$filearr['fileName'];
+					
+					$filearr['path']=$folderPath;
+
 					$filearr['rev']='rev';
 					$filearr['lastModifiedTime']=$m['modifiedDate'];
 					$filearr['isDirectory'] = $m['isDirectory'];
@@ -158,13 +173,12 @@ class GoogleDrive implements CloudInterface{
 				
 				}
 
-
 				return FileModel::getFolderContents($userCloudID,$folderPath);
 			}
 			else
-			{/*
-				echo "inside eles";
-				$arr=self::printFilesInFolder($service,$folderid);
+			{
+				
+				/*$arr=self::printFilesInFolder($service,$folderid);
 				$i=0;
 				
 				foreach($arr as $id)
@@ -178,11 +192,16 @@ class GoogleDrive implements CloudInterface{
 					$folderContents[$i]=FileModel::getFolderContents($userCloudID,$path);
 					
 					$i=$i+1;
-				}
-*/					$folderContents=FileModel::getFolderContents($userCloudID,$folderPath);
+				}*/
+				$folderContents=FileModel::getFolderContents($userCloudID,$folderPath);
 			return $folderContents;
 			}
-
+	
+			}}catch(Exception $e){
+			Log::info("Exception raised in googledrive::getFolderContents",array('userCloudID'=>$userCloudID, 'folderPath'=>$folderPath));
+			Log::error($e);				
+			throw $e;
+		}
 		}
 		
 /**********************************************************************************
@@ -275,9 +294,7 @@ function retrieveAllChanges($service, $startChangeId = NULL,$userCloudID,$path,$
 	  
 				foreach($children['items'] as $child)
 				{ 
-					$arr[$i]= $child['id'];
-
-					
+					$arr[$i]= $child['id'];	
 					$i=$i+1;
 				}
 
@@ -315,22 +332,16 @@ function retrieveAllChanges($service, $startChangeId = NULL,$userCloudID,$path,$
   			
 				$arr[$i]=Array();
 				$a=array('fields'=>'title,modifiedDate,quotaBytesUsed,mimeType');
-				foreach($fileid as $c){
-		
-	
-				$f[$i] = $service->files->get($c,$a);
-$i=$i+1;				
-				
+				foreach($fileid as $c)
+				{
+					$f[$i] = $service->files->get($c,$a);
+					$i=$i+1;				
+				}
 
 
-}
-print_r($f);
-
-
-
-
-$i=0;
-foreach ($f as $file) {
+			$i=0;
+			foreach ($f as $file) 
+			{
 	
 					$new_date = $file['modifiedDate'];
  					list($date,$t)=explode("T", $new_date);
@@ -341,18 +352,19 @@ foreach ($f as $file) {
 				$metadata['size']= $file['quotaBytesUsed'];
 				$metadata['title']= $file['title'];
 				if($file['mimeType']=='application/vnd.google-apps.folder')
-				$metadata['isDirectory'] = 'true';
+				$metadata['isDirectory'] = true;
 				else
-				$metadata['isDirectory'] = 'false';
+				$metadata['isDirectory'] = false;
 				$arr[$i]=$metadata;
 				$i=$i+1;
-		}
+			}
 
 
 	 
 			
 	}
-	catch(Exception $e){ echo "An error occured : " . $e->getMessage();}
+	catch(Exception $e){ //echo "An error occured : " . $e->getMessage();
+	}
 return($arr);
 }
 /*********************************************************************************
@@ -367,14 +379,35 @@ return($arr);
 			    $mime = 'application/vnd.google-apps.folder';
 			    $r=Utility::splitPath($folderPath);
 			    $foldername=$r[1];
-			    $c=Utility::splitPath($r[0]);
-			    $parent_folder = $c[1];
-			    $s="mimeType='application/vnd.google-apps.folder' and trashed=false and title contains '".$parent_folder."'";
-			    $parameters = array("q"=> $s ,"maxResults"=>'1');
+			    //$c=Utility::splitPath($r[0]);
+			   $folderPath=substr($r[0],0,-1);
+			   $r=Utility::splitPath($folderPath);
+			    $parent_folder = $r[1];
+				if($parent_folder=='')
+				{
 
-              $folderid=GoogleDrive::retrieveFolderId($service,$parameters);
+				$s="mimeType='application/vnd.google-apps.folder' and trashed=false and title contains '".$parent_folder."'";
+			    $parameters = array("q"=> $s ,"maxResults"=>'1');
+				$folderid=GoogleDrive::retrieveFolderId($service,$parameters);
+				}			    
+				else
+					$folderid='root';
+			    
+              
                
                $f =GoogleDrive::insertFolder($service, $foldername, $folderid , $mime);
+
+               $folderData = array();
+			$folderData['path']=$folderPath;
+			$folderData['fileName']=$foldername;
+			$folderData['lastModifiedTime']=$f['modifiedDate']; 
+			$folderData['rev']='rev';
+			$folderData['isDirectory']=true;
+			$folderData['size']= '0';
+			$folderData['hash']=null;
+			FileModel::addOrUpdateFile($userCloudID, $folderData);	
+			return $folderData;
+
 		}
 	
 
@@ -411,6 +444,7 @@ return($arr);
 
   		  }
 
+
 		}
 /********************************************************************************	
 @params: $completePath contains complete path to cloud including filename 
@@ -419,23 +453,26 @@ return($arr);
 	
 *********************************************************************************/
 		public function delete($userCloudID , $completePath){
+			
+			$client= $this->getClientObject($userCloudID);
+			$service = new Google_DriveService($client);
+            
 			$arr =  Utility::splitPath($completePath);
 			$filename=$arr[1];
 			$s="title contains '".$filename."'";
-		    $client= $this->getClientObject($userCloudID);
-			$service = new Google_DriveService($client);
-            $parameters = array("q"=> $s,"maxResults"=>1);
+		    $parameters = array("q"=> $s,"maxResults"=>1);
+
             $fileid=GoogleDrive::retrieveFolderId($service,$parameters);
             if(!is_null($fileid))
             {
 
             	GoogleDrive::deleteFile($service, $fileid);
-            	FileModel::deleteFile($userCloudID, $completePath, $filename);
+            	FileModel::deleteFile($userCloudID, $arr[0], $filename);
 
             }
         	else
         	{
-          		echo "sorry file not found....try again!";
+          		//echo "sorry file not found....try again!";
 
         	}
 
@@ -480,6 +517,31 @@ return($arr);
 
 		}
 
+public function getFullFileStructure($userCloudID){
+			$client= $this->getClientObject($userCloudID);
+			$service = new Google_DriveService($client);
+			$folderid="root";
+			$arr=self::printFilesInFolder($service,$folderid); //it returns fileid of each child file/folder of the
+				
+				//given forlder
+
+			$meta=self::getMetaData($service,$arr);//returns metadata of each file in folder
+			foreach($meta as $m){
+
+					$newFile = array();
+					$newFile['path']='/'.$m['title'];
+					$newFile['fileName']=$m['title'];
+					$newFile['lastModifiedTime']=$m['modifiedDate'];
+					$newFile['rev']='rev';
+					$newFile['size']=$m['size'];
+					$newFile['isDirectory']=$m['is_dir'];
+					$newFile['hash']=null;
+					FileModel::addOrUpdateFile($userCloudID, $newFile);
+			
+			}
+					
+
+}
 /**********************************************************************************
 @params: $userCloudID: usercloudid
 		$path:path where file is to be downloaded on server
@@ -491,18 +553,25 @@ return($arr);
 		public function downloadFolder($userCloudID, $folderPath)
 		{
 
-			$serverDownloadPath = public_path().'/temp/googledrive_download/';
+			$serverDownloadPath = public_path().'/temp/googledrive/download/';
 			$client= $this->getClientObject($userCloudID);
 			$service = new Google_DriveService($client);
-			$serverDownloadPath = public_path().'/temp/googledrive_download/';
+			$serverDownloadPath = public_path().'/temp/googledrive/download/';
 			$f=Utility::splitPath($folderPath);
 			$folderName=$f[1];
-			$s="mimeType='application/vnd.google-apps.folder' and trashed=false and title contains '".$folderName."'";
-		    $parameters = array("q"=> $s ,"maxResults"=>'1');
-			$folderid=self::retrieveFolderId($service,$parameters);
+			if($folderName=='')
+			{
+				$s="mimeType='application/vnd.google\-apps.folder' and trashed=false and title contains '".$folderName."'";
+		    	$parameters = array("q"=> $s ,"maxResults"=>'1');
+				$folderid=self::retrieveFolderId($service,$parameters);
+			}
+			else
+			$folderid='root';
+			
 			$flag=self::getFolder($service,$folderid,$folderName,$serverDownloadPath);
 			if($flag=='true'){
 			$jsonFilePath = $serverDownloadPath.$folderid.'.json';
+
 			$array =self::getFolderContents($userCloudID,$folderPath);
 				File::put($jsonFilePath,json_encode($array));
 				return Utility::createZip($jsonFilePath,'googledrive');
@@ -510,7 +579,7 @@ return($arr);
 			else
 			{
 
-				echo "error in downloading...!!";
+				//echo "error in downloading...!!";
 			}
         }
 /**********************************************************************************
@@ -537,10 +606,10 @@ return($arr);
 			{
 				
 			 	self::downloadFile($service,$d['mime'],$d['url'],$d['title'],$path);
-				echo "after";
+				//echo "after";
  
             }else{
-            	echo "calling download file";
+            	//echo "calling download file";
             	self::getFolder($service,$c,$d['title'],$path);}
         }
         return 'true';
@@ -623,10 +692,10 @@ return($arr);
   		//$token = DB::table('user_cloud_info')->where('user_cloudID', $id)->pluck('access_token');
   		 //$token= json_encode($token); 
 
-		//$path =app_path().'/database/googledrive-app-info.json';
+		// $path =app_path().'/database/googledrive-app-info.json';
 
-        //$json_data = file_get_contents($path);
-		//$data_array = json_decode($json_data, true);
+  //       $json_data = file_get_contents($path);
+		// $data_array = json_decode($json_data, true);
         $client = new Google_Client();
 		$client->setAccessType('ofline'); // default: offline
 
@@ -643,11 +712,10 @@ return($arr);
 		$service = new Google_DriveService($client);
 		
 		//$client->getAccessToken($client); 
-
-		$arr= array('access_token' => 'ya29.1.AADtN_X9oeGiQdLhV5m-nTSukqBYKF-I49p1dG6QH-e6XeqJCk8U_AiAdbNeHJ8RpAZZHL0_',
+		$arr= array('access_token' => 'ya29.1.AADtN_Wo_pUkH-9iYg4m_JlTuxyFi3FfMEvnxLIDIpTpEPFtQdTL-slSnhUNlXqlVvnKabxb',
 			'token_type' => 'Bearer', 'expires_in' => 3600, 
-			'id_token' => 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjM3OGQ1YjgwNjkzMjU0ZDFiYjIzMGMwNTEzMmNmMzY1NmYxYThiZjQifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiZW1haWwiOiJnYXJnLnBvb2phMjIwNjkyQGdtYWlsLmNvbSIsImNpZCI6IjM4NDUzMjc4MTc2OC05OGprcW5iNTY4M3FiNzJma2h2YnMxa21hc3FyanA0ZS5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsImF6cCI6IjM4NDUzMjc4MTc2OC05OGprcW5iNTY4M3FiNzJma2h2YnMxa21hc3FyanA0ZS5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsImF1ZCI6IjM4NDUzMjc4MTc2OC05OGprcW5iNTY4M3FiNzJma2h2YnMxa21hc3FyanA0ZS5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsInRva2VuX2hhc2giOiJ3aktYRnl5V1Vza0kyM19HZ2RsakNnIiwiYXRfaGFzaCI6IndqS1hGeXlXVXNrSTIzX0dnZGxqQ2ciLCJpZCI6IjEwMTg2NTgwMzAwNTE2NTg3MzkyNyIsInN1YiI6IjEwMTg2NTgwMzAwNTE2NTg3MzkyNyIsInZlcmlmaWVkX2VtYWlsIjoidHJ1ZSIsImVtYWlsX3ZlcmlmaWVkIjoidHJ1ZSIsImlhdCI6MTM5NTg1NTExOCwiZXhwIjoxMzk1ODU5MDE4fQ.TlcIh9dtqtgU4kTwKG6TaAdcraK1wXTqP1DJspqt8JqLQw8HzaXtgtUal_QIKEJpxmeGkFWv2WyBL0BLqKTwj20Ij_AcSJFIwHXJFbvoyOolRSVlo_xoQtIb971fZx-2T2n29DUa5irImCbGvXPm4mlYK2HT1A-mFX6edOqLayo',
-			 'refresh_token' => '1/XBRAG3dn7QgQS3eRfn4njrCvURF8OQNfppAVnkEY30Q','created' => 1395855412);
+			'id_token' => 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjkyZDkxNzNiYjgxNjA5NjNlNjRhZDUzYzEzYTFkMmEzOWE3ZWUyNGMifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwidG9rZW5faGFzaCI6InVDXzZob0hRWVZPR2h2VXhCdmJlN0EiLCJhdF9oYXNoIjoidUNfNmhvSFFZVk9HaHZVeEJ2YmU3QSIsImF1ZCI6IjM4NDUzMjc4MTc2OC05OGprcW5iNTY4M3FiNzJma2h2YnMxa21hc3FyanA0ZS5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsInZlcmlmaWVkX2VtYWlsIjoidHJ1ZSIsImVtYWlsX3ZlcmlmaWVkIjoidHJ1ZSIsImlkIjoiMTAxODY1ODAzMDA1MTY1ODczOTI3Iiwic3ViIjoiMTAxODY1ODAzMDA1MTY1ODczOTI3IiwiY2lkIjoiMzg0NTMyNzgxNzY4LTk4amtxbmI1NjgzcWI3MmZraHZiczFrbWFzcXJqcDRlLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXpwIjoiMzg0NTMyNzgxNzY4LTk4amtxbmI1NjgzcWI3MmZraHZiczFrbWFzcXJqcDRlLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiZW1haWwiOiJnYXJnLnBvb2phMjIwNjkyQGdtYWlsLmNvbSIsImlhdCI6MTM5NTkwNTI1OSwiZXhwIjoxMzk1OTA5MTU5fQ.gX9GgGqX6KCYm8z7PPo8dFrJKJOROeCALsouOu6jOspTx-jHuk0myDKHOb94e7Uy9Gs_p2Y1IL6LO68dUpBYy_jSVDFoofsaHcx-f0DbX2LXAOrKS4FIrryUR9nIfKraKDzu4vDKSCJqq-wc4QrQn7pAbYotK9zGVJRBRsHOGS8',
+			 'refresh_token' => '1/LZaJWsw1rwPKKe8ZTD8IWDndlASMvIOVs3SG2rUnC9E','created' => 1395905553);
 		$token = json_encode($arr);
 		$client->setAccessToken($token);
 	
@@ -698,7 +766,8 @@ return($arr);
       	$result = $result[0];
      	$required_id= $result['id'];
      	return($required_id);
- 	}catch(Exception $e){echo "Error occured: " .$e->getMessage();}
+ 	}catch(Exception $e){//echo "Error occured: " .$e->getMessage();
+ 		}
   		
       
 	}
@@ -711,6 +780,7 @@ return($arr);
 	{
 		try {
     				$service->files->delete($fileId);
+    				
   				} catch (Exception $e)
   				{
     				print "An error occurred: " . $e->getMessage();
