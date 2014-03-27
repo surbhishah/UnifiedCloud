@@ -164,7 +164,7 @@ function getFolderContents(cloud,fPath,cache) {
 				//getting file extension
 				ext = file.file_name.split('.').pop();
 				extClass = getClassFromExtension(ext);
-				var td = $('<td class="context-menu-one"><span class="' + extClass['class'] + '"></span><a href="#" class="file">' + file.file_name +'</a></td>' );
+				var td = $('<td class="context-menu-one"><span class="' + extClass['class'] + '"></span><a href="#" class="file" is_encrypted='+file.is_encrypted+'>' + file.file_name +'</a></td>' );
 				tr.append(td);
 			}
 
@@ -570,10 +570,12 @@ function downloadContainer(selectorClass) {
 	//set variables for ajax call
 	var cwd = $('#cwd').html();
 	var file = $('#file-explorer tbody tr'+selectorClass).find('a.file').html(); 
+	var  is_encrypted = $('#file-explorer tbody tr'+selectorClass).find('a.file').attr('is_encrypted'); 
 	
 	if(typeof(file) == 'undefined') {
 		
 		var folder = $('#file-explorer tbody tr'+selectorClass).find('a.directory').html(); 
+		
 		var folderPath='';
 		if(cwd == '/') 
 			folderPath = cwd+folder;
@@ -589,11 +591,17 @@ function downloadContainer(selectorClass) {
 
 		}
 	}
+	//handling files
 	else {
 	//console.log(cwd + " : "+ file);
-		url = "download?userCloudID="+ userCloudID +"&cloudName=" + cloud + "&cloudSourcePath=" + cwd + "&fileName=" + file; 
-		console.log(url);
-		window.location.href = url;
+		if(is_encrypted == 0) {
+			url = "download?userCloudID="+ userCloudID +"&cloudName=" + cloud + "&cloudSourcePath=" + cwd + "&fileName=" + file; 
+			console.log(url);
+			window.location.href = url;
+		} else {
+			//file is encrypted to launch modal for passkey
+			
+		}
 	}
 }
 
