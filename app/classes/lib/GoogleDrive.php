@@ -140,7 +140,7 @@ class GoogleDrive implements CloudInterface{
 		}
 
 	$flag =self::retrieveAllChanges($service, $startChangeId = NULL,$userCloudID,$folderPath,$folderid,$fileName);
-	$flag='true';
+	
 		if($flag=='true')
 			{
 				
@@ -383,7 +383,7 @@ return($arr);
 			   $folderPath=substr($r[0],0,-1);
 			   $r=Utility::splitPath($folderPath);
 			    $parent_folder = $r[1];
-				if($parent_folder=='')
+				if($parent_folder!='')
 				{
 
 				$s="mimeType='application/vnd.google-apps.folder' and trashed=false and title contains '".$parent_folder."'";
@@ -712,10 +712,10 @@ public function getFullFileStructure($userCloudID){
 		$service = new Google_DriveService($client);
 		
 		//$client->getAccessToken($client); 
-		$arr= array('access_token' => 'ya29.1.AADtN_Wo_pUkH-9iYg4m_JlTuxyFi3FfMEvnxLIDIpTpEPFtQdTL-slSnhUNlXqlVvnKabxb',
+		$arr= array('access_token' => 'ya29.1.AADtN_Xx8mnEnzInlozLZ7oquyhYo5JFm__ShXo7wksbnAICtpDfRiGMt97IREhO',
 			'token_type' => 'Bearer', 'expires_in' => 3600, 
-			'id_token' => 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjkyZDkxNzNiYjgxNjA5NjNlNjRhZDUzYzEzYTFkMmEzOWE3ZWUyNGMifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwidG9rZW5faGFzaCI6InVDXzZob0hRWVZPR2h2VXhCdmJlN0EiLCJhdF9oYXNoIjoidUNfNmhvSFFZVk9HaHZVeEJ2YmU3QSIsImF1ZCI6IjM4NDUzMjc4MTc2OC05OGprcW5iNTY4M3FiNzJma2h2YnMxa21hc3FyanA0ZS5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsInZlcmlmaWVkX2VtYWlsIjoidHJ1ZSIsImVtYWlsX3ZlcmlmaWVkIjoidHJ1ZSIsImlkIjoiMTAxODY1ODAzMDA1MTY1ODczOTI3Iiwic3ViIjoiMTAxODY1ODAzMDA1MTY1ODczOTI3IiwiY2lkIjoiMzg0NTMyNzgxNzY4LTk4amtxbmI1NjgzcWI3MmZraHZiczFrbWFzcXJqcDRlLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXpwIjoiMzg0NTMyNzgxNzY4LTk4amtxbmI1NjgzcWI3MmZraHZiczFrbWFzcXJqcDRlLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiZW1haWwiOiJnYXJnLnBvb2phMjIwNjkyQGdtYWlsLmNvbSIsImlhdCI6MTM5NTkwNTI1OSwiZXhwIjoxMzk1OTA5MTU5fQ.gX9GgGqX6KCYm8z7PPo8dFrJKJOROeCALsouOu6jOspTx-jHuk0myDKHOb94e7Uy9Gs_p2Y1IL6LO68dUpBYy_jSVDFoofsaHcx-f0DbX2LXAOrKS4FIrryUR9nIfKraKDzu4vDKSCJqq-wc4QrQn7pAbYotK9zGVJRBRsHOGS8',
-			 'refresh_token' => '1/LZaJWsw1rwPKKe8ZTD8IWDndlASMvIOVs3SG2rUnC9E','created' => 1395905553);
+			'id_token' => 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjkyZDkxNzNiYjgxNjA5NjNlNjRhZDUzYzEzYTFkMmEzOWE3ZWUyNGMifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiZW1haWwiOiJnYXJnLnBvb2phMjIwNjkyQGdtYWlsLmNvbSIsImlkIjoiMTAxODY1ODAzMDA1MTY1ODczOTI3Iiwic3ViIjoiMTAxODY1ODAzMDA1MTY1ODczOTI3IiwiY2lkIjoiMzg0NTMyNzgxNzY4LTk4amtxbmI1NjgzcWI3MmZraHZiczFrbWFzcXJqcDRlLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXpwIjoiMzg0NTMyNzgxNzY4LTk4amtxbmI1NjgzcWI3MmZraHZiczFrbWFzcXJqcDRlLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwidG9rZW5faGFzaCI6InpMbEVqQWhBdW10bHVYU285TV8xbUEiLCJhdF9oYXNoIjoiekxsRWpBaEF1bXRsdVhTbzlNXzFtQSIsInZlcmlmaWVkX2VtYWlsIjoidHJ1ZSIsImVtYWlsX3ZlcmlmaWVkIjoidHJ1ZSIsImF1ZCI6IjM4NDUzMjc4MTc2OC05OGprcW5iNTY4M3FiNzJma2h2YnMxa21hc3FyanA0ZS5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsImlhdCI6MTM5NTkxMjg2MiwiZXhwIjoxMzk1OTE2NzYyfQ.BvISjGvX2DhFUm6F1K6ITm3lINeovw8LzaKWzr1X5LXCxGMXyVgF-LhIx-5zXZgYYnnuI2wAVYcWLXaVKML2GaAys-op1btbwSJ8medZGzZNLnXLTV_GUxPVIwa5ZC648_G3jcufb4GzlUryV1MqEwad6BIW80vNFUMCceysrws',
+			 'refresh_token' => '1/lypt_tQ8VtvtOTO_8w4kLjZFpnoctdOeYysQpWSYpyw','created' => 1395913155);
 		$token = json_encode($arr);
 		$client->setAccessToken($token);
 	

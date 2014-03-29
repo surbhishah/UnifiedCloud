@@ -103,7 +103,7 @@
 {{ HTML::script('packages/js/jquery.contextMenu.js' )}}
 {{ HTML::script('packages/js/bootstrap-typeahead.js' )}}
 <script>
-    $('#file-search').typeahead({
+    /*$('#file-search').typeahead({
         ajax : {
             url : 'search/files/1',
             displayField : "file_name",
@@ -112,7 +112,7 @@
                 return data;
             }
         }
-    });
+    });*/
 </script>
 @stop
 

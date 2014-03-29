@@ -25,8 +25,9 @@ class SearchController extends BaseController {
 	}
 /**********************************************************************************************/    
 // TEST Function 
-	public function getFilesForSearch($userID){
+	public function getFilesForSearch(){
 		//$userID = Input::get('userID');
+		$userID = Session::get('userID');
 		$query = Input::get("query");
 		$fileArray= FileModel::getFilesForSearch($userID);
 		return Response::json($fileArray);

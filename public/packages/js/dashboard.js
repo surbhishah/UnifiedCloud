@@ -101,8 +101,14 @@ function createNewFolder(folderName,jObj) {
 		notification('folder name required','error');
 
 	} else {
+		if($('#cwd').html() == '/') {
+		var fPath = '/' + folderName;
 
+		}
+		else {
 		var fPath = $('#cwd').html() + '/' + folderName;
+
+		}
 		$.ajax({
 			 type: 'GET',
             url: 'new_folder',
@@ -111,6 +117,7 @@ function createNewFolder(folderName,jObj) {
 		}).done(function() {
 
 			notification('Folder created','success');
+			getFolderContents(cloud,$('#cwd').html(),'false');
 		});
 
 		jObj.parent().parent().remove();
@@ -998,6 +1005,16 @@ $.contextMenu({
     autoHide: true
 });
 
+$('#file-search').typeahead({
+    ajax : {
+        url : 'search/files',
+        displayField : "file_name",
+        preProcess : function(data) {
+            console.log(data);
+            return data;
+        }
+    }
+});
 
 $('#share-search').typeahead({
     onSelect: function(item) {
