@@ -5,12 +5,15 @@ This project aims to bring Dropbox , Google drive and SkyDrive under the same um
 
 - Do not forget to uncomment lines RequestUtil.php in Dropbox which checks for 64 bit php.
 - Add route group to restrict access to routes.
-- getFolderContents return all data, refactor to limit data.
 - sharing folder
 - sharing encrypted files
-- fix getFolderContents to preserve encryption_key_hash and is_encryption fields in DB.
 - convert font-family to scss variables
 - add dashboard nav button on landing page if user logged in and on nav page. or find alternate solution
+- fix autosync ( autosync throw error when files are moved or deleted) 
+- add groups to main UI
+- add csrf tokens to ajax forms
+- Oauth for autosyncer
+- make installer for autosyncer
 ##Testing
 
 - Run test code using
