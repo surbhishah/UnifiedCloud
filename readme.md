@@ -14,6 +14,9 @@ This project aims to bring Dropbox , Google drive and SkyDrive under the same um
 - add csrf tokens to ajax forms
 - Oauth for autosyncer
 - make installer for autosyncer
+- add getCloud function to BaseController
+- handle controller generated messages in views
+- handle the case of cloud data overflow
 ##Testing
 
 - Run test code using
