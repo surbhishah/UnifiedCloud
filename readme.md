@@ -18,6 +18,7 @@ This project aims to bring Dropbox , Google drive and SkyDrive under the same um
 - handle controller generated messages in views
 - handle the case of cloud data overflow
 - postAddMember in GroupsController - check if user adding the person is admin of the group
+- show message to user when shares with no user
 ##Testing
 
 - Run test code using
