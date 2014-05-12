@@ -148,30 +148,6 @@ class Dropbox implements CloudInterface{
 }
 /************************************************************************************************/
 	/*
-	 *	@params :
-	 *	'userCloudID'				: ID of the user
-	 *	@return value: instance of Dropbox/Client class
-	 *	@exceptions: AccessTokenNotFoundException
-	*/
-	private function getClient($userCloudID){
-			try{
-				$accessToken = UserCloudInfo::getAccessToken($userCloudID);
-				if($accessToken == null){
-					throw new AccessTokenNotFoundException();
-					return null;
-				}else{
-					$client = new Dropbox\Client($accessToken,self::$clientIdentifier);
-					return $client;
-				}
-			}catch(Exception $e){
-				Log::info("Exception raised in Dropbox::getClient",array('userCloudID'=>$userCloudID));
-				Log::error($e);
-				throw $e;
-			}
-
-	}
-/************************************************************************************************/
-	/*
 	*	@params:
 	*	userCloudID = ID of the user's cloud
 	* 	folderPath = Path of the folder whose contents have been sought
@@ -199,90 +175,6 @@ class Dropbox implements CloudInterface{
 			Log::info("Exception raised in Dropbox::getFolderContents",array('userCloudID'=>$userCloudID, 'folderPath'=>$folderPath));
 			Log::error($e);				
 			throw $e;
-		}
-	}
-/************************************************************************************************/
-	/*
-	*	@params:
-	*	userCloudID = ID of the user
-	* 	folderPath = Path of the folder whose contents have been sought
-	*	For eg : if folderPath = /Projects/Unicloud then contents of Unicloud will be returned
-	*	@return value: Meta data of the folder and its files and folders
-	* 	@Exceptions:	Exception
-	*/
-	private function refreshFolder($userCloudID, $folderPath){
-
-		try{
-			$client = self::getClient($userCloudID);
-			// Dropbox API requires that there should be no trailing slash except if it is root '/'
-			// Obtain fileMetaData from Dropbox
-			$hash = FileModel::getHash($userCloudID, $folderPath);
-			if($hash == null){
-				$newMetaData = $client->getMetadataWithChildren($folderPath);
-				$receivedData = true;
-			}
-			else{
-				list($receivedData, $newMetaData) = $client->getMetadataWithChildrenIfChanged($folderPath, $hash);
-			}
-			// if data is received , then update our database and then return the folder contents
-			if($receivedData == true){
-				$folderData = array();// This is the folder for which data has been received
-				if($folderPath=='/'){// Dropbox does not return these attributes for root 
-					$folderData['path']='root';
-					$folderData['fileName']='/';
-					$folderData['lastModifiedTime']= null;// Does not matter ..never needed ..null sets current time in db
-					$folderData['rev']='rev';// rev of root is not known and rev is not nullable
-				}
-				else{
-					list($path, $folderName)= Utility::splitPath($newMetaData['path']);
-					$folderData['path']=$path;
-					$folderData['fileName']=$folderName;
-					$folderData['lastModifiedTime']=$newMetaData['modified']; 
-					$folderData['rev']=$newMetaData['rev'];
-				}
-				$folderData['hash'] = $newMetaData['hash'];
-				$folderData['isDirectory']=true;
-				$folderData['size']=$newMetaData['size'];
-				// $filesArray =  Array of files in our db
-				$filesArray= FileModel::getFolderContents($userCloudID, $folderPath);
-				$completePaths= array();
-				$i=0;
-				foreach ($filesArray as $file) {
-					$completePaths[$i]= Utility::joinPath($file['path'],$file['file_name'] );
-					$i++;
-				}
-				//$filesReceived = Array of files from dropbox
-				$filesReceived = $newMetaData['contents'];
-				$i=0;
-				$completePathsReceived = array();
-				foreach ($filesReceived as $file) {
-					$completePathsReceived[$i]= $file['path'];
-				}
-				
-				// Update the folder data specially hash 
-				FileModel::addOrUpdateFile($userCloudID, $folderData);
-				foreach($filesReceived as $file){// Each file may be a folder or a file
-					list($path, $fileName)= Utility::splitPath($file['path']);
-					$newFile['path']=$path;
-					$newFile['fileName']=$fileName;
-					$newFile['lastModifiedTime']=$file['modified'];
-					$newFile['rev']=$file['rev'];
-					$newFile['size']=$file['size'];
-					$newFile['isDirectory']=$file['is_dir'];
-					$newFile['hash']=null;// Passing null because we dont have hash values for these 
-					// but we might get them in the future if $file is actually a folder 
-					FileModel::addOrUpdateFile($userCloudID, $newFile);
-				}
-			}
-			// if no data is received ..means data we have is correct, send it directly
-			// TO BE COMMENTED LATER THIS FUNCTION DOES NOT RETURN ANYTHING
-			//return $newMetaData;
-			//return FileModel::getFolderContents($userCloudID, $folderPath);
-
-		}catch(Exception $e){
-				Log::info("Exception raised in Dropbox::refreshFolder",array('userCloudID'=>$userCloudID, 'folderPath'=>$folderPath));
-				Log::error($e);				
-				throw $e;
 		}
 	}
 /************************************************************************************************/
@@ -364,31 +256,6 @@ class Dropbox implements CloudInterface{
 	        return Redirect::to($authorizeUrl);
 		}catch(Exception $e){
 				Log::info("Exception raised in Dropbox::getRegistrationPage");
-				Log::error($e);
-				throw $e;
-		}
-    }
-
-/************************************************************************************************/
-	/*
-	*	@params: None
-	*	None
-	*	@return value: This function returns an object of Dropbox\WebAuth class
-	* 	@Exceptions:	Exception
-	*/
-  // TODO  Redirect URI
-    private function getWebAuth(){
-    	try{
-	        session_start();
-	        $path= app_path().'/database/dropbox-app-info.json';
-	        $appInfo = Dropbox\AppInfo::loadFromJsonFile($path);
-	        $redirectUri = "http://localhost/UnifiedCloud/public/auth/dropbox";// This needs a Https link ..only localhost 
-	                                                                    //is allowed for http
-	        $csrfTokenStore = new Dropbox\ArrayEntryStore($_SESSION, 'date(format)ropbox-auth-csrf-token');
-	        return new Dropbox\WebAuth($appInfo, self::$clientIdentifier, $redirectUri, $csrfTokenStore);
-    	
-    	}catch(Exception $e){
-				Log::info("Exception raised in Dropbox::getWebAuth");
 				Log::error($e);
 				throw $e;
 		}
@@ -491,87 +358,6 @@ class Dropbox implements CloudInterface{
 		}
 	}
 /************************************************************************************************/
-
-	/*
-	*	@params:
-	*	userCloudID = ID of the user's cloud
-	*	folderPath = Path to the folder to be downloaded
-	*	@return value: None
-	* 	@Exceptions:	Exception
-	*	@description: This function calls refreshFolder function on all child folders
-	*					This is necessary since we might not have data about children when
-	*					downloadFolder is called on a folder 
-	*					
-	*/
-
-	private function getFolderWithDescendants($userCloudID, $folderPath){
-		try{
-			$folderContents = $this->getFolderContents($userCloudID, $folderPath);
-			foreach ($folderContents as $file) {
-				if($file['is_directory']==true){
-					// recursive call
-					$this->getFolderWithDescendants($userCloudID, Utility::joinPath($folderPath, $file['file_name']));
-				}
-			}
-
-		}catch(Exception $e){
-			Log::info("Exception raised in Dropbox::getFolderWithDescendants",array('userCloudID'=>$userCloudID,'folderPath'=> $folderPath));
-			Log::error($e);
-			throw $e;
-		}
-
-	}
-/************************************************************************************************/
-	/*
-	*	@params:
-	*	userCloudID = ID of the user's cloud
-	*	folderPath = Path to the folder to be downloaded
-	*	client = client object of class Dropbox/Client.php
-	*	array = Passed by reference because we will make recursive calls to it
-	*	@return value: None..array has been passed by reference which is what we need
-	* 	@Exceptions:	Exception
-	*	@description: the function downloadFolder calls this function to create an associative array whose
-	*					elements are of the form folderPath => files
-	*					This function recursively parses all the folders inside folder and their successors
-	*					to create an array
-	*					This array is created recursively.
-	*/
-
-	private function downloadFolderOnServer($userCloudID, $folderPath,$client, &$array){
-		try{
-				$serverDestinationPath = public_path().'/temp/dropbox/downloads/';
-				$files = FileModel::getFolderContents($userCloudID, $folderPath);
-				$array[$folderPath]=$files;
-				if($files != null){
-					foreach($files as $file){
-						if($file['is_directory']==true){
-							// Recursive call
-							$this->downloadFolderOnServer($userCloudID, Utility::joinPath($folderPath, $file['file_name']), $client, $array);
-						}
-						else{
-							$fileDestination = $serverDestinationPath.$file['fileID'];
-							if(Temp::TempFileExists($file['fileID'])	){
-								// Check if the file is up to date , so get the metadata from dropbox
-								$fileMetaData = $client->getMetaData(Utility::joinPath($folderPath, $file['file_name']));
-								// Check if the rev values are same , if they are then send this file , DO NOT download
-								if($fileMetaData['rev']==$file['rev']){ //otherwise download the file
-									continue;// Do nothing for this file, go to next one
-								}
-							}// otherwise download the file
-							$fileStream = fopen($fileDestination, 'wb');
-							$client->getFile(	Utility::joinPath($folderPath, $file['file_name']  ), $fileStream);
-							Temp::addTempEntry($file['fileID']);
-						}
-					}
-				}
-		}catch(Exception $e){
-			Log::info("Exception raised in Dropbox::downloadFolderOnServer",array('userCloudID'=>$userCloudID, 'folderPath'=>$folderPath));
-			Log::error($e);
-			throw $e;
-		}
-
-	}
-/************************************************************************************************/
 // To be called when a user adds a new cloud to UnifiedCloud
  // At that time , we bring in all information from dropbox and save it to our database
  // After this we just bring the delta (ie the changes that have been made) and reflect them in our database
@@ -629,4 +415,219 @@ class Dropbox implements CloudInterface{
  		}
  	}
  /************************************************************************************************/	
+	/*
+	*	@params:
+	*	userCloudID = ID of the user's cloud
+	*	folderPath = Path to the folder to be downloaded
+	*	@return value: None
+	* 	@Exceptions:	Exception
+	*	@description: This function calls refreshFolder function on all child folders
+	*					This is necessary since we might not have data about children when
+	*					downloadFolder is called on a folder 
+	*					
+	*/
+
+	private function getFolderWithDescendants($userCloudID, $folderPath){
+		try{
+			$folderContents = $this->getFolderContents($userCloudID, $folderPath);
+			foreach ($folderContents as $file) {
+				if($file['is_directory']==true){
+					// recursive call
+					$this->getFolderWithDescendants($userCloudID, Utility::joinPath($folderPath, $file['file_name']));
+				}
+			}
+
+		}catch(Exception $e){
+			Log::info("Exception raised in Dropbox::getFolderWithDescendants",array('userCloudID'=>$userCloudID,'folderPath'=> $folderPath));
+			Log::error($e);
+			throw $e;
+		}
+
+	}
+/************************************************************************************************/
+
+	/*
+	*	@params:
+	*	userCloudID = ID of the user's cloud
+	*	folderPath = Path to the folder to be downloaded
+	*	client = client object of class Dropbox/Client.php
+	*	array = Passed by reference because we will make recursive calls to it
+	*	@return value: None..array has been passed by reference which is what we need
+	* 	@Exceptions:	Exception
+	*	@description: the function downloadFolder calls this function to create an associative array whose
+	*					elements are of the form folderPath => files
+	*					This function recursively parses all the folders inside folder and their successors
+	*					to create an array
+	*					This array is created recursively.
+	*/
+
+	private function downloadFolderOnServer($userCloudID, $folderPath,$client, &$array){
+		try{
+				$serverDestinationPath = public_path().'/temp/dropbox/downloads/';
+				$files = FileModel::getFolderContents($userCloudID, $folderPath);
+				$array[$folderPath]=$files;
+				if($files != null){
+					foreach($files as $file){
+						if($file['is_directory']==true){
+							// Recursive call
+							$this->downloadFolderOnServer($userCloudID, Utility::joinPath($folderPath, $file['file_name']), $client, $array);
+						}
+						else{
+							$fileDestination = $serverDestinationPath.$file['fileID'];
+							if(Temp::TempFileExists($file['fileID'])	){
+								// Check if the file is up to date , so get the metadata from dropbox
+								$fileMetaData = $client->getMetaData(Utility::joinPath($folderPath, $file['file_name']));
+								// Check if the rev values are same , if they are then send this file , DO NOT download
+								if($fileMetaData['rev']==$file['rev']){ //otherwise download the file
+									continue;// Do nothing for this file, go to next one
+								}
+							}// otherwise download the file
+							$fileStream = fopen($fileDestination, 'wb');
+							$client->getFile(	Utility::joinPath($folderPath, $file['file_name']  ), $fileStream);
+							Temp::addTempEntry($file['fileID']);
+						}
+					}
+				}
+		}catch(Exception $e){
+			Log::info("Exception raised in Dropbox::downloadFolderOnServer",array('userCloudID'=>$userCloudID, 'folderPath'=>$folderPath));
+			Log::error($e);
+			throw $e;
+		}
+
+	}
+/************************************************************************************************/
+	/*
+	*	@params:
+	*	userCloudID = ID of the user
+	* 	folderPath = Path of the folder whose contents have been sought
+	*	For eg : if folderPath = /Projects/Unicloud then contents of Unicloud will be returned
+	*	@return value: Meta data of the folder and its files and folders
+	* 	@Exceptions:	Exception
+	*/
+	private function refreshFolder($userCloudID, $folderPath){
+
+		try{
+			$client = self::getClient($userCloudID);
+			// Dropbox API requires that there should be no trailing slash except if it is root '/'
+			// Obtain fileMetaData from Dropbox
+			$hash = FileModel::getHash($userCloudID, $folderPath);
+			if($hash == null){
+				$newMetaData = $client->getMetadataWithChildren($folderPath);
+				$receivedData = true;
+			}
+			else{
+				list($receivedData, $newMetaData) = $client->getMetadataWithChildrenIfChanged($folderPath, $hash);
+			}
+			// if data is received , then update our database and then return the folder contents
+			if($receivedData == true){
+				$folderData = array();// This is the folder for which data has been received
+				if($folderPath=='/'){// Dropbox does not return these attributes for root 
+					$folderData['path']='root';
+					$folderData['fileName']='/';
+					$folderData['lastModifiedTime']= null;// Does not matter ..never needed ..null sets current time in db
+					$folderData['rev']='rev';// rev of root is not known and rev is not nullable
+				}
+				else{
+					list($path, $folderName)= Utility::splitPath($newMetaData['path']);
+					$folderData['path']=$path;
+					$folderData['fileName']=$folderName;
+					$folderData['lastModifiedTime']=$newMetaData['modified']; 
+					$folderData['rev']=$newMetaData['rev'];
+				}
+				$folderData['hash'] = $newMetaData['hash'];
+				$folderData['isDirectory']=true;
+				$folderData['size']=$newMetaData['size'];
+				// $filesArray =  Array of files in our db
+				$filesArray= FileModel::getFolderContents($userCloudID, $folderPath);
+				$completePaths= array();
+				$i=0;
+				foreach ($filesArray as $file) {
+					$completePaths[$i]= Utility::joinPath($file['path'],$file['file_name'] );
+					$i++;
+				}
+				//$filesReceived = Array of files from dropbox
+				$filesReceived = $newMetaData['contents'];
+				$i=0;
+				$completePathsReceived = array();
+				foreach ($filesReceived as $file) {
+					$completePathsReceived[$i]= $file['path'];
+				}
+				
+				// Update the folder data specially hash 
+				FileModel::addOrUpdateFile($userCloudID, $folderData);
+				foreach($filesReceived as $file){// Each file may be a folder or a file
+					list($path, $fileName)= Utility::splitPath($file['path']);
+					$newFile['path']=$path;
+					$newFile['fileName']=$fileName;
+					$newFile['lastModifiedTime']=$file['modified'];
+					$newFile['rev']=$file['rev'];
+					$newFile['size']=$file['size'];
+					$newFile['isDirectory']=$file['is_dir'];
+					$newFile['hash']=null;// Passing null because we dont have hash values for these 
+					// but we might get them in the future if $file is actually a folder 
+					FileModel::addOrUpdateFile($userCloudID, $newFile);
+				}
+			}
+			// if no data is received ..means data we have is correct, send it directly
+			// TO BE COMMENTED LATER THIS FUNCTION DOES NOT RETURN ANYTHING
+			//return $newMetaData;
+			//return FileModel::getFolderContents($userCloudID, $folderPath);
+
+		}catch(Exception $e){
+				Log::info("Exception raised in Dropbox::refreshFolder",array('userCloudID'=>$userCloudID, 'folderPath'=>$folderPath));
+				Log::error($e);				
+				throw $e;
+		}
+	}
+/************************************************************************************************/
+	/*
+	*	@params: None
+	*	None
+	*	@return value: This function returns an object of Dropbox\WebAuth class
+	* 	@Exceptions:	Exception
+	*/
+  // TODO  Redirect URI
+    private function getWebAuth(){
+    	try{
+	        session_start();
+	        $path= app_path().'/database/dropbox-app-info.json';
+	        $appInfo = Dropbox\AppInfo::loadFromJsonFile($path);
+	        $redirectUri = "http://localhost/UnifiedCloud/public/auth/dropbox";// This needs a Https link ..only localhost 
+	                                                                    //is allowed for http
+	        $csrfTokenStore = new Dropbox\ArrayEntryStore($_SESSION, 'date(format)ropbox-auth-csrf-token');
+	        return new Dropbox\WebAuth($appInfo, self::$clientIdentifier, $redirectUri, $csrfTokenStore);
+    	
+    	}catch(Exception $e){
+				Log::info("Exception raised in Dropbox::getWebAuth");
+				Log::error($e);
+				throw $e;
+		}
+    }
+
+/************************************************************************************************/
+ 	/*
+	 *	@params :
+	 *	'userCloudID'				: ID of the user
+	 *	@return value: instance of Dropbox/Client class
+	 *	@exceptions: AccessTokenNotFoundException
+	*/
+	private function getClient($userCloudID){
+			try{
+				$accessToken = UserCloudInfo::getAccessToken($userCloudID);
+				if($accessToken == null){
+					throw new AccessTokenNotFoundException();
+					return null;
+				}else{
+					$client = new Dropbox\Client($accessToken,self::$clientIdentifier);
+					return $client;
+				}
+			}catch(Exception $e){
+				Log::info("Exception raised in Dropbox::getClient",array('userCloudID'=>$userCloudID));
+				Log::error($e);
+				throw $e;
+			}
+
+	}
+/************************************************************************************************/
+
 }
