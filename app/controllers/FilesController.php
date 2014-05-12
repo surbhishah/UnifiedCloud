@@ -33,6 +33,8 @@ class FilesController extends BaseController{
 				Log::error($e->getMessage());
 				throw $e;
 
+		}catch(Dropbox\Exception_StorageQuotaExceeded $e){
+			//TODO
 		}catch(Exception $e){
 				Log::info("Exception raised in FilesController::postFile");
 				Log::error($e->getMessage());
