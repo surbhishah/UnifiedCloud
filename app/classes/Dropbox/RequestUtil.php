@@ -255,7 +255,9 @@ final class RequestUtil
         if ($sc === 401) return new Exception_InvalidAccessToken($message);
         if ($sc === 500 || $sc === 502) return new Exception_ServerError($message);
         if ($sc === 503) return new Exception_RetryLater($message);
-
+        // Handle the case when user exceeds his data storage limit 
+        // Added by sur
+        if ($sc === 507) return new Exception_StorageQuotaExceeded($message);
         return new Exception_BadResponse("Unexpected $message");
     }
 

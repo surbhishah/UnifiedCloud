@@ -28,8 +28,7 @@ class EncryptionController extends BaseController {
 			//passKey required to encrypt randomly generated Encryption key. 
 			$userPassKey = Input::get('passKey');
 			Log::info("inp postEncryptFiles", array("cloudName"=>$cloudName, "passkey"=>$userPassKey, "cloudDestinationPath"=>$cloudDestinationPath, "userCloudID"=>$userCloudID));
-			$factory = new CloudFactory(); 			// to controller 
-			$cloud = $factory->createCloud($cloudName);
+			$cloud = parent::getCloudInstance($cloudName);
 			$i=0;// TO BE COMMENTED GEtting $result is not necessary ,,,delete it later abhishek
 			$files = Input::file('files');
 			foreach($files as $file){
@@ -80,8 +79,7 @@ class EncryptionController extends BaseController {
 		    $fileObject = null;
 
 		    //uploading encrypted file.
-		    $factory = new CloudFactory(); 
-			$cloud = $factory->createCloud($cloudName);
+		    $cloud = parent::getCloudInstance($cloudName);
 			$result = $cloud->upload($userCloudID, $file, $cloudDestinationPath);	
 			
 		    //encrypting randomPassKey with userPassKey
@@ -118,8 +116,7 @@ class EncryptionController extends BaseController {
 			 	$cloudName = Input::get('cloudName');// to be COMMENTED later abhishek if cloudName is passed as parameter 
 				$userPassKey = Input::get('passKey');
 
-				$factory = new CloudFactory(); 			// to controller 
-				$cloud = $factory->createCloud($cloudName);
+				$cloud = parent::getCloudInstance($cloudName);
 				$fileDestination =$cloud->download($userCloudID, $cloudSourcePath, $fileName);			
 				// Return the file with the response so that browser shows an option to user to download a file
 				

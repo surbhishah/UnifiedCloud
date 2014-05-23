@@ -22,8 +22,7 @@ class AutosyncController extends BaseController {
             //$cloudName = Input::get('cloudName');
             //$userCloudID = Input::get('userCloudID');       
             $cloudDestinationPath = Input::get('cloudDestinationPath');
-            $factory = new CloudFactory(); 
-            $cloud = $factory->createCloud($cloudName);
+            $cloud = parent::getCloudInstance($cloudName);
             $file = Input::file('file');
             $result= $cloud->upload($userCloudID, $file, $cloudDestinationPath);    
             return Response::json($result);
@@ -45,8 +44,7 @@ class AutosyncController extends BaseController {
         try{
         
             $folderPath= Input::get('folderPath');
-            $factory = new CloudFactory(); 
-            $cloud = $factory->createCloud($cloudName);
+            $cloud = parent::getCloudInstance($cloudName);
             $result = $cloud->createFolder($userCloudID, $folderPath);
             //if $result == null then folder already exists
             return Response::json($result);
@@ -66,8 +64,7 @@ class AutosyncController extends BaseController {
     public function delete($cloudName, $userCloudID){
         try{
             $path= Input::get('path');
-            $factory = new CloudFactory(); 
-            $cloud = $factory->createCloud($cloudName);
+            $cloud = parent::getCloudInstance($cloudName);
             $result = $cloud->delete($userCloudID,$path);
             return Response::json($result);
 

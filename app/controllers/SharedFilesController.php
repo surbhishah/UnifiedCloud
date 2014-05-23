@@ -88,8 +88,7 @@ class SharedFilesController extends BaseController {
             $userCloudID = FileModel::find($file->fileID)->pluck('user_cloudID');
             $cloudID = UserCloudInfo::find($userCloudID)->pluck('cloudID');
             $cloudName = Cloud::getCloudName($cloudID);
-            $factory = new CloudFactory(); 
-            $cloud = $factory->createCloud($cloudName);
+            $cloud = parent::getCloudInstance($cloudName);
             $fileDestination=$cloud->download($file->user_cloudID, $file->path, $file->file_name);
             return Response::download($fileDestination,$file->file_name);
 

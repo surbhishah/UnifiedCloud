@@ -19,9 +19,8 @@ class FilesController extends BaseController{
 			//$cloudName = Input::get('cloudName');
 			$userCloudID = Input::get('userCloudID');		
 			$cloudDestinationPath = Input::get('cloudDestinationPath');
-			$factory = new CloudFactory(); 
-			$cloud = $factory->createCloud($cloudName);
-			$i=0;// TO BE COMMENTED GEtting $result is not necessary ,,,delete it later abhishek
+			$cloud = parent::getCloudInstance($cloudName);
+						$i=0;// TO BE COMMENTED GEtting $result is not necessary ,,,delete it later abhishek
 			$files = Input::file('files');
 			foreach($files as $file){
 				$result[$i]= $cloud->upload($userCloudID, $file, $cloudDestinationPath);	
@@ -34,6 +33,8 @@ class FilesController extends BaseController{
 				Log::error($e->getMessage());
 				throw $e;
 
+		}catch(Dropbox\Exception_StorageQuotaExceeded $e){
+			//TODO
 		}catch(Exception $e){
 				Log::info("Exception raised in FilesController::postFile");
 				Log::error($e->getMessage());
@@ -59,8 +60,7 @@ class FilesController extends BaseController{
 				$cloudSourcePath=Input::get('cloudSourcePath');
 			 	$fileName = Input::get('fileName');
 			 	$cloudName = Input::get('cloudName');// to be COMMENTED later abhishek if cloudName is passed as parameter 
-				$factory = new CloudFactory(); 			// to controller 
-				$cloud = $factory->createCloud($cloudName);
+				$cloud = parent::getCloudInstance($cloudName);
 				$fileDestination= $cloud->download($userCloudID, $cloudSourcePath, $fileName);			
 				// Return the file with the response so that browser shows an option to user to download a file
 				//return $fileDestination;
@@ -94,8 +94,7 @@ class FilesController extends BaseController{
 			$folderPath = Input::get('folderPath'); 
 			$userCloudID = Input::get('userCloudID');
 			$cached = Input::get('cached');
-			$factory = new CloudFactory(); 
-			$cloud = $factory->createCloud($cloudName);
+			$cloud = parent::getCloudInstance($cloudName);
 			$result=$cloud->getFolderContents($userCloudID, $folderPath,$cached);
 			
 			$jsonResult = Utility::arrayJsonEncode($result);
@@ -131,8 +130,7 @@ class FilesController extends BaseController{
 			$cloudName = Input::get('cloudName');
 			$folderPath= Input::get('folderPath');
 			$userCloudID = Input::get('userCloudID');
-			$factory = new CloudFactory(); 
-			$cloud = $factory->createCloud($cloudName);
+			$cloud = parent::getCloudInstance($cloudName);
 			$result = $cloud->createFolder($userCloudID, $folderPath);
 
 			//if $result == null then folder already exists
@@ -168,8 +166,7 @@ class FilesController extends BaseController{
 			$path= Input::get('path');
 			$userCloudID =  Input::get('userCloudID');
 
-			$factory = new CloudFactory(); 
-			$cloud = $factory->createCloud($cloudName);
+			$cloud = parent::getCloudInstance($cloudName);
 			$result = $cloud->delete($userCloudID,$path);
 			return View::make('complete')		
 						->with('message',$result);// Needed only for testing the functioning, May be COMMENTED
@@ -203,8 +200,7 @@ class FilesController extends BaseController{
 			$cloudName = Input::get('cloudName');
 			$userCloudID = Input::get('userCloudID');		
 			$folderPath = Input::get('folderPath');
-			$factory = new CloudFactory();
-			$cloud = $factory->createCloud($cloudName);
+			$cloud = parent::getCloudInstance($cloudName);
 			$zipFileName = $cloud->downloadFolder($userCloudID,$folderPath);
 			header('Content-Type: application/zip');
 			header('Content-disposition: attachment; filename='.$zipFileName);
@@ -229,8 +225,7 @@ class FilesController extends BaseController{
 		try{
 			$cloudName = Input::get('cloudName');
 			$userCloudID = Input::get('userCloudID');
-			$factory = new CloudFactory();
-			$cloud = $factory->createCloud($cloudName);
+			$cloud = parent::getCloudInstance($cloudName);
 			return View::make('complete')->with('message', $cloud->getFullFileStructure($userCloudID));
 			
 		}catch(UnknownCloudException $e){

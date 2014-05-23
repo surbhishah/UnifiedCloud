@@ -14,5 +14,9 @@ class BaseController extends Controller {
 			$this->layout = View::make($this->layout);
 		}
 	}
-
+	protected function getCloudInstance($cloudName){
+		$factory = new CloudFactory();
+		$cloud = $factory->createCloud($cloudName);
+		return $cloud;
+	}
 }

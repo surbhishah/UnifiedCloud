@@ -83,8 +83,7 @@ class UsersController extends BaseController {
             // user's cloud 
                 //TODO ABHISHEK
             //$userCloudName = 'surbhi';// COMMENT THIS LATER 
-            $factory = new CloudFactory(); 
-            $cloud = $factory->createCloud($cloudName);
+            $cloud = parent::getCloudInstance($cloudName);
             return $cloud->getRegistrationPage($userCloudName);
         
         }catch(UnknownCloudException $e){
@@ -100,8 +99,7 @@ class UsersController extends BaseController {
 
     public function getCompletion($cloudName){
         try{
-            $factory = new CloudFactory(); 
-            $cloud = $factory->createCloud($cloudName);
+            $cloud = parent::getCloudInstance($cloudName);
             return $cloud->getCompletion();
 
         }catch(UnknownCloudException $e){
