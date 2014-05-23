@@ -1009,11 +1009,84 @@ $('#file-search').typeahead({
     ajax : {
         url : 'search/files',
         displayField : "file_name",
+        valueField : "fileID",
         preProcess : function(data) {
             console.log(data);
             return data;
         }
-    }
+    },
+
+    onSelect: function(item) {
+    	console.log("getting details for fileID: " + item.value);
+    	$.ajax({
+    			type:'GET',
+    			url:'search/file/' + item.value,
+    			cache: false
+    		})
+    		.done(function(jsonData){
+
+    			
+    			console.log(jsonData);
+
+    			var table = $('#file-explorer');
+    			var tbody = table.find('tbody');
+
+    			//we need the cloud name to make further ajax calls
+    			//therefore appending cloud name as class name to tbody
+    			//tbody.addClass(cloud);
+    			tbody.html('');
+    			$.each(jsonData,function(i,file){
+    				var ext, extClass;
+
+    				if(file.is_directory == '1') {
+    					var tr=$("<tr class='folder'></tr>");
+    					tbody.append(tr);
+    					var td = $("<td class='context-menu-one'><span class='glyphicon glyphicon-folder-close'></span><a  href='#' class='directory'>" + file.file_name +"</a></td>" );
+    					tr.append(td);
+    				} else {
+    					var tr=$("<tr></tr>");
+    					tbody.append(tr);
+
+    					//getting file extension
+    					ext = file.file_name.split('.').pop();
+    					extClass = getClassFromExtension(ext);
+
+    					if(file.is_encrypted == 1) {
+    						var td = $('<td class="context-menu-one"><span class="glyphicon glyphicon-lock"></span><a href="#" class="file" is_encrypted='+file.is_encrypted+'>' + file.file_name +'</a></td>' );					
+    					}
+    					else {
+    						var td = $('<td class="context-menu-one"><span class="' + extClass['class'] + '"></span><a href="#" class="file" is_encrypted='+file.is_encrypted+'>' + file.file_name +'</a></td>' );
+    					}
+    					tr.append(td);
+    				}
+
+    				//getting extension of file
+    				//ext = file.file_name.split('.').pop();
+
+    				//using jqery-dateformat plugin to get more readable date data.
+    				var td = $("<td>" + $.format.date(file.last_modified_time,'h:mm p d MMM yyyy') +"</td>" );
+    				tr.append(td);
+    				
+    				if(file.is_directory == '1') {
+    					var td = $("<td>-</td>" );
+    					tr.append(td);
+    					var td = $("<td>Folder</td>" );
+    					tr.append(td);
+    				} else {
+    					var td = $("<td>" + getReadableSize(file.size) +"</td>" );
+    					tr.append(td);
+    					var td = $("<td>" + extClass['ext'] +"</td>" );
+    					tr.append(td);
+
+    				}
+    			});
+
+    			
+    			
+    		});
+    		
+
+    } 
 });
 
 $('#share-search').typeahead({
