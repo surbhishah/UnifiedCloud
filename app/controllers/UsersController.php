@@ -71,7 +71,7 @@ class UsersController extends BaseController {
         Auth::logout();
         //TODO ABHISHEK //TODO Cache clear SUrbhi
         Session::flush();
-        return Redirect::route('landing')->with('message', 'Your are now logged out!');
+        return Redirect::route('landing')->with('message', 'You are now logged out!');
     }
     
     //cloudName = dropbox (case insensitive)

@@ -266,3 +266,8 @@ Route::get('user/search/files',array(
 	'as'=>'search_files_route',
 	'uses'=>'SearchController@getFilesForSearch'
 ));
+
+Route::get('user/search/file/{fileID}',array(
+	'as'=>'search_file',
+	'uses'=>'SearchController@getFileDetailsForFileID'
+));

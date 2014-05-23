@@ -34,6 +34,15 @@ class SearchController extends BaseController {
 		//return View::make('complete')->with('message',$fileArray);
 	}
 /**********************************************************************************************/    
+	public function getFileDetailsForFileID($fileID){
+		//$userID = Input::get('userID');
+		// $userID = Session::get('userID');
+		 Log::info('fileID in SearchController',array('fileID' => $fileID));
+		$fileArray = FileModel::getFileDetails($fileID);
+		return $fileArray;
+		//return View::make('complete')->with('message',$fileArray);
+	}
+/**********************************************************************************************/    
 	
 	private function levenschtein_search($query) {
 

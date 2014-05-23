@@ -178,10 +178,16 @@ class FileModel extends Eloquent  {
 	}
 /**********************************************************************************************/
 	private static function getFilesOfCloud($userCloudID){
-		return FileModel::where('user_CloudID','=',$userCloudID)->select('user_cloudID', 'is_encrypted','path','file_name',
+		return FileModel::where('user_CloudID','=',$userCloudID)->select('fileID','user_cloudID', 'is_encrypted','path','file_name',
 			'is_directory','last_modified_time','size')
 				->get()
 				->toArray();
+	}
+/**********************************************************************************************/
+	public static function getFileDetails($fileID){
+		return FileModel::where('fileID','=',$fileID)->select('fileID','user_cloudID', 'is_encrypted','path','file_name',
+			'is_directory','last_modified_time','size')
+				->get();
 	}
 /**********************************************************************************************/
 }
