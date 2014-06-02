@@ -15,7 +15,11 @@ class CloudFactory{
 			$className = $clouds[$index];
 			$ref = new ReflectionClass($className);
 			$classInstance = $ref->newInstance();
-			return $classInstance;
+			if($classInstance instanceof CloudInterface)
+				return $classInstance;
+			else
+				throw new UnknownCloudException();
+				
 
 		}catch(ReflectionException $e){
 			Log::info("Exception raised in CloudFactory",array('CloudName'=>$cloudName));
