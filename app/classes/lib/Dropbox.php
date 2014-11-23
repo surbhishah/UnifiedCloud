@@ -290,7 +290,7 @@ class Dropbox implements CloudInterface{
 				else{
 					$userCloudID = UserCloudInfo::setAccessToken($userID,$userCloudName, $uid, self::$cloudID, $accessToken);
 					return Redirect::route('dashboard')
-							->with('message','Cloud successfully added "'.$userCloudName);		
+							->with('message','Cloud successfully added '.$userCloudName);		
 				}
             }
             catch (Dropbox\WebAuthException_BadRequest $ex) {

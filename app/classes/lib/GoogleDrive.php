@@ -1,7 +1,8 @@
 <?php
 class GoogleDrive implements CloudInterface{
-
-
+	private $client;
+	private static $cloudID = '2';
+	
 	public function upload($userCloudID, $userfile, $cloudDestinationPath){
 
 		try{
@@ -388,11 +389,31 @@ private function printFilesInFolder($service, $folderId)
 			}
 
 		}
+		
+		
 		public function getRegistrationPage($userCloudName='googledrive'){
 			try
-			{		
-				self::getAuth($userCloudName);
+			{	
+				$redirectUri = "http://localhost/UnifiedCloud/public/auth/googledrive";
+				session_start();
+				Session::put('userCloudName', $userCloudName );
 
+
+				$this->client = new Google_Client();
+				$this->client->setApplicationName("Project Kumo");
+				$this->client->setClientID('106317172296-foodr0qjqqu6qrj1pabnufd8k2d2tsce.apps.googleusercontent.com');
+				$this->client->setClientSecret('u8eobXG_MdNmBgzFFxrhWrgU');
+				$this->client->setDeveloperKey('AIzaSyAfvNjLrKN4gEQZRhZRSBzDysaofEstwV4');
+				$this->client->setAccessType('offline');
+					//$client->setApprovalPrompt('force');
+				$this->client->setScopes(array('https://www.googleapis.com/auth/userinfo.profile',
+					'https://www.googleapis.com/auth/userinfo.email','https://www.googleapis.com/auth/drive','https://www.googleapis.com/auth/drive.readonly.metadata','https://www.googleapis.com/auth/drive.appdata','https://www.googleapis.com/auth/drive.file','https://www.googleapis.com/auth/drive.readonly'));
+				$this->client->setRedirectUri($redirectUri);
+				
+				$url = $this->client->createAuthUrl();
+				Log::info("url", array("url", $url));
+				return Redirect::to($url);
+			
 			}catch(Exception $e){
 				Log::info("Exception raised in Dropbox::getRegistrationPage");
 				Log::error($e);
@@ -401,15 +422,30 @@ private function printFilesInFolder($service, $folderId)
 
 		}
 		public function getCompletion(){
-
-			list($accessToken) = $this->getAuth()->finish($_GET);
-			//echo $accessToken;
-			$client = getClientObject($accessToken);
-			$oauth2 = new Google_Oauth2Service($client);
-			$userInfo = $oauth2->userinfo->get();
-			$uid = $userInfo['id'];
-			$userID = Session::get('userID');
-			$userCloudName=Session::get('userCloudName');
+			$redirectUri = "http://localhost/UnifiedCloud/public/auth/googledrive";
+	
+			$this->client = new Google_Client();
+			$this->client->setApplicationName("Project Kumo");
+			$this->client->setClientID('106317172296-foodr0qjqqu6qrj1pabnufd8k2d2tsce.apps.googleusercontent.com');
+			$this->client->setClientSecret('u8eobXG_MdNmBgzFFxrhWrgU');
+			$this->client->setDeveloperKey('AIzaSyAfvNjLrKN4gEQZRhZRSBzDysaofEstwV4');
+			$this->client->setAccessType('offline');
+				//$client->setApprovalPrompt('force');
+			$this->client->setScopes(array('https://www.googleapis.com/auth/userinfo.profile',
+				'https://www.googleapis.com/auth/userinfo.email','https://www.googleapis.com/auth/drive','https://www.googleapis.com/auth/drive.readonly.metadata','https://www.googleapis.com/auth/drive.appdata','https://www.googleapis.com/auth/drive.file','https://www.googleapis.com/auth/drive.readonly'));
+			$this->client->setRedirectUri($redirectUri);
+    
+	    	$this->client->authenticate($_GET['code']);  
+	    	$token = $this->client->getAccessToken();
+	    	//Log::info("Token = ", array("token", $token));
+			
+	    	//$client = getClientObject($accessToken);
+			// $oauth2 = new Google_Oauth2Service($client);
+			// $userInfo = $oauth2->userinfo->get();
+			// $uid = $userInfo['id'];
+			$uid="shdjdjhdhjhd";
+			$userID = Session::get('userID');			
+			$userCloudName= Session::get('userCloudName');
 
 			if(User::userAlreadyExists($uid, self::$cloudID)){
 				return Redirect::route('dashboard')
@@ -417,12 +453,12 @@ private function printFilesInFolder($service, $folderId)
 			}
 			else if(UserCloudInfo::userCloudNameAlreadyExists($userID,self::$cloudID, $userCloudName)){
 				return Redirect::route('dashboard')
-				->with('message','You already have an account with this name "'.$userCloudName);		
+				->with('message','You already have and account with this name "'.$userCloudName);		
 			}
 			else{
 				$userCloudID = UserCloudInfo::setAccessToken($userID,$userCloudName, $uid, self::$cloudID,$token);
 				return Redirect::route('dashboard')
-				->with('message','Cloud successfully added "'.$userCloudName);		
+				->with('message','Cloud successfully added '.$userCloudName);		
 			}
 
 
@@ -529,32 +565,7 @@ private function getFolder($service,$folderid,$folderName,$path)
 
 
 
-	private function getAuth($userCloudName){
-		session_start();
-
-		$client = new Google_Client();
-
-		$client->setClientID('384532781768-98jkqnb5683qb72fkhvbs1kmasqrjp4e.apps.googleusercontent.com');
-		$client->setClientSecret('qpcmArT7UhEHy46ibMs51WFS');
-		$client->setDeveloperKey('AIzaSyCZFa9xF56smL3Dwx1vMCwEuTTgL5vo6q0s');
-		$client->setAccessType('offline');
-			//$client->setApprovalPrompt('force');
-		$client->setScopes(array('https://www.googleapis.com/auth/userinfo.profile',
-			'https://www.googleapis.com/auth/userinfo.email','https://www.googleapis.com/auth/drive','https://www.googleapis.com/auth/drive.readonly.metadata','https://www.googleapis.com/auth/drive.appdata','https://www.googleapis.com/auth/drive.file','https://www.googleapis.com/auth/drive.readonly'));
-		$redirectUri = "http://localhost/UnifiedCloud/public/auth/googledrive";
-		$client->setRedirectUri($redirectUri);
-		$service = new Google_DriveService($client);
-		$oauth2 = new Google_Oauth2Service($client);
-           // Session::put('userCloudName', $userCloudName );
-
-		$ret= $client->authenticate();
-
-
-			//$t=$client->getAccessToken($client);
-//print_r($t);
-
-
-	}
+	
 /******************************************************************************
 	@params:$parentid: id of parent folder in which file is to be inserted
 	 @action: insert file on drive
@@ -627,27 +638,27 @@ private function getFolder($service,$folderid,$folderName,$path)
 			'token_type' => 'Bearer', 'expires_in' => 3600, 
 			'id_token' => 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjkyZDkxNzNiYjgxNjA5NjNlNjRhZDUzYzEzYTFkMmEzOWE3ZWUyNGMifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiZW1haWwiOiJnYXJnLnBvb2phMjIwNjkyQGdtYWlsLmNvbSIsImlkIjoiMTAxODY1ODAzMDA1MTY1ODczOTI3Iiwic3ViIjoiMTAxODY1ODAzMDA1MTY1ODczOTI3IiwiY2lkIjoiMzg0NTMyNzgxNzY4LTk4amtxbmI1NjgzcWI3MmZraHZiczFrbWFzcXJqcDRlLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXpwIjoiMzg0NTMyNzgxNzY4LTk4amtxbmI1NjgzcWI3MmZraHZiczFrbWFzcXJqcDRlLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwidG9rZW5faGFzaCI6InpMbEVqQWhBdW10bHVYU285TV8xbUEiLCJhdF9oYXNoIjoiekxsRWpBaEF1bXRsdVhTbzlNXzFtQSIsInZlcmlmaWVkX2VtYWlsIjoidHJ1ZSIsImVtYWlsX3ZlcmlmaWVkIjoidHJ1ZSIsImF1ZCI6IjM4NDUzMjc4MTc2OC05OGprcW5iNTY4M3FiNzJma2h2YnMxa21hc3FyanA0ZS5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsImlhdCI6MTM5NTkxMjg2MiwiZXhwIjoxMzk1OTE2NzYyfQ.BvISjGvX2DhFUm6F1K6ITm3lINeovw8LzaKWzr1X5LXCxGMXyVgF-LhIx-5zXZgYYnnuI2wAVYcWLXaVKML2GaAys-op1btbwSJ8medZGzZNLnXLTV_GUxPVIwa5ZC648_G3jcufb4GzlUryV1MqEwad6BIW80vNFUMCceysrws',
 			'refresh_token' => '1/lypt_tQ8VtvtOTO_8w4kLjZFpnoctdOeYysQpWSYpyw','created' => 1395913155);
-$token = json_encode($arr);
-$client->setAccessToken($token);
+		$token = json_encode($arr);
+		$client->setAccessToken($token);
 
 
-if($client->isAccessTokenExpired()) 
-{
-    		//$client->refreshToken(' 1/5pjNXv3Pj3c00aZETO-38ZZImKNXo1uZXOvHkepkNqg');
+		if($client->isAccessTokenExpired()) 
+		{
+		    		//$client->refreshToken(' 1/5pjNXv3Pj3c00aZETO-38ZZImKNXo1uZXOvHkepkNqg');
 
-	$r=$client->revokeToken($token);
+			$r=$client->revokeToken($token);
 
-	$token =$client->getAccessToken();
-	$client->setAccessToken($token);
-
-
-
-	if($client->isAccessTokenExpired()){}
+			$token =$client->getAccessToken();
+			$client->setAccessToken($token);
 
 
 
-}
-return $client;
+			if($client->isAccessTokenExpired()){}
+
+
+
+		}
+		return $client;
 
   } //end of getClientObject Function
 

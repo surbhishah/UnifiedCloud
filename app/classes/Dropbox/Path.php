@@ -64,7 +64,7 @@ final class Path
             return "must be valid UTF-8; BMP only, no surrogates, no U+FFFE or U+FFFF";
         }
 
-        if (substr_compare($path, "/", 0, 1) !== 0) return "must start with \"/\"";
+        if (\substr_compare($path, "/", 0, 1) !== 0) return "must start with \"/\"";
         $l = strlen($path);
         if ($l === 1) return null;  // Special case for "/"
 
@@ -113,7 +113,7 @@ final class Path
     {
         Checker::argString("path", $path);
 
-        if (substr_compare($path, "/", 0, 1) !== 0) {
+        if (\substr_compare($path, "/", 0, 1) !== 0) {
             throw new \InvalidArgumentException("'path' must start with \"/\"");
         }
         $l = strlen($path);
