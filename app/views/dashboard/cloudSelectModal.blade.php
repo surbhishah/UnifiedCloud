@@ -74,7 +74,7 @@ array('cloudName' => 'Dropbox','userCloudName' => 'mycloud')) }}"><img src={{ as
             <h4>Google Drive</h4>
           </div>
           <div class="col-md-12 col-md-offset-3">
-            <input type="text" name="userCloudName" class="form-control" placeholder="Name your cloud" value="">            
+            <input type="text" name="userDriveCloudName" class="form-control" placeholder="Name your cloud" value="">            
           </div>
           <div class="col-md-12 col-md-offset-5">
             <button type="submit" id="Drive-auth" class="btn btn-custom-small">Go!</button>       

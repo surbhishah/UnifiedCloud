@@ -959,7 +959,7 @@ $('#Dropbox-auth').on('click',function(){
 
 //auth call for Google Drive
 $('#Drive-auth').on('click',function(){
-	var userCloudName = $('[name="userCloudName"]').val();
+	var userCloudName = $('[name="userDriveCloudName"]').val();
 	var cloudName = $('#googleDriveAuthModal .modal-title').html();
 	url = "authenticate/" + cloudName + "/" +userCloudName;
 	console.log(url);

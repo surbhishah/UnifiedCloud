@@ -19,11 +19,7 @@ if ($mbstring_func_overload & 2 == 2) {
 if (strlen((string) PHP_INT_MAX) < 19) {
     // Looks like we're running on a 32-bit build of PHP.  This could cause problems because some of the numbers
     // we use (file sizes, quota, etc) can be larger than 32-bit ints can handle.
-
-    /*
-        Uncomment this line later only for test purposes...
-    */
-    //throw new \Exception("The Dropbox SDK uses 64-bit integers, but it looks like we're running on a version of PHP that doesn't support 64-bit integers (PHP_INT_MAX=" . ((string) PHP_INT_MAX) . ").  Library: \"" . __FILE__ . "\"");
+    throw new \Exception("The Dropbox SDK uses 64-bit integers, but it looks like we're running on a version of PHP that doesn't support 64-bit integers (PHP_INT_MAX=" . ((string) PHP_INT_MAX) . ").  Library: \"" . __FILE__ . "\"");
 }
 
 /**
@@ -234,7 +230,7 @@ final class RequestUtil
      */
     static function parseResponseJson($responseBody)
     {
-        $obj = json_decode($responseBody, TRUE, 10);
+        $obj = json_decode($responseBody, true, 10);
         if ($obj === null) {
             throw new Exception_BadResponse("Got bad JSON from server: $responseBody");
         }
@@ -255,10 +251,8 @@ final class RequestUtil
         if ($sc === 401) return new Exception_InvalidAccessToken($message);
         if ($sc === 500 || $sc === 502) return new Exception_ServerError($message);
         if ($sc === 503) return new Exception_RetryLater($message);
-        // Handle the case when user exceeds his data storage limit 
-        // Added by sur
-        if ($sc === 507) return new Exception_StorageQuotaExceeded($message);
-        return new Exception_BadResponse("Unexpected $message");
+
+        return new Exception_BadResponseCode("Unexpected $message", $sc);
     }
 
     /**
