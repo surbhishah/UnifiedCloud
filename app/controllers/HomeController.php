@@ -19,5 +19,10 @@ class HomeController extends BaseController {
 	{
 		return View::make('hello');
 	}
-
+	public function getClient($userCloudID, $cloudName){
+	    //$userCloudID = Input::get('userCloudID');		
+		$cloud = parent::getCloudInstance($cloudName);
+		return $cloud->getClientObject($userCloudID);
+		
+	}
 }

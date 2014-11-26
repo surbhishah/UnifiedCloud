@@ -13,8 +13,14 @@ class CloudFactory{
 				throw new UnknownCloudException();
 			
 			$className = $clouds[$index];
-			$ref = new ReflectionClass($className);
-			$classInstance = $ref->newInstance();
+			$reflection = new ReflectionClass($className);
+
+			$classInstance = call_user_func($className.'::getInstance'); 
+			
+			// $getInstance = $reflection->getMethod('getInstance');
+			// $classInstance= $getInstance->invoke();
+			// //$classInstance = $ref->newInstance();
+			
 			if($classInstance instanceof CloudInterface)
 				return $classInstance;
 			else

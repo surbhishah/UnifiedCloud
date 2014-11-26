@@ -10,4 +10,5 @@ interface CloudInterface{
 		public function getRegistrationPage($userCloudName);
 		public function getCompletion();
 		public function downloadFolder($userCloudID, $folderPath);
+		public function getClientObject($userCloudID);
 }

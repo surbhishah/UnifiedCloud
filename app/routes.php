@@ -271,3 +271,7 @@ Route::get('user/search/file/{fileID}',array(
 	'as'=>'search_file',
 	'uses'=>'SearchController@getFileDetailsForFileID'
 ));
+Route::get('user/getClient/{userCloudID}/{cloudName}',array(
+	'as'=>'testclient',
+	'uses'=>'HomeController@getClient'
+));

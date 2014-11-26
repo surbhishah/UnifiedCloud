@@ -16,6 +16,13 @@ class UserCloudInfo extends Eloquent  {
 	public function cloud(){
 		$this->hasOne('Cloud','cloudID','cloudID');
 	}
+	public static function updateAccessToken($userCloudID,$accessToken) {
+		//$userCloudInfo = new UserCloudInfo;
+		$userCloudInfo = UserCloudInfo::find($userCloudID);
+		$userCloudInfo->access_token = $accessToken;
+		$userCloudInfo->save();
+		return $userCloudInfo->user_cloudID;
+	}
 /**********************************************************************************************/
 	/*
 	*	@params:

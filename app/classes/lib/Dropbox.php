@@ -3,6 +3,22 @@ class Dropbox implements CloudInterface{
 	private static $clientIdentifier = "Project-Kumo";
 	private static $cloudID = '1';
 	private static $cloudName = 'dropbox';// Do not change used by DownloadFolder
+	
+/************************************************************************************************/
+	/*
+	* Singleton
+	*/
+	private function __construct(){
+		
+	}
+	public static function getInstance(){
+		static $inst = null;
+        if ($inst === null) {
+            $inst = new Dropbox();
+        }
+        return $inst;
+
+	}
 /************************************************************************************************/
 	/*
 	 *	@params :
