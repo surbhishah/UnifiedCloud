@@ -140,6 +140,7 @@ class GoogleDrive implements CloudInterface{
 			 	$client= $this->getClientObject($userCloudID);
 			 	$service = new Google_DriveService($client);
 			 	$f=Utility::splitPath($folderPath);
+			 	Log::info('$f after split path',array('$f',$f));
 			 	$fileName = $f[1];
 			 	Log::info("In getFolderContents fileName = ",array("filename", $fileName));
 			 	if($fileName!='')
@@ -147,12 +148,13 @@ class GoogleDrive implements CloudInterface{
 			 		$s="mimeType='application/vnd.google-apps.folder' and trashed=false and title contains '".$fileName."'";
 			 		$parameters = array("q"=> $s ,"maxResults"=>'1');
 			 		$folderid=self::retrieveFolderId($service, $parameters);
-				 	Log::info("In getFolderContents = ",array("folderid", $folderid));
+				 	Log::info("In getFolderContents = ",array("folderid", $folderid,"$param",$parameters));
 			 		$flag='true';
 			 	}
 			 	else
 			 	{
 			 		$folderid='root';
+
 			 	}
 			 	//$flag is a string , not boolean
 			 	$flag = self::retrieveAllChanges($service, $startChangeId = NULL,$userCloudID,$folderPath,$folderid,$fileName);
@@ -160,7 +162,12 @@ class GoogleDrive implements CloudInterface{
 			 	if($flag=='true')
 			 	{
 					$arr=self::printFilesInFolder($service,$folderid); //it returns fileid of each child file/folder of the
+					Log::info("=============================arr============================");
+					Log::info("arr: ",array("arr",$arr));	
+					Log::info("=============================meta============================");
 					$meta=self::getMetaData($service,$arr);//returns metadata of each file in folder
+					Log::info("meta",array("meta",$meta));
+					Log::info("===============================================================");
 					foreach ($meta as $m) {
 						$filearr['fileName']=$m['title'];
 						$filearr['path']=$folderPath;
@@ -199,10 +206,10 @@ class GoogleDrive implements CloudInterface{
 
 @return: string ...true if changes occured else false
 *********************************************************************************/
-	private function retrieveAllChanges($service, $startChangeId = NULL,$userCloudID,$path,$folderid,$fileName) 
+	private function retrieveAllChanges($service, $startChangeId,$userCloudID,$path,$folderid,$fileName) 
 	{
 		$result = array();
-		$startChangeId="2800";
+		// $startChangeId="2800";
 		$pageToken = NULL;
 		try 
 		{

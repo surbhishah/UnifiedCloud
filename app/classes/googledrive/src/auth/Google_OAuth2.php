@@ -92,7 +92,7 @@ class Google_OAuth2 extends Google_Auth {
     if (!$code && isset($_GET['code'])) {
       $code = $_GET['code'];
     }
-    Log::info("Code = ",array('Code' =>$code);
+    Log::info("Code = ",array('Code',$code));
   
     if ($code) {
       // We got here from the redirect from a successful authorization grant, fetch the access token
