@@ -446,6 +446,13 @@ $('#add-cloud').tooltip({
 	'title' : 'Add new cloud'
 });
 
+$('.cloud-name').tooltip({
+	'trigger' :'hover',
+	'title' : function() {
+		return $(this).html().trim();
+	}
+});
+
 /* ========================================================
  *	Core functions start here
  * ========================================================
