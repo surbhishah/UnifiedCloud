@@ -178,6 +178,7 @@ class FileModel extends Eloquent  {
 /**********************************************************************************************/
 	public static function getFilesAllClouds($userID){
 		return DB::table('files')
+		->whereRaw('path in ("root","/")')
 	    ->where('userID', '=', $userID)
             ->join('user_cloud_info', 'files.user_cloudID', '=', 'user_cloud_info.user_cloudID')
             ->join('clouds', 'user_cloud_info.cloudID', '=', 'clouds.cloudID')            

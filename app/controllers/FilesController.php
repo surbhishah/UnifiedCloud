@@ -242,10 +242,12 @@ class FilesController extends BaseController{
 
 	}	
 /************************************************************************************************/
-	public function getFiles($userID){
+	public function getFiles(){
 		try{
-			return FileModel::getFilesAllClouds($userID);
-				
+			$userID = Session::get('userID');
+			$jsonResult = Utility::arrayJsonEncode(FileModel::getFilesAllClouds($userID));
+			return $jsonResult;
+
 		}catch(Exception $e){
 				Log::info("Exception raised in FilesController::getFiles ");
 				Log::error($e->getMessage());

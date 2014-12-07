@@ -130,6 +130,12 @@ Route::get('user/folder_content',array(
 	'uses'=>'FilesController@getFolderContents'
 ));
 
+// get all cloud folders
+Route::get('user/allcloudfiles',array(
+	'as' => 'get_all_cloud_files',
+	'uses' => 'FilesController@getFiles'
+));
+
 // create folder 
 Route::get('user/new_folder',array(
 	'as'=>'create_folder_route',
@@ -264,7 +270,7 @@ Route::get('remote/delete/{cloudName}/{userCloudID}',array(
 // correctly 
 Route::get('user/search/files',array(
 	'as'=>'search_files_route',
-	'uses'=>'SearchController@getFilesForSearch'
+	'uses'=>'SearchController@getAllFilesForSearch'
 ));
 
 Route::get('user/search/file/{fileID}',array(

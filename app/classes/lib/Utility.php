@@ -182,6 +182,47 @@ class Utility {
 	    return ($assoc)? '{'.$res.'}' : '['.$res.']';
 	}
 /**********************************************************************************************/
+	public static function levenschtein_search($fileName,$query) {
+		return 0;
+		// if (s.length === 0) return 0;
+  //       if (t.length === 0) return 0;
+ 
+  //       return Math.min(
+  //               levenshteinDistance(s.substr(1), t) + 1,
+  //               levenshteinDistance(t.substr(1), s) + 1,
+  //               levenshteinDistance(s.substr(1), t.substr(1)) + (s[0] !== t[0] ? 1 : 0)
+  //       );
+		// $m = strlen($s);
+		// $n = strlen($t);
+	 
+		// for($i=0;$i<=$m;$i++) $d[$i][0] = 0;
+		// for($j=0;$j<=$n;$j++) $d[0][$j] = 0;
+	 
+		// for($i=1;$i<=$m;$i++) {
+		// 	for($j=1;$j<=$n;$j++) {
+		// 		$c = ($s[$i-1] == $t[$j-1])?0:1;
+		// 		$d[$i][$j] = min($d[$i-1][$j]+1,
+		// 						 $d[$i][$j-1]+1,
+		// 						 $d[$i-1][$j-1]+$c);
+		// 	}
+		// }
+	 
+		// return $d[$m][$n]; 
+		if (strlen($fileName) == 0) 
+			return 0;
+
+		if (strlen($query) == 0)
+			return 0;
+		
+		$distance = min(
+				 Utility::levenschtein_search(substr($fileName, 1),$query) + 1,
+				 Utility::levenschtein_search(substr($query, 1),$fileName) + 1,
+				 Utility::levenschtein_search(substr($query, 1),substr($fileName, 1)) + ($fileName[0] != $query[0] ? 1 : 0)	
+			);
+		return $distance;
+	}
+
+
 }
 
 

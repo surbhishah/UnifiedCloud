@@ -30,6 +30,14 @@ class SearchController extends BaseController {
 		$userID = Session::get('userID');
 		$query = Input::get("query");
 		$fileArray= FileModel::getFilesForSearch($userID);
+		$searchedFileArray = array();
+		foreach ($fileArray as $file) {
+			$distance = Utility::levenschtein_search($file['file_name'],$query);
+			Log::info("distance between: ",array('file',$file['file_name'],'query',$query,'distance',$distance));
+			if($distance < 2) {
+				$searchedFileArray = array_merge($searchedFileArray,$file);
+			}
+		}
 		return Response::json($fileArray);
 		//return View::make('complete')->with('message',$fileArray);
 	}
@@ -37,15 +45,12 @@ class SearchController extends BaseController {
 	public function getFileDetailsForFileID($fileID){
 		//$userID = Input::get('userID');
 		// $userID = Session::get('userID');
-		 Log::info('fileID in SearchController',array('fileID' => $fileID));
+		 Log::info('fileID in SearchController',array('fileID',$fileID));
 		$fileArray = FileModel::getFileDetails($fileID);
 		return $fileArray;
 		//return View::make('complete')->with('message',$fileArray);
 	}
 /**********************************************************************************************/    
 	
-	private function levenschtein_search($query) {
-
-		return $result; 
-	} 
+	 
 }
