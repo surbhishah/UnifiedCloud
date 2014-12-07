@@ -241,4 +241,18 @@ class FilesController extends BaseController{
 		}
 
 	}	
+/************************************************************************************************/
+	public function getFiles($userID){
+		try{
+			return FileModel::getFilesAllClouds($userID);
+				
+		}catch(Exception $e){
+				Log::info("Exception raised in FilesController::getFiles ");
+				Log::error($e->getMessage());
+				throw $e;
+			
+		}
+
+	}	
+/************************************************************************************************/
 }
