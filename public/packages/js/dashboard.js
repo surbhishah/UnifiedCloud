@@ -124,6 +124,10 @@ function createNewFolder(folderName,jObj) {
 	}
 
 }
+
+/**
+ * get the folder content of all clouds, for just the root folder
+ */
 function getAllCloudFolderContents() {
 	$('.loading').addClass('loading-gif');
 	$.ajax({
@@ -151,12 +155,12 @@ function getAllCloudFolderContents() {
 			var ext, extClass;
 
 			if(file.is_directory == '1') {
-				var tr=$("<tr class='folder'></tr>");
+				var tr=$("<tr class='folder " + file.name + "' cloud-name-attr='"+ file.name +"'></tr>");
 				tbody.append(tr);
 				var td = $("<td class='context-menu-one'><span class='glyphicon glyphicon-folder-close'></span><a  href='#' class='directory' data-cloud-name='" + cloud + "'>" + file.file_name +"</a></td>" );
 				tr.append(td);
 			} else {
-				var tr=$("<tr></tr>");
+				var tr=$("<tr cloud-name-attr='"+ file.name +"' class='" + file.name + "'></tr>");
 				tbody.append(tr);
 
 				//getting file extension

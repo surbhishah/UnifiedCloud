@@ -284,3 +284,11 @@ body #file-explorer .breadcrumb li {
   font-weight: bolder;
   color: #cf4858;
 }
+
+.Dropbox {
+  border-left: 10px solid #3d9ae8;
+}
+
+.googledrive {
+  border-left: 10px solid #face4b;
+}
