@@ -136,6 +136,9 @@ function getAllCloudFolderContents() {
 		cache: false
 	})
 	.done(function(jsonData){
+		//setting cloud value to none so that 
+		//on click folder we can set it based on data-cloud-name
+		cloud = "none";
 
 		$('.loading').removeClass('loading-gif');
 		//console.log(jsonData);
@@ -157,7 +160,7 @@ function getAllCloudFolderContents() {
 			if(file.is_directory == '1') {
 				var tr=$("<tr class='folder " + file.name + "' cloud-name-attr='"+ file.name +"'></tr>");
 				tbody.append(tr);
-				var td = $("<td class='context-menu-one'><span class='glyphicon glyphicon-folder-close'></span><a  href='#' class='directory' data-cloud-name='" + cloud + "'>" + file.file_name +"</a></td>" );
+				var td = $("<td class='context-menu-one'><span class='glyphicon glyphicon-folder-close'></span><a  href='#' class='directory' data-cloud-name='" + file.name + "' data-cloud-id='" + file.user_cloudID + "'>" + file.file_name +"</a></td>" );
 				tr.append(td);
 			} else {
 				var tr=$("<tr cloud-name-attr='"+ file.name +"' class='" + file.name + "'></tr>");
@@ -576,8 +579,14 @@ $("#file-explorer tbody").on("click","a.directory",function(){
 	
 	breadcrumb.append('<li>'+nextPath+'</li>');
 	$('#cwd').html(fPath);
-
-	getFolderContents(cloud,fPath,'true');
+	if (cloud == 'none') {
+		cloud = $(this).attr('data-cloud-name');
+		userCloudID = $(this).attr('data-cloud-id');
+		console.log("data-cloud-name: " + cloud + " userCloudID: " + userCloudID);
+		getFolderContents(cloud,fPath,'true');
+	} else {
+		getFolderContents(cloud,fPath,'true');
+	}
 });
 
 //register click on table row.
