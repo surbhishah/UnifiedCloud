@@ -169,13 +169,24 @@ class FileModel extends Eloquent  {
 	public static function getFilesForSearch($userID){
 		$clouds = UserCloudInfo::getClouds($userID);
 		$fileArray =array();
-		$i = 0;
 		foreach ($clouds as $cloud) {
 			$files = self::getFilesOfCloud($cloud->user_cloudID);
 			$fileArray = array_merge($fileArray, $files);
 		}
 		return $fileArray;
 	}
+/**********************************************************************************************/
+	public static function getFilesAllClouds($userID){
+		return DB::table('files')
+	    ->where('userID', '=', $userID)
+            ->join('user_cloud_info', 'files.user_cloudID', '=', 'user_cloud_info.user_cloudID')
+            ->join('clouds', 'user_cloud_info.cloudID', '=', 'clouds.cloudID')            
+            ->select('fileID','user_cloud_info.user_cloudID', 'is_encrypted','path','file_name',
+			'is_directory','last_modified_time','size', 'clouds.name')
+            ->orderBy('file_name')
+            ->get();
+	} 
+
 /**********************************************************************************************/
 	private static function getFilesOfCloud($userCloudID){
 		return FileModel::where('user_CloudID','=',$userCloudID)->select('fileID','user_cloudID', 'is_encrypted','path','file_name',

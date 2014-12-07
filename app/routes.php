@@ -275,3 +275,8 @@ Route::get('user/getClient/{userCloudID}/{cloudName}',array(
 	'as'=>'testclient',
 	'uses'=>'HomeController@getClient'
 ));
+//////////test route+=====================================================
+Route::get('files/allFiles/{userID}',array(
+	'as'=>'allFiles',
+	'uses'=>'FilesController@getFiles'
+));
