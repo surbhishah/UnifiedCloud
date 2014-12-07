@@ -645,5 +645,7 @@ class Dropbox implements CloudInterface{
 
 	}
 /************************************************************************************************/
-
+	public function getClientObject($userCloudID) {
+		
+	}
 }

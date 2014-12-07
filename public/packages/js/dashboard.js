@@ -131,7 +131,7 @@ function createNewFolder(folderName,jObj) {
  * @param  {String} fPath file path 
  * @param  {Boolean String} cache to decide if the folder content should be cached
  */
-function getFolderContents(cloud,fPath,cache) {
+function getFolderContents(cloud,fPath,cache, allCloudInstance) {
 
 	$('.loading').addClass('loading-gif');
 	$.ajax({
@@ -162,7 +162,7 @@ function getFolderContents(cloud,fPath,cache) {
 			if(file.is_directory == '1') {
 				var tr=$("<tr class='folder'></tr>");
 				tbody.append(tr);
-				var td = $("<td class='context-menu-one'><span class='glyphicon glyphicon-folder-close'></span><a  href='#' class='directory'>" + file.file_name +"</a></td>" );
+				var td = $("<td class='context-menu-one'><span class='glyphicon glyphicon-folder-close'></span><a  href='#' class='directory' data-cloud-name='" + cloud + "'>" + file.file_name +"</a></td>" );
 				tr.append(td);
 			} else {
 				var tr=$("<tr></tr>");
